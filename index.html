@@ -549,12 +549,34 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="tab-page" id="tp-registro">
         <div class="sec-header" style="margin-top:0"><div class="sec-title">Registrar ciclo</div></div>
         <div class="card">
-          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Nuevo periodo</div>
-          <div class="fg-row">
-            <div class="fg"><label>Fecha inicio (día 1)</label><input type="date" id="r-start"></div>
-            <div class="fg"><label>Duración (días)</label><input type="number" id="r-dur" min="1" max="12" value="5"></div>
+          <div class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Registrar periodo
           </div>
-          <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveCycle()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Guardar ciclo</button></div>
+          <p style="font-size:.78rem;color:var(--text2);margin-bottom:.9rem;line-height:1.6">Registrá el día 1 de cada periodo. Podés cargar periodos pasados para tener un promedio más preciso.</p>
+          <div class="fg-row">
+            <div class="fg"><label>Fecha del primer sangrado (día 1)</label><input type="date" id="r-start"></div>
+            <div class="fg"><label>Duración del sangrado (días)</label><input type="number" id="r-dur" min="1" max="12" value="5"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" onclick="saveCycle()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+              Guardar
+            </button>
+          </div>
+        </div>
+ 
+        <!-- Ciclos registrados -->
+        <div class="card" id="cycles-history-card" style="margin-top:.85rem">
+          <div class="card-title" style="margin-bottom:.65rem">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Historial de ciclos
+            <span id="cycles-avg-badge" style="margin-left:auto;font-size:.7rem;font-weight:600;background:var(--sage-l);color:var(--sage-d);padding:2px 9px;border-radius:12px"></span>
+          </div>
+          <div id="cycles-list" style="font-size:.8rem"></div>
+          <p style="font-size:.72rem;color:var(--text3);margin-top:.75rem;line-height:1.6;font-style:italic">
+            Con 2 o más ciclos registrados, el promedio se calcula automáticamente. Con más registros, las predicciones son más precisas.
+          </p>
         </div>
  
         <div class="sec-header"><div class="sec-title">Diario del día</div>
@@ -786,28 +808,76 @@ const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'
 // ══════════════════════════════════════════════
 //  CYCLE MATH
 // ══════════════════════════════════════════════
+function sortedCycles(){
+  return [...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+}
+ 
+// Returns the avg cycle length computed from all real logged cycles.
+// Falls back to S.cycleLength if not enough data.
+function avgCycleLength(){
+  const sc=sortedCycles();
+  if(sc.length<2) return S.cycleLength;
+  const diffs=[];
+  for(let i=1;i<sc.length;i++) diffs.push(dd(pd(sc[i-1].start),pd(sc[i].start)));
+  return Math.max(21,Math.min(45,Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length)));
+}
+ 
+// Returns the start date (Date object) of the cycle that TODAY falls in.
+// Logic: find the last logged cycle start that is <= today.
+// If that cycle is very old (more than avgCycle*2 days ago with no new log),
+// advance forward by full cycle lengths until we reach the cycle containing today.
+function currentCycleStart(){
+  if(!S.lastPeriod) return null;
+  const sc=sortedCycles();
+  const avg=avgCycleLength();
+  const today=new Date();
+ 
+  // Start from last logged period
+  let base=pd(sc.length?sc[sc.length-1].start:S.lastPeriod);
+ 
+  // Check if there's a logged cycle that contains today
+  // A logged cycle "contains" today if today >= its start AND today < its start + avg
+  // Walk backwards from latest log to find if today is within a logged cycle
+  for(let i=sc.length-1;i>=0;i--){
+    const cStart=pd(sc[i].start);
+    if(dd(cStart,today)>=0){
+      // This logged cycle started before or on today
+      // Check how many avg-lengths have passed since this log
+      const daysPassed=dd(cStart,today);
+      const fullCycles=Math.floor(daysPassed/avg);
+      // The current cycle start is cStart + fullCycles * avg
+      return ad(cStart,fullCycles*avg);
+    }
+  }
+  return base;
+}
+ 
 function cycleMap(){
-  if(!S.lastPeriod)return{};
+  if(!S.lastPeriod) return {};
   const m={};
-  // Mark real logged period days
-  S.cycles.forEach(c=>{
+  const avg=avgCycleLength();
+ 
+  // 1. Mark REAL logged period days (solid)
+  sortedCycles().forEach(c=>{
     for(let i=0;i<c.duration;i++) m[ds(ad(pd(c.start),i))]='period';
   });
-  // Base = start of last known cycle (Day 1 of last period)
-  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
-  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
-  // cy=0 = current cycle, cy=1 = next cycle, etc.
+ 
+  // 2. Predict future cycles starting from current cycle start
+  const curStart=currentCycleStart();
+  if(!curStart) return m;
+ 
+  // Generate predictions for current + next 8 cycles
   for(let cy=0;cy<9;cy++){
-    const start=ad(base,cy*S.cycleLength);
-    // Predicted period days (only if not already logged as real)
+    const start=ad(curStart,cy*avg);
+    // Predicted period (skip if already logged as real)
     for(let i=0;i<S.periodLength;i++){
       const d=ds(ad(start,i));
       if(!m[d]) m[d]='period-pred';
     }
-    // Ovulation = Day 14 of cycle = start + 13 days (0-indexed)
+    // Ovulation = Day 14 (start + 13)
     const ov=ad(start,13);
-    m[ds(ov)]='ovulation';
-    // Fertile window: 6 days before ovulation, 5 days after
+    if(!m[ds(ov)]) m[ds(ov)]='ovulation';
+    // Fertile: 6 before, 5 after ovulation
     for(let i=-6;i<=5;i++){
       if(i===0) continue;
       const d=ds(ad(ov,i));
@@ -816,58 +886,80 @@ function cycleMap(){
   }
   return m;
 }
+ 
+function nextPeriodDate(){
+  if(!S.lastPeriod) return null;
+  const avg=avgCycleLength();
+  const curStart=currentCycleStart();
+  if(!curStart) return null;
+  // Next period = start of NEXT cycle from current
+  return ds(ad(curStart,avg));
+}
+ 
 function nextEvt(types){
-  // For period prediction: calculate directly from math to avoid off-by-one
   if(types.includes('period-pred')||types.includes('period')){
     return nextPeriodDate();
   }
-  // For ovulation/fertile: use map but skip dates in the past
   const m=cycleMap(),t=td();
-  return Object.entries(m).filter(([d,tp])=>d>t&&types.includes(tp)).sort(([a],[b])=>a.localeCompare(b))[0]?.[0]||null;
+  return Object.entries(m)
+    .filter(([d,tp])=>d>t&&types.includes(tp))
+    .sort(([a],[b])=>a.localeCompare(b))[0]?.[0]||null;
 }
-function nextPeriodDate(){
-  if(!S.lastPeriod) return null;
-  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
-  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
-  const today=new Date();
-  // How many days since last period started
-  const daysSince=dd(base,today); // floor: 0 on day 1, 1 on day 2, etc.
-  // How many complete cycles have passed
-  const cyclesPassed=Math.floor(daysSince/S.cycleLength);
-  // Next period start = base + (cyclesPassed+1) * cycleLength
-  const next=ad(base,(cyclesPassed+1)*S.cycleLength);
-  return ds(next);
-}
+ 
 function dayIC(){
   if(!S.lastPeriod) return 1;
-  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
-  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
-  // Days since last period start (floor: 0 on day 1, 1 on day 2...)
-  const daysSince=dd(base,new Date());
-  // Current day within cycle (1-indexed)
-  const dayInCycle=(daysSince%S.cycleLength)+1;
-  return dayInCycle<1?dayInCycle+S.cycleLength:dayInCycle;
+  const curStart=currentCycleStart();
+  if(!curStart) return 1;
+  const daysSince=dd(curStart,new Date());
+  return daysSince+1; // Day 1 = first day of current cycle
 }
+ 
+function cycleStats(){
+  const sc=sortedCycles();
+  const avg=avgCycleLength();
+  let vari=0;
+  if(sc.length>=2){
+    const diffs=[];
+    for(let i=1;i<sc.length;i++) diffs.push(dd(pd(sc[i-1].start),pd(sc[i].start)));
+    if(diffs.length>1){
+      const mean=diffs.reduce((a,b)=>a+b,0)/diffs.length;
+      const sq=diffs.map(d=>(d-mean)**2);
+      vari=Math.round(Math.sqrt(sq.reduce((a,b)=>a+b,0)/sq.length));
+    }
+  }
+  return{avg,vari,count:sc.length};
+}
+ 
+function getDayOfCycleFor(dstr){
+  if(!S.lastPeriod) return 0;
+  const avg=avgCycleLength();
+  const sc=sortedCycles();
+  const target=pd(dstr);
+  const earliest=pd(sc.length?sc[0].start:S.lastPeriod);
+  // Date is before all known data - no cycle number to show
+  if(dd(earliest,target)<0) return 0;
+  for(let i=sc.length-1;i>=0;i--){
+    const cStart=pd(sc[i].start);
+    const daysPassed=dd(cStart,target);
+    if(daysPassed>=0){
+      const fullCycles=Math.floor(daysPassed/avg);
+      const cycleStart=ad(cStart,fullCycles*avg);
+      return dd(cycleStart,target)+1;
+    }
+  }
+  return 0;
+}
+ 
 function curPhase(){
   const m=cycleMap(),t=m[td()],day=dayIC();
-  if(t==='period'||t==='period-pred')return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
-  if(t==='ovulation')return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
-  if(t==='fertile')return{name:'Ventana Fértil',short:'Fértil',color:'var(--sage-d)'};
-  if(day<=S.periodLength)return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
-  if(day<=13)return{name:'Fase Folicular',short:'Folicular',color:'var(--sage-d)'};
-  if(day===14)return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
+  if(t==='period'||t==='period-pred') return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
+  if(t==='ovulation') return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
+  if(t==='fertile') return{name:'Ventana Fértil',short:'Fértil',color:'var(--sage-d)'};
+  const avg=avgCycleLength();
+  if(day<=S.periodLength) return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
+  if(day<=13) return{name:'Fase Folicular',short:'Folicular',color:'var(--sage-d)'};
+  if(day===14) return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
   return{name:'Fase Lútea',short:'Lútea',color:'var(--gold-d)'};
-}
-function cycleStats(){
-  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
-  let avg=S.cycleLength,vari=0;
-  if(sorted.length>=2){
-    const diffs=[];
-    for(let i=1;i<sorted.length;i++)diffs.push(dd(pd(sorted[i-1].start),pd(sorted[i].start)));
-    avg=Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length);
-    if(diffs.length>1){const sq=diffs.map(d=>(d-avg)**2);vari=Math.round(Math.sqrt(sq.reduce((a,b)=>a+b,0)/sq.length));}
-  }
-  return{avg,vari,count:sorted.length};
 }
  
 // ══════════════════════════════════════════════
@@ -990,6 +1082,7 @@ function launchApp(){
 function renderAll(){
   renderHero();renderStats_summary();renderCalendar();renderDailyTip();
   renderStatsCard();renderLogList();renderAnalysis();renderLearnAge();
+  renderCyclesList();
   const ph=curPhase();
   document.getElementById('topbar-phase').textContent=ph.short;
 }
@@ -1056,7 +1149,7 @@ function renderCalendar(){
     if(log.moods&&log.moods.length)pips+=`<div class="pip pip-mood"></div>`;
     if(log.intimate)pips+=`<div class="pip pip-intimate"></div>`;
     const cycDay = calBase ? (()=>{ let diff=dd(calBase,pd(dstr)); diff=diff%S.cycleLength; return diff<0?diff+S.cycleLength:diff+1; })() : '';
-    const cycDaySpan = cycDay ? `<span style="font-size:.52rem;color:var(--text3);line-height:1">${cycDay}</span>` : '';
+    const cycDaySpan = (cycDay&&cycDay>0) ? `<span style="font-size:.52rem;color:var(--text3);line-height:1">${cycDay}</span>` : '';
     const pipsHtml = pips ? `<div class="day-pips">${pips}</div>` : '';
     h += `<div class="${cls}" onclick="openDayModal('${dstr}')"><span class="dn">${d}</span>${cycDaySpan}${pipsHtml}</div>`;
   }
@@ -1192,15 +1285,70 @@ function saveCycle(){
   const start=document.getElementById('r-start').value;
   const dur=parseInt(document.getElementById('r-dur').value)||S.periodLength;
   if(!start){showToast('Selecciona la fecha');return;}
-  if(!S.lastPeriod||start>S.lastPeriod)S.lastPeriod=start;
+  if(!S.lastPeriod||start>S.lastPeriod) S.lastPeriod=start;
   const idx=S.cycles.findIndex(c=>c.start===start);
-  if(idx>=0)S.cycles[idx].duration=dur;else S.cycles.push({start,duration:dur});
-  save();showToast('Ciclo guardado');renderAll();
+  if(idx>=0) S.cycles[idx].duration=dur;
+  else S.cycles.push({start,duration:dur});
+  const newAvg=avgCycleLength();
+  if(S.cycles.length>=2) S.cycleLength=newAvg;
+  save();
+  showToast('Ciclo guardado'+(S.cycles.length>=2?' — promedio: '+newAvg+'d':''));
+  renderAll();
 }
  
 // ══════════════════════════════════════════════
 //  STATS SUMMARY
 // ══════════════════════════════════════════════
+function renderCyclesList(){
+  const sc=sortedCycles();
+  const avg=avgCycleLength();
+  const badge=document.getElementById('cycles-avg-badge');
+  const list=document.getElementById('cycles-list');
+  if(!badge||!list) return;
+ 
+  if(sc.length===0){
+    badge.textContent='Sin datos';
+    list.innerHTML='<p style="color:var(--text3);font-style:italic">Aún no hay ciclos registrados.</p>';
+    return;
+  }
+ 
+  badge.textContent='Promedio: '+avg+' días';
+ 
+  // Build table of cycles
+  let rows='<div style="display:flex;flex-direction:column;gap:.35rem">';
+  sc.slice().reverse().forEach((c,ri)=>{
+    const i=sc.length-1-ri;
+    const nextC=i+1<sc.length?sc[i+1]:null;
+    const cycleLen=nextC?dd(pd(c.start),pd(nextC.start)):null;
+    const lenText=cycleLen?`<span style="color:var(--text2);font-weight:600">${cycleLen}d</span>`:'<span style="color:var(--text3)">actual</span>';
+    const isCurrent=i===sc.length-1;
+    rows+=`<div style="display:flex;align-items:center;gap:.75rem;padding:.45rem .6rem;background:${isCurrent?'var(--sage-l)':'var(--surface2)'};border-radius:8px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:${isCurrent?'var(--sage)':'var(--border)'}"></div>
+      <span style="flex:1;font-weight:${isCurrent?'600':'400'};color:${isCurrent?'var(--sage-d)':'var(--text2)'}">${fmtL(c.start)}</span>
+      <span style="font-size:.72rem;color:var(--text3)">Duración sangrado: ${c.duration}d</span>
+      <span style="font-size:.75rem;min-width:44px;text-align:right">${lenText}</span>
+      <button onclick="deleteCycle('${c.start}')" style="background:none;border:none;cursor:pointer;color:var(--text3);padding:2px;line-height:1;font-size:.9rem;border-radius:4px" title="Eliminar">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      </button>
+    </div>`;
+  });
+  rows+='</div>';
+  list.innerHTML=rows;
+}
+ 
+function deleteCycle(startDate){
+  if(!confirm('¿Eliminar el ciclo del '+fmtL(startDate)+'?')) return;
+  S.cycles=S.cycles.filter(c=>c.start!==startDate);
+  // Update lastPeriod to new latest
+  const sc=sortedCycles();
+  S.lastPeriod=sc.length?sc[sc.length-1].start:'';
+  // Recalculate avg
+  const newAvg=avgCycleLength();
+  if(S.cycles.length>=2) S.cycleLength=newAvg;
+  save(); renderAll();
+  showToast('Ciclo eliminado');
+}
+ 
 function renderStats_summary(){
   const{avg,vari,count}=cycleStats();
   const nextP=nextEvt(['period-pred','period']),nextOv=nextEvt(['ovulation']);
