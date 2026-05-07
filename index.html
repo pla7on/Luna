@@ -31,12 +31,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .screen.active{display:flex;}
 /* ─── LOCK SCREEN ─── */
 #screen-lock{background:linear-gradient(145deg,#fdf6fa 0%,#f0eaf8 40%,#e8f4f0 100%);align-items:center;justify-content:center;padding:2rem;flex-direction:column;}
-.lock-orb{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--c1) 0%,var(--c2) 50%,var(--c3) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;box-shadow:0 8px 32px rgba(180,120,160,.25);animation:float 4s ease-in-out infinite;}
+.lock-orb{width:76px;height:76px;border-radius:50%;background:linear-gradient(135deg,var(--c1) 0%,var(--c2) 50%,var(--c3) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;box-shadow:0 8px 32px rgba(180,120,160,.25);animation:float 4s ease-in-out infinite;}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .lock-orb svg{filter:drop-shadow(0 2px 4px rgba(255,255,255,.5));}
-.lock-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:600;color:var(--text);margin-bottom:.3rem;text-align:center;}
-.lock-sub{color:var(--text2);font-size:.9rem;margin-bottom:2.5rem;text-align:center;}
-.lock-card{background:white;border-radius:var(--r-xl);padding:2.2rem;width:100%;max-width:380px;box-shadow:var(--shadow-md);border:1px solid var(--border);}
+.lock-title{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--text);margin-bottom:.25rem;text-align:center;}
+.lock-sub{color:var(--text2);font-size:.88rem;margin-bottom:1.5rem;text-align:center;}
+.lock-card{background:white;border-radius:var(--r-xl);padding:1.8rem 2rem;width:100%;max-width:320px;box-shadow:var(--shadow-md);border:1px solid var(--border);}
 .lock-user{display:flex;align-items:center;gap:.85rem;margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
 .lock-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .lock-user-name{font-weight:600;font-size:1rem;color:var(--text);}
@@ -47,7 +47,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .pin-dot.error{background:var(--rose);border-color:var(--rose-d);animation:shake .3s ease;}
 @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
 .numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
-.num-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);height:56px;font-size:1.2rem;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;}
+.num-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);height:52px;font-size:1.15rem;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;}
 .num-btn:hover{background:var(--plum-l);border-color:var(--plum);color:var(--plum-d);}
 .num-btn:active{transform:scale(.95);}
 .num-btn.del{font-size:.95rem;color:var(--text2);}
@@ -321,16 +321,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
   <!-- First time: redirect to setup -->
   <div id="lock-pin-area" class="hidden">
     <div class="lock-card">
-      <div class="lock-user">
-        <div class="lock-avatar">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
-        </div>
-        <div>
-          <div class="lock-user-name" id="lock-name-display">—</div>
-          <div class="lock-user-label">Bienvenida de vuelta</div>
-        </div>
-      </div>
-      <div class="pin-label">Ingresa tu PIN de 4 dígitos</div>
+      <div class="pin-label">Ingresa tu PIN</div>
       <div class="pin-dots" id="pin-dots">
         <div class="pin-dot" id="pd0"></div>
         <div class="pin-dot" id="pd1"></div>
@@ -856,28 +847,27 @@ function cycleMap(){
   if(!S.lastPeriod) return {};
   const m={};
   const avg=avgCycleLength();
+  const sc=sortedCycles();
  
   // 1. Mark REAL logged period days (solid)
-  sortedCycles().forEach(c=>{
+  sc.forEach(c=>{
     for(let i=0;i<c.duration;i++) m[ds(ad(pd(c.start),i))]='period';
   });
  
-  // 2. Predict future cycles starting from current cycle start
-  const curStart=currentCycleStart();
-  if(!curStart) return m;
- 
-  // Generate predictions for current + next 8 cycles
-  for(let cy=0;cy<9;cy++){
-    const start=ad(curStart,cy*avg);
-    // Predicted period (skip if already logged as real)
+  // 2. Use last known cycle as anchor, generate 12 cycles BACK + 9 cycles FORWARD
+  // This covers all past months the user might browse to
+  const base=pd(sc.length?sc[sc.length-1].start:S.lastPeriod);
+  for(let cy=-12;cy<9;cy++){
+    const start=ad(base,cy*avg);
+    // Period prediction (skip days already logged as real)
     for(let i=0;i<S.periodLength;i++){
       const d=ds(ad(start,i));
       if(!m[d]) m[d]='period-pred';
     }
-    // Ovulation = Day 14 (start + 13)
+    // Ovulation = Day 14
     const ov=ad(start,13);
     if(!m[ds(ov)]) m[ds(ov)]='ovulation';
-    // Fertile: 6 before, 5 after ovulation
+    // Fertile window
     for(let i=-6;i<=5;i++){
       if(i===0) continue;
       const d=ds(ad(ov,i));
@@ -938,16 +928,12 @@ function getDayOfCycleFor(dstr){
   const earliest=pd(sc.length?sc[0].start:S.lastPeriod);
   // Date is before all known data - no cycle number to show
   if(dd(earliest,target)<0) return 0;
-  for(let i=sc.length-1;i>=0;i--){
-    const cStart=pd(sc[i].start);
-    const daysPassed=dd(cStart,target);
-    if(daysPassed>=0){
-      const fullCycles=Math.floor(daysPassed/avg);
-      const cycleStart=ad(cStart,fullCycles*avg);
-      return dd(cycleStart,target)+1;
-    }
-  }
-  return 0;
+  // Use last known cycle as reference and work both forward and backward
+  const base=pd(sc.length?sc[sc.length-1].start:S.lastPeriod);
+  const daysSinceBase=dd(base,target); // can be negative (past) or positive (future)
+  const fullCycles=Math.floor(daysSinceBase/avg); // floor works correctly for negatives too
+  const cycleStart=ad(base,fullCycles*avg);
+  return dd(cycleStart,target)+1;
 }
  
 function curPhase(){
