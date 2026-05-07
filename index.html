@@ -22,7 +22,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;}input,select,textarea{font-size:16px!important;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;}input,select,textarea{font-size:16px!important;}input[type="date"]{-webkit-appearance:none;appearance:none;}
 /* ─── SVG ICONS ─── */
 .ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .ic svg{display:block;}
@@ -70,12 +70,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .step-card h3{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:.3rem;color:var(--text);}
 .step-card .step-desc{font-size:.82rem;color:var(--text2);margin-bottom:1.4rem;}
 /* ─── FORM ELEMENTS ─── */
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;min-width:0;}
 .fg label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;}
-.fg input,.fg select,.fg textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:all .2s;width:100%;}
+.fg input,.fg select,.fg textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:all .2s;width:100%;box-sizing:border-box;max-width:100%;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--plum);background:white;box-shadow:0 0 0 3px rgba(184,118,176,.12);}
 .fg textarea{resize:vertical;min-height:68px;}
-.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;min-width:0;}
 @media(max-width:480px){.fg-row{grid-template-columns:1fr;}}
 .pin-setup{display:flex;gap:.6rem;justify-content:center;margin-bottom:1rem;}
 .pin-setup-dot{width:44px;height:44px;border-radius:var(--r-sm);border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:var(--plum);transition:all .2s;}
@@ -122,7 +122,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .sec-header:first-child{margin-top:0;}
 .sec-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;}
 /* ─── CARDS ─── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;box-shadow:var(--shadow);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;box-shadow:var(--shadow);overflow:hidden;}
 .card+.card{margin-top:.85rem;}
 .card-title{font-weight:600;font-size:.88rem;margin-bottom:.9rem;color:var(--text);display:flex;align-items:center;gap:.5rem;}
 /* ─── HERO CARD ─── */
@@ -779,7 +779,7 @@ const td=()=>new Date().toISOString().split('T')[0];
 const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
 const ad=(dt,n)=>{const d=new Date(dt);d.setDate(d.getDate()+n);return d;};
 const ds=d=>d.toISOString().split('T')[0];
-const dd=(a,b)=>Math.round((b-a)/86400000);
+const dd=(a,b)=>Math.floor((b-a)/86400000);
 const fmtS=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'short'}):'—';
 const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'}):'—';
  
@@ -789,26 +789,64 @@ const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'
 function cycleMap(){
   if(!S.lastPeriod)return{};
   const m={};
-  S.cycles.forEach(c=>{for(let i=0;i<c.duration;i++)m[ds(ad(pd(c.start),i))]='period';});
+  // Mark real logged period days
+  S.cycles.forEach(c=>{
+    for(let i=0;i<c.duration;i++) m[ds(ad(pd(c.start),i))]='period';
+  });
+  // Base = start of last known cycle (Day 1 of last period)
   const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
-  let base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  // cy=0 = current cycle, cy=1 = next cycle, etc.
   for(let cy=0;cy<9;cy++){
     const start=ad(base,cy*S.cycleLength);
-    for(let i=0;i<S.periodLength;i++){const d=ds(ad(start,i));if(!m[d])m[d]='period-pred';}
-    const ov=ad(start,13);m[ds(ov)]='ovulation';
-    for(let i=-6;i<=5;i++){if(i===0)continue;const d=ds(ad(ov,i));if(!m[d])m[d]='fertile';}
+    // Predicted period days (only if not already logged as real)
+    for(let i=0;i<S.periodLength;i++){
+      const d=ds(ad(start,i));
+      if(!m[d]) m[d]='period-pred';
+    }
+    // Ovulation = Day 14 of cycle = start + 13 days (0-indexed)
+    const ov=ad(start,13);
+    m[ds(ov)]='ovulation';
+    // Fertile window: 6 days before ovulation, 5 days after
+    for(let i=-6;i<=5;i++){
+      if(i===0) continue;
+      const d=ds(ad(ov,i));
+      if(!m[d]) m[d]='fertile';
+    }
   }
   return m;
 }
 function nextEvt(types){
+  // For period prediction: calculate directly from math to avoid off-by-one
+  if(types.includes('period-pred')||types.includes('period')){
+    return nextPeriodDate();
+  }
+  // For ovulation/fertile: use map but skip dates in the past
   const m=cycleMap(),t=td();
   return Object.entries(m).filter(([d,tp])=>d>t&&types.includes(tp)).sort(([a],[b])=>a.localeCompare(b))[0]?.[0]||null;
 }
-function dayIC(){
-  if(!S.lastPeriod)return 1;
+function nextPeriodDate(){
+  if(!S.lastPeriod) return null;
   const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
   const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
-  let d=dd(base,new Date());d=d%S.cycleLength;return d<0?d+S.cycleLength:d+1;
+  const today=new Date();
+  // How many days since last period started
+  const daysSince=dd(base,today); // floor: 0 on day 1, 1 on day 2, etc.
+  // How many complete cycles have passed
+  const cyclesPassed=Math.floor(daysSince/S.cycleLength);
+  // Next period start = base + (cyclesPassed+1) * cycleLength
+  const next=ad(base,(cyclesPassed+1)*S.cycleLength);
+  return ds(next);
+}
+function dayIC(){
+  if(!S.lastPeriod) return 1;
+  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  // Days since last period start (floor: 0 on day 1, 1 on day 2...)
+  const daysSince=dd(base,new Date());
+  // Current day within cycle (1-indexed)
+  const dayInCycle=(daysSince%S.cycleLength)+1;
+  return dayInCycle<1?dayInCycle+S.cycleLength:dayInCycle;
 }
 function curPhase(){
   const m=cycleMap(),t=m[td()],day=dayIC();
@@ -979,7 +1017,7 @@ function renderHero(){
   // Period card: date prominent, days as note
   const pDE=document.getElementById('s-nextperiod'),pSE=document.getElementById('s-nextperiod-date'),pDE2=document.getElementById('s-nextperiod-days');
   if(pDE){pDE.textContent=nextP?fmtL(nextP):'—';pDE.style.fontSize='.82rem';pDE.style.paddingTop='3px';pDE.classList.add('count-anim');setTimeout(()=>pDE.classList.remove('count-anim'),600);}
-  if(pSE)pSE.textContent=nextP?(dP===0?'Es hoy':dP===1?'Mañana':'En '+dP+' días'):'—';
+  if(pSE)pSE.textContent=nextP?(dP===0?'Es hoy':dP===1?'Mañana':'aprox. en '+dP+' días'):'—';
   if(pDE2)pDE2.textContent='';
   s('s-nextov',dO===0?'Hoy':dO+(typeof dO==='number'?'d':''),nextOv?fmtS(nextOv):'—');
   s('s-dayic',day,'de '+S.cycleLength+' días');
@@ -1661,9 +1699,12 @@ function renderIntimateAnalysis(){
 }
  
 function getDayOfCycleFor(dstr){
+  if(!S.lastPeriod) return 1;
   const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
   const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
-  let d=dd(base,new Date(dstr.replace(/-/g,'/')));d=d%S.cycleLength;return d<0?d+S.cycleLength:d+1;
+  const daysSince=dd(base,pd(dstr));
+  const d=(daysSince%S.cycleLength)+1;
+  return d<1?d+S.cycleLength:d;
 }
  
 // ══════════════════════════════════════════════
