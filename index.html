@@ -1045,12 +1045,12 @@ function initLockScreen(){
     showScreen('screen-setup');
   }else{
     // Usuaria registrada: mostrar pantalla de PIN
-    try {
-      document.getElementById('lock-title').textContent='Hola'+(S.name?' '+S.name.split(' ')[0]:'');
-      document.getElementById('lock-sub').textContent='Ingresa tu PIN para continuar';
-      document.getElementById('lock-name-display').textContent=S.name||'Usuaria';
-      document.getElementById('lock-pin-area').classList.remove('hidden');
-    } catch(e){}
+    const titleEl = document.getElementById('lock-title');
+    const subEl   = document.getElementById('lock-sub');
+    const areaEl  = document.getElementById('lock-pin-area');
+    if(titleEl) titleEl.textContent = 'Hola' + (S.name ? ' ' + S.name.split(' ')[0] : '');
+    if(subEl)   subEl.textContent   = 'Ingresa tu PIN para continuar';
+    if(areaEl)  areaEl.classList.remove('hidden');
     showScreen('screen-lock');
   }
 }
