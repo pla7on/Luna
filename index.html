@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luna — Registro Menstrual</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --c1:#f2c4ce;--c2:#d4a5c9;--c3:#a8c5da;--c4:#aed9c8;--c5:#f9dfa3;
+  --c1d:#e8879a;--c2d:#b876b0;--c3d:#6ba3c4;--c4d:#5fb89a;--c5d:#f0b429;
+  --sage:#7fb5a0;--sage-l:#e6f4f0;--sage-d:#4a8c78;
+  --rose:#e8879a;--rose-l:#fdf0f2;--rose-d:#c45a72;
+  --plum:#b876b0;--plum-l:#f5ecf8;--plum-d:#8a4a8a;
+  --sky:#6ba3c4;--sky-l:#eaf4fb;--sky-d:#3d7fa8;
+  --gold:#f0b429;--gold-l:#fef8e7;--gold-d:#c8860a;
+  --bg:#fdfbf8;--surface:#fff;--surface2:#f9f7f5;
+  --border:#ede9e4;--border2:#e0dbd5;
+  --text:#2a2520;--text2:#6b6560;--text3:#a09890;
+  --r-sm:10px;--r-md:16px;--r-lg:22px;--r-xl:30px;
+  --shadow:0 2px 12px rgba(0,0,0,.06);--shadow-md:0 4px 24px rgba(0,0,0,.09);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;}
+/* ─── SVG ICONS ─── */
+.ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
+.ic svg{display:block;}
+/* ─── SCREEN SYSTEM ─── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;}
+/* ─── LOCK SCREEN ─── */
+#screen-lock{background:linear-gradient(145deg,#fdf6fa 0%,#f0eaf8 40%,#e8f4f0 100%);align-items:center;justify-content:center;padding:2rem;flex-direction:column;}
+.lock-orb{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--c1) 0%,var(--c2) 50%,var(--c3) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;box-shadow:0 8px 32px rgba(180,120,160,.25);animation:float 4s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.lock-orb svg{filter:drop-shadow(0 2px 4px rgba(255,255,255,.5));}
+.lock-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:600;color:var(--text);margin-bottom:.3rem;text-align:center;}
+.lock-sub{color:var(--text2);font-size:.9rem;margin-bottom:2.5rem;text-align:center;}
+.lock-card{background:white;border-radius:var(--r-xl);padding:2.2rem;width:100%;max-width:380px;box-shadow:var(--shadow-md);border:1px solid var(--border);}
+.lock-user{display:flex;align-items:center;gap:.85rem;margin-bottom:1.8rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.lock-avatar{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lock-user-name{font-weight:600;font-size:1rem;color:var(--text);}
+.lock-user-label{font-size:.75rem;color:var(--text3);}
+.pin-dots{display:flex;gap:.75rem;justify-content:center;margin-bottom:1.5rem;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all .2s;}
+.pin-dot.filled{background:var(--plum);border-color:var(--plum);transform:scale(1.1);}
+.pin-dot.error{background:var(--rose);border-color:var(--rose-d);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;}
+.num-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-md);height:56px;font-size:1.2rem;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;}
+.num-btn:hover{background:var(--plum-l);border-color:var(--plum);color:var(--plum-d);}
+.num-btn:active{transform:scale(.95);}
+.num-btn.del{font-size:.95rem;color:var(--text2);}
+.num-btn.empty{background:transparent;border-color:transparent;cursor:default;}
+.pin-label{text-align:center;font-size:.78rem;color:var(--text3);margin-bottom:1.2rem;}
+.lock-error{text-align:center;color:var(--rose-d);font-size:.78rem;margin-top:.8rem;min-height:20px;}
+/* ─── SETUP ─── */
+#screen-setup{flex-direction:column;align-items:center;justify-content:flex-start;padding:0;background:linear-gradient(165deg,#fdf6fa 0%,#f0eaf8 40%,#e8f4f0 100%);}
+.setup-header{width:100%;max-width:480px;padding:2.5rem 2rem 0;text-align:center;}
+.setup-header .logo-mark{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem;}
+.setup-header h1{font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;margin-bottom:.4rem;}
+.setup-header p{color:var(--text2);font-size:.88rem;margin-bottom:2rem;}
+.setup-body{width:100%;max-width:480px;padding:0 1.5rem 3rem;}
+.step-progress{display:flex;align-items:center;gap:.4rem;margin-bottom:2rem;}
+.step-seg{flex:1;height:3px;border-radius:3px;background:var(--border);transition:background .4s;}
+.step-seg.done{background:linear-gradient(90deg,var(--c1d),var(--c2d));}
+.step-card{background:white;border-radius:var(--r-lg);padding:1.8rem;box-shadow:var(--shadow);border:1px solid var(--border);display:none;}
+.step-card.active{display:block;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.step-card h3{font-family:'Playfair Display',serif;font-size:1.25rem;margin-bottom:.3rem;color:var(--text);}
+.step-card .step-desc{font-size:.82rem;color:var(--text2);margin-bottom:1.4rem;}
+/* ─── FORM ELEMENTS ─── */
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;}
+.fg label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;}
+.fg input,.fg select,.fg textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:all .2s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--plum);background:white;box-shadow:0 0 0 3px rgba(184,118,176,.12);}
+.fg textarea{resize:vertical;min-height:68px;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
+@media(max-width:480px){.fg-row{grid-template-columns:1fr;}}
+.pin-setup{display:flex;gap:.6rem;justify-content:center;margin-bottom:1rem;}
+.pin-setup-dot{width:44px;height:44px;border-radius:var(--r-sm);border:2px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:var(--plum);transition:all .2s;}
+.pin-setup-dot.set{background:var(--plum-l);border-color:var(--plum);}
+.setup-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:220px;margin:0 auto 1.2rem;}
+.setup-num{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);height:50px;font-size:1.1rem;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;}
+.setup-num:hover{background:var(--plum-l);border-color:var(--plum);}
+.setup-num:active{transform:scale(.95);}
+/* ─── BUTTONS ─── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.7rem 1.6rem;border-radius:var(--r-md);font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .18s;border:none;}
+.btn-primary{background:linear-gradient(135deg,var(--plum),var(--sage));color:white;box-shadow:0 4px 16px rgba(184,118,176,.3);}
+.btn-primary:hover{box-shadow:0 6px 22px rgba(184,118,176,.45);transform:translateY(-1px);}
+.btn-secondary{background:white;color:var(--text2);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:var(--border2);background:var(--surface2);}
+.btn-ghost{background:transparent;color:var(--text2);padding:.5rem .9rem;font-size:.82rem;}
+.btn-ghost:hover{color:var(--text);}
+.btn-sm{padding:.45rem 1rem;font-size:.8rem;border-radius:var(--r-sm);}
+.btn-row{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:.5rem;}
+.btn:active{transform:scale(.97);}
+/* ─── MAIN APP ─── */
+#screen-app{flex-direction:column;align-items:stretch;}
+.app-topbar{position:sticky;top:0;z-index:50;background:rgba(253,251,248,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;}
+.app-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;display:flex;align-items:center;gap:.5rem;}
+.app-logo .logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--c1d),var(--c2d));}
+.topbar-right{display:flex;align-items:center;gap:.6rem;}
+.phase-chip{font-size:.73rem;font-weight:600;padding:4px 12px;border-radius:20px;background:var(--sage-l);color:var(--sage-d);}
+.lock-icon-btn{width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+.lock-icon-btn:hover{background:var(--rose-l);}
+/* ─── NAV ─── */
+.app-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(253,251,248,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:.6rem 1rem env(safe-area-inset-bottom,.5rem);display:grid;grid-template-columns:repeat(5,1fr);}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:.4rem;cursor:pointer;transition:all .15s;border-radius:var(--r-sm);}
+.nav-item .nav-label{font-size:.62rem;font-weight:600;color:var(--text3);transition:color .15s;}
+.nav-item svg{transition:all .15s;}
+.nav-item.active .nav-label{color:var(--plum-d);}
+.nav-item.active svg{color:var(--plum);}
+.nav-item:hover .nav-label{color:var(--text2);}
+/* ─── CONTENT ─── */
+.app-content{flex:1;padding:1.5rem 1.25rem 6rem;max-width:680px;margin:0 auto;width:100%;}
+/* ─── TAB PAGES ─── */
+.tab-page{display:none;}
+.tab-page.active{display:block;animation:fadeUp .3s ease;}
+/* ─── SECTION HEADERS ─── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;margin-top:1.8rem;}
+.sec-header:first-child{margin-top:0;}
+.sec-title{font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:600;}
+/* ─── CARDS ─── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.25rem;box-shadow:var(--shadow);}
+.card+.card{margin-top:.85rem;}
+.card-title{font-weight:600;font-size:.88rem;margin-bottom:.9rem;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+/* ─── HERO CARD ─── */
+.hero-card{background:linear-gradient(135deg,#fdf0f2 0%,#f5ecf8 50%,#eaf4fb 100%);border:1px solid #f0e8ef;border-radius:var(--r-xl);padding:1.6rem;margin-bottom:1.2rem;position:relative;overflow:hidden;}
+.hero-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(180,118,176,.12) 0%,transparent 70%);}
+.hero-card::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(107,163,196,.1) 0%,transparent 70%);}
+.hero-greeting{font-size:.8rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.7px;margin-bottom:.3rem;}
+.hero-phase{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.hero-daycount{font-size:.85rem;color:var(--text2);}
+.hero-meter{margin-top:1.1rem;}
+.meter-track{height:6px;background:rgba(0,0,0,.08);border-radius:6px;overflow:hidden;}
+.meter-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--c1d),var(--c2d),var(--c3d));transition:width .8s cubic-bezier(.4,0,.2,1);}
+.meter-labels{display:flex;justify-content:space-between;margin-top:.4rem;font-size:.65rem;color:var(--text3);}
+/* ─── STAT GRID ─── */
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-bottom:1.2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--r-lg) var(--r-lg) 0 0;}
+.stat-card.c-rose::before{background:linear-gradient(90deg,var(--c1d),#e8a0b4);}
+.stat-card.c-plum::before{background:linear-gradient(90deg,var(--c2d),#9b87c4);}
+.stat-card.c-sage::before{background:linear-gradient(90deg,var(--c4d),var(--sage));}
+.stat-card.c-gold::before{background:linear-gradient(90deg,var(--c5d),#e8c87a);}
+.stat-icon{width:34px;height:34px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;margin-bottom:.65rem;}
+.stat-icon.c-rose{background:var(--rose-l);color:var(--rose-d);}
+.stat-icon.c-plum{background:var(--plum-l);color:var(--plum-d);}
+.stat-icon.c-sage{background:var(--sage-l);color:var(--sage-d);}
+.stat-icon.c-gold{background:var(--gold-l);color:var(--gold-d);}
+.stat-label{font-size:.68rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.stat-value{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:600;color:var(--text);line-height:1.1;margin:.15rem 0;}
+.stat-sub{font-size:.7rem;color:var(--text3);}
+/* ─── CALENDAR ─── */
+.cal-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--shadow);}
+.cal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--border);}
+.cal-month{font-family:'Playfair Display',serif;font-size:1rem;font-weight:600;text-transform:capitalize;}
+.cal-nav{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--text2);}
+.cal-nav:hover{border-color:var(--plum);color:var(--plum);background:var(--plum-l);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.cal-dname{text-align:center;font-size:.62rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;padding:.55rem 0;border-bottom:1px solid var(--border);}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.78rem;font-weight:500;position:relative;transition:all .15s;gap:2px;}
+.cal-day:hover{background:var(--surface2);}
+.cal-day.dim{color:var(--text3);}
+.cal-day.is-period{background:#fdf0f2;}
+.cal-day.is-period .dn{color:var(--rose-d);}
+.cal-day.is-fertile{background:#eaf4f1;}
+.cal-day.is-fertile .dn{color:var(--sage-d);}
+.cal-day.is-ovulation{background:#f5ecf8;}
+.cal-day.is-ovulation .dn{color:var(--plum-d);font-weight:700;}
+.cal-day.is-today .dn{background:var(--gold-d);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;}
+.day-pips{display:flex;gap:2px;height:5px;align-items:center;}
+.pip{width:4px;height:4px;border-radius:50%;flex-shrink:0;}
+.pip-flow{background:var(--rose-d);}
+.pip-mood{background:var(--plum);}
+.pip-intimate{background:var(--blush-dark,#c4a08a);opacity:.4;width:3px;height:3px;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:.55rem;padding:.7rem 1.1rem;border-top:1px solid var(--border);}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:.67rem;color:var(--text2);}
+.leg-swatch{width:10px;height:10px;border-radius:3px;}
+.ls-period{background:var(--rose-d);}
+.ls-fertile{background:var(--sage-d);}
+.ls-ovulation{background:var(--plum);}
+.ls-today{background:var(--gold-d);}
+/* ─── CHIPS ─── */
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;}
+.chip{background:var(--surface2);border:1.5px solid var(--border);border-radius:20px;padding:5px 12px;font-size:.76rem;font-weight:500;cursor:pointer;transition:all .15s;color:var(--text2);user-select:none;}
+.chip:hover{border-color:var(--border2);}
+.chip.on{font-weight:600;}
+.chip.mood.on{background:var(--plum-l);border-color:var(--plum);color:var(--plum-d);}
+.chip.phys.on{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
+.chip.gen.on{background:var(--sage-l);border-color:var(--sage);color:var(--sage-d);}
+/* ─── FLOW SELECTOR ─── */
+.flow-row{display:flex;gap:.5rem;}
+.flow-opt{flex:1;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.55rem .3rem;text-align:center;cursor:pointer;font-size:.76rem;font-weight:600;color:var(--text2);transition:all .15s;user-select:none;}
+.flow-opt.on{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
+/* ─── PAIN SCALE ─── */
+.pain-row{display:flex;gap:.35rem;}
+.pain-opt{flex:1;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.48rem;text-align:center;cursor:pointer;font-size:.85rem;font-weight:700;color:var(--text2);transition:all .12s;user-select:none;}
+.pain-opt.on{background:var(--rose-l);border-color:var(--rose-d);color:var(--rose-d);}
+/* ─── TOGGLE ─── */
+.toggle-row{display:flex;align-items:center;gap:.75rem;cursor:pointer;user-select:none;}
+.tgl{width:40px;height:22px;background:var(--border);border-radius:22px;position:relative;transition:background .2s;flex-shrink:0;}
+.tgl.on{background:var(--plum);}
+.tgl::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;background:white;border-radius:50%;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+.tgl.on::after{left:21px;}
+.tgl-label{font-size:.83rem;font-weight:500;color:var(--text2);}
+/* ─── ANALYTICS ─── */
+.chart-wrap{position:relative;padding-top:1rem;}
+.chart-title{font-size:.78rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.9rem;}
+/* Donut */
+.donut-wrap{display:flex;align-items:center;gap:1.5rem;}
+.donut-svg{flex-shrink:0;}
+.donut-legend{display:flex;flex-direction:column;gap:.5rem;}
+.donut-leg-item{display:flex;align-items:center;gap:.5rem;font-size:.78rem;}
+.donut-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.donut-leg-label{color:var(--text2);}
+.donut-leg-val{font-weight:600;color:var(--text);margin-left:auto;padding-left:.5rem;}
+/* Bar chart */
+.bar-chart{display:flex;gap:.45rem;align-items:flex-end;height:80px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bar-fill{width:100%;border-radius:4px 4px 0 0;min-height:3px;transition:height .7s cubic-bezier(.4,0,.2,1);}
+.bar-lbl{font-size:.55rem;color:var(--text3);text-align:center;line-height:1.2;}
+/* Line chart */
+.line-svg{width:100%;overflow:visible;}
+/* Cycle ring */
+.ring-wrap{display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+/* ─── INSIGHT BOX ─── */
+.insight-box{border-radius:var(--r-md);padding:.9rem 1rem;font-size:.8rem;line-height:1.65;margin-bottom:.6rem;}
+.ib-sage{background:var(--sage-l);border-left:3px solid var(--sage);color:#2d5a4a;}
+.ib-rose{background:var(--rose-l);border-left:3px solid var(--rose);color:#7a2d3a;}
+.ib-plum{background:var(--plum-l);border-left:3px solid var(--plum);color:#5a2d62;}
+.ib-gold{background:var(--gold-l);border-left:3px solid var(--gold);color:#6a4a00;}
+.ib-sky{background:var(--sky-l);border-left:3px solid var(--sky);color:#1e4a6a;}
+.insight-box strong{display:block;font-weight:700;margin-bottom:3px;font-size:.82rem;}
+/* ─── PHASE INFO ─── */
+.phase-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;margin-top:.65rem;}
+@media(min-width:400px){.phase-tiles{grid-template-columns:repeat(4,1fr);}}
+.phase-tile{border-radius:var(--r-md);padding:.75rem;text-align:center;}
+.phase-tile .pt-day{font-size:.62rem;font-weight:600;opacity:.75;margin-bottom:2px;}
+.phase-tile .pt-name{font-size:.76rem;font-weight:700;}
+.pt-mens{background:var(--rose-l);color:var(--rose-d);}
+.pt-foll{background:#f0f9f5;color:#2d7a50;}
+.pt-ovul{background:var(--plum-l);color:var(--plum-d);}
+.pt-lute{background:var(--gold-l);color:var(--gold-d);}
+/* cycle bar */
+.cyc-bar{display:flex;height:24px;border-radius:8px;overflow:hidden;margin-bottom:.65rem;}
+.cb-seg{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600;}
+.cb-m{background:var(--rose-l);color:var(--rose-d);}
+.cb-f{background:#f0f9f5;color:#2d7a50;}
+.cb-o{background:var(--plum-l);color:var(--plum-d);}
+.cb-l{background:var(--gold-l);color:var(--gold-d);}
+/* ─── STAT ROWS ─── */
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.83rem;}
+.stat-row:last-child{border-bottom:none;}
+.stat-row .sk{color:var(--text2);}
+.stat-row .sv{font-weight:600;color:var(--text);}
+/* ─── LOG LIST ─── */
+.log-list{display:flex;flex-direction:column;gap:.5rem;}
+.log-item{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);cursor:pointer;transition:all .15s;}
+.log-item:hover{border-color:var(--plum);box-shadow:0 2px 8px rgba(184,118,176,.1);}
+.log-date-col{min-width:50px;font-weight:600;color:var(--text2);font-size:.72rem;padding-top:2px;}
+.log-tags{display:flex;flex-wrap:wrap;gap:3px;}
+.lt{border-radius:12px;padding:2px 8px;font-size:.68rem;font-weight:600;}
+.lt-flow{background:var(--rose-l);color:var(--rose-d);}
+.lt-mood{background:var(--plum-l);color:var(--plum-d);}
+.lt-phys{background:var(--sage-l);color:var(--sage-d);}
+.lt-int{background:var(--gold-l);color:var(--gold-d);}
+/* ─── MODAL ─── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:200;align-items:flex-end;justify-content:center;padding:0;}
+.modal-bg.open{display:flex;animation:modalBgIn .2s ease;}
+@keyframes modalBgIn{from{opacity:0;}to{opacity:1;}}
+.modal-sheet{background:white;border-radius:var(--r-xl) var(--r-xl) 0 0;padding:1.5rem;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:sheetUp .3s cubic-bezier(.4,0,.2,1);}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 1.2rem;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:600;margin-bottom:.4rem;}
+.modal-phase-chip{display:inline-block;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:20px;margin-bottom:1rem;}
+.modal-det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.82rem;gap:.5rem;}
+.modal-det-row:last-child{border-bottom:none;}
+.modal-det-key{color:var(--text2);flex-shrink:0;}
+.modal-det-val{color:var(--text);font-weight:500;text-align:right;}
+/* ─── PILL BADGE ─── */
+.pill{display:inline-block;font-size:.68rem;font-weight:600;padding:2px 9px;border-radius:12px;}
+.pill-low{background:var(--sage-l);color:var(--sage-d);}
+.pill-med{background:var(--gold-l);color:var(--gold-d);}
+.pill-high{background:var(--rose-l);color:var(--rose-d);}
+/* ─── DIVIDER ─── */
+.divider{height:1px;background:var(--border);margin:1.2rem 0;}
+/* ─── TOAST ─── */
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:white;padding:.6rem 1.2rem;border-radius:20px;font-size:.8rem;font-weight:500;z-index:300;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+/* ─── MISC ─── */
+.hidden{display:none!important;}
+.mt{margin-top:.85rem;}
+.mini-met{display:flex;gap:.4rem;align-items:center;}
+.mini-met input{flex:1;}
+.mini-met .unit{font-size:.75rem;color:var(--text3);min-width:24px;}
+@keyframes countUp{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:scale(1);}}
+.count-anim{animation:countUp .5s ease forwards;}
+@media(max-width:380px){.stat-grid{grid-template-columns:1fr 1fr;gap:.55rem;}.app-content{padding:1.2rem 1rem 6rem;}}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════
+     LOCK SCREEN
+══════════════════════════════════════════ -->
+<div class="screen active" id="screen-lock">
+  <div class="lock-orb">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
+      <circle cx="22" cy="18" r="8" fill="white" fill-opacity=".9"/>
+      <path d="M8 36c0-7.732 6.268-14 14-14s14 6.268 14 14" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" fill-opacity=".7"/>
+    </svg>
+  </div>
+  <div class="lock-title" id="lock-title">Luna</div>
+  <div class="lock-sub" id="lock-sub">Cargando...</div>
+
+  <!-- First time: redirect to setup -->
+  <div id="lock-pin-area" class="hidden">
+    <div class="lock-card">
+      <div class="lock-user">
+        <div class="lock-avatar">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+        </div>
+        <div>
+          <div class="lock-user-name" id="lock-name-display">—</div>
+          <div class="lock-user-label">Bienvenida de vuelta</div>
+        </div>
+      </div>
+      <div class="pin-label">Ingresa tu PIN de 4 dígitos</div>
+      <div class="pin-dots" id="pin-dots">
+        <div class="pin-dot" id="pd0"></div>
+        <div class="pin-dot" id="pd1"></div>
+        <div class="pin-dot" id="pd2"></div>
+        <div class="pin-dot" id="pd3"></div>
+      </div>
+      <div class="numpad">
+        <button class="num-btn" onclick="pinInput('1')">1</button>
+        <button class="num-btn" onclick="pinInput('2')">2</button>
+        <button class="num-btn" onclick="pinInput('3')">3</button>
+        <button class="num-btn" onclick="pinInput('4')">4</button>
+        <button class="num-btn" onclick="pinInput('5')">5</button>
+        <button class="num-btn" onclick="pinInput('6')">6</button>
+        <button class="num-btn" onclick="pinInput('7')">7</button>
+        <button class="num-btn" onclick="pinInput('8')">8</button>
+        <button class="num-btn" onclick="pinInput('9')">9</button>
+        <button class="num-btn empty"></button>
+        <button class="num-btn" onclick="pinInput('0')">0</button>
+        <button class="num-btn del" onclick="pinDel()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12H3m9-9l-9 9 9 9"/></svg>
+        </button>
+      </div>
+      <div class="lock-error" id="lock-error"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SETUP SCREEN
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-setup">
+  <div style="width:100%;max-width:480px;margin:0 auto;">
+    <div class="setup-header">
+      <div class="logo-mark">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </div>
+      <h1>Bienvenida a Luna</h1>
+      <p>Tu espacio personal y privado para conocer tu ciclo menstrual</p>
+    </div>
+    <div class="setup-body">
+      <div class="step-progress" id="step-progress">
+        <div class="step-seg done" id="seg0"></div>
+        <div class="step-seg" id="seg1"></div>
+        <div class="step-seg" id="seg2"></div>
+        <div class="step-seg" id="seg3"></div>
+      </div>
+
+      <!-- Step 0: Perfil -->
+      <div class="step-card active" id="scard-0">
+        <h3>Tu perfil</h3>
+        <p class="step-desc">Cuéntanos un poco sobre ti para personalizar tu experiencia.</p>
+        <div class="fg"><label>Tu nombre</label><input type="text" id="s-name" placeholder="¿Cómo te llamas?"></div>
+        <div class="fg-row">
+          <div class="fg"><label>Edad</label><input type="number" id="s-age" min="10" max="60" placeholder="Ej. 27"></div>
+          <div class="fg"><label>Objetivo principal</label>
+            <select id="s-goal"><option value="conocer">Conocer mi ciclo</option><option value="embarazo">Buscar embarazo</option><option value="evitar">Evitar embarazo</option><option value="sintomas">Controlar síntomas</option><option value="salud">Salud general</option></select>
+          </div>
+        </div>
+        <div class="fg"><label>Anticonceptivos</label>
+          <select id="s-contra"><option value="no">No uso</option><option value="pildora">Píldora combinada</option><option value="mini">Minipíldora</option><option value="diu-h">DIU hormonal</option><option value="diu-c">DIU de cobre</option><option value="implante">Implante</option><option value="inyeccion">Inyección hormonal</option><option value="otro">Otro</option></select>
+        </div>
+        <div class="btn-row"><button class="btn btn-primary" style="width:100%" onclick="setupGo(1)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button></div>
+      </div>
+
+      <!-- Step 1: Ciclo -->
+      <div class="step-card" id="scard-1">
+        <h3>Tu ciclo</h3>
+        <p class="step-desc">Estos datos nos permiten calcular tu ventana fértil y ovulación.</p>
+        <div class="fg"><label>Fecha de tu último periodo (día 1)</label><input type="date" id="s-lastperiod"></div>
+        <div class="fg-row">
+          <div class="fg"><label>Duración del ciclo</label>
+            <select id="s-cycle"><option value="24">24 días</option><option value="25">25 días</option><option value="26">26 días</option><option value="27">27 días</option><option value="28" selected>28 días</option><option value="29">29 días</option><option value="30">30 días</option><option value="31">31 días</option><option value="32">32 días</option><option value="33">33 días</option><option value="35">35 días</option><option value="custom">Otro…</option></select>
+          </div>
+          <div class="fg"><label>Duración del periodo</label>
+            <select id="s-plen"><option value="2">2 días</option><option value="3">3 días</option><option value="4">4 días</option><option value="5" selected>5 días</option><option value="6">6 días</option><option value="7">7 días</option><option value="8">8 días</option></select>
+          </div>
+        </div>
+        <div class="fg hidden" id="custom-cyc-w"><label>Días exactos</label><input type="number" id="s-cycle-custom" min="18" max="55" placeholder="Ej. 34"></div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="setupGo(0)">← Atrás</button><button class="btn btn-primary" style="flex:1" onclick="setupGo(2)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button></div>
+      </div>
+
+      <!-- Step 2: PIN -->
+      <div class="step-card" id="scard-2">
+        <h3>Crea tu PIN</h3>
+        <p class="step-desc">Elige un PIN de 4 dígitos para proteger tu información privada.</p>
+        <div class="pin-setup" id="pin-setup-dots">
+          <div class="pin-setup-dot" id="psd0">—</div>
+          <div class="pin-setup-dot" id="psd1">—</div>
+          <div class="pin-setup-dot" id="psd2">—</div>
+          <div class="pin-setup-dot" id="psd3">—</div>
+        </div>
+        <div class="setup-numpad">
+          <button class="setup-num" onclick="setupPinInput('1')">1</button>
+          <button class="setup-num" onclick="setupPinInput('2')">2</button>
+          <button class="setup-num" onclick="setupPinInput('3')">3</button>
+          <button class="setup-num" onclick="setupPinInput('4')">4</button>
+          <button class="setup-num" onclick="setupPinInput('5')">5</button>
+          <button class="setup-num" onclick="setupPinInput('6')">6</button>
+          <button class="setup-num" onclick="setupPinInput('7')">7</button>
+          <button class="setup-num" onclick="setupPinInput('8')">8</button>
+          <button class="setup-num" onclick="setupPinInput('9')">9</button>
+          <button class="setup-num" onclick="setupPinDel()" style="font-size:.8rem">←</button>
+          <button class="setup-num" onclick="setupPinInput('0')">0</button>
+          <button class="setup-num" style="opacity:.2" disabled></button>
+        </div>
+        <div class="btn-row"><button class="btn btn-ghost" onclick="setupGo(1)">← Atrás</button><button class="btn btn-primary" id="btn-pin-ok" style="flex:1;opacity:.4" disabled onclick="setupGo(3)">Confirmar PIN</button></div>
+      </div>
+
+      <!-- Step 3: Confirmación -->
+      <div class="step-card" id="scard-3">
+        <h3>¡Todo listo!</h3>
+        <p class="step-desc">Tu perfil está configurado. Luna está lista para acompañarte.</p>
+        <div style="text-align:center;padding:1rem 0">
+          <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--c1),var(--c2),var(--c3));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          </div>
+          <p style="font-size:.85rem;color:var(--text2);line-height:1.7">Tu información está protegida con tu PIN. Recuerda anotarlo en un lugar seguro.</p>
+        </div>
+        <button class="btn btn-primary" style="width:100%" onclick="finishSetup()">Entrar a Luna
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════ -->
+<div class="screen" id="screen-app">
+  <div style="width:100%;display:flex;flex-direction:column;min-height:100vh;">
+
+    <div class="app-topbar">
+      <div class="app-logo">
+        <div class="logo-dot"></div>
+        Luna
+      </div>
+      <div class="topbar-right">
+        <div class="phase-chip" id="topbar-phase">Cargando...</div>
+        <div class="lock-icon-btn" onclick="lockApp()" title="Bloquear">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="app-content">
+
+      <!-- ── TAB: INICIO ── -->
+      <div class="tab-page active" id="tp-inicio">
+        <div class="hero-card">
+          <div class="hero-greeting" id="hero-greeting">Hola</div>
+          <div class="hero-phase" id="hero-phase">—</div>
+          <div class="hero-daycount" id="hero-daycount">—</div>
+          <div class="hero-meter">
+            <div class="meter-track"><div class="meter-fill" id="hero-meter" style="width:0%"></div></div>
+            <div class="meter-labels"><span>Día 1</span><span id="meter-mid">Ovulación</span><span id="meter-end">Día 28</span></div>
+          </div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card c-rose">
+            <div class="stat-icon c-rose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg></div>
+            <div class="stat-label">Próx. periodo</div>
+            <div class="stat-value" id="s-nextperiod">—</div>
+            <div class="stat-sub" id="s-nextperiod-date">—</div>
+          </div>
+          <div class="stat-card c-plum">
+            <div class="stat-icon c-plum"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
+            <div class="stat-label">Ovulación</div>
+            <div class="stat-value" id="s-nextov">—</div>
+            <div class="stat-sub" id="s-nextov-date">—</div>
+          </div>
+          <div class="stat-card c-sage">
+            <div class="stat-icon c-sage"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg></div>
+            <div class="stat-label">Día del ciclo</div>
+            <div class="stat-value" id="s-dayic">—</div>
+            <div class="stat-sub" id="s-dayic-sub">—</div>
+          </div>
+          <div class="stat-card c-gold">
+            <div class="stat-icon c-gold"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v3H7V7a5 5 0 0 1 5-5z"/><rect x="2" y="10" width="20" height="12" rx="2"/><path d="M12 14v4"/></svg></div>
+            <div class="stat-label">Fertilidad hoy</div>
+            <div class="stat-value" id="s-fertility" style="font-size:1rem;padding-top:6px">—</div>
+            <div class="stat-sub" id="s-fertility-sub">—</div>
+          </div>
+        </div>
+
+        <div class="sec-header">
+          <div class="sec-title">Calendario</div>
+          <button class="btn btn-secondary btn-sm" onclick="openDayModal(todayStr())">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+            Hoy
+          </button>
+        </div>
+        <div class="cal-wrap">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="changeMonth(-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <div class="cal-month" id="cal-month-lbl"></div>
+            <button class="cal-nav" onclick="changeMonth(1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <div class="cal-grid" id="cal-dnames"></div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="cal-legend">
+            <div class="leg-item"><div class="leg-swatch ls-period"></div>Menstruación</div>
+            <div class="leg-item"><div class="leg-swatch ls-fertile"></div>Ventana fértil</div>
+            <div class="leg-item"><div class="leg-swatch ls-ovulation"></div>Ovulación</div>
+            <div class="leg-item"><div class="leg-swatch ls-today"></div>Hoy</div>
+          </div>
+        </div>
+
+        <div class="sec-header"><div class="sec-title">Consejo del día</div></div>
+        <div id="daily-tip"></div>
+      </div>
+
+      <!-- ── TAB: REGISTRAR ── -->
+      <div class="tab-page" id="tp-registro">
+        <div class="sec-header" style="margin-top:0"><div class="sec-title">Registrar ciclo</div></div>
+        <div class="card">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Nuevo periodo</div>
+          <div class="fg-row">
+            <div class="fg"><label>Fecha inicio (día 1)</label><input type="date" id="r-start"></div>
+            <div class="fg"><label>Duración (días)</label><input type="number" id="r-dur" min="1" max="12" value="5"></div>
+          </div>
+          <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveCycle()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Guardar ciclo</button></div>
+        </div>
+
+        <div class="sec-header"><div class="sec-title">Diario del día</div>
+          <input type="date" id="log-date" style="font-size:.76rem;padding:.32rem .6rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-family:'Nunito',sans-serif;">
+        </div>
+        <div class="card">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>Flujo menstrual</div>
+          <div class="flow-row" id="flow-sel">
+            <div class="flow-opt" data-flow="sin" onclick="selFlow(this)">Sin flujo</div>
+            <div class="flow-opt" data-flow="ligero" onclick="selFlow(this)">Ligero</div>
+            <div class="flow-opt" data-flow="moderado" onclick="selFlow(this)">Moderado</div>
+            <div class="flow-opt" data-flow="abundante" onclick="selFlow(this)">Abundante</div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg>Estado de ánimo</div>
+          <div class="chips" id="mood-chips">
+            <div class="chip mood" onclick="togChip(this)">Feliz</div><div class="chip mood" onclick="togChip(this)">Tranquila</div><div class="chip mood" onclick="togChip(this)">Energética</div><div class="chip mood" onclick="togChip(this)">Sensible</div><div class="chip mood" onclick="togChip(this)">Cansada</div><div class="chip mood" onclick="togChip(this)">Triste</div><div class="chip mood" onclick="togChip(this)">Irritable</div><div class="chip mood" onclick="togChip(this)">Ansiosa</div><div class="chip mood" onclick="togChip(this)">Confundida</div><div class="chip mood" onclick="togChip(this)">Motivada</div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 12.5l6 6 9-11"/></svg>Síntomas físicos</div>
+          <div class="chips" id="phys-chips">
+            <div class="chip phys" onclick="togChip(this)">Cólicos</div><div class="chip phys" onclick="togChip(this)">Dolor de cabeza</div><div class="chip phys" onclick="togChip(this)">Migraña</div><div class="chip phys" onclick="togChip(this)">Sensibilidad en senos</div><div class="chip phys" onclick="togChip(this)">Hinchazón</div><div class="chip phys" onclick="togChip(this)">Náuseas</div><div class="chip phys" onclick="togChip(this)">Dolor de espalda</div><div class="chip phys" onclick="togChip(this)">Fatiga</div><div class="chip phys" onclick="togChip(this)">Acné</div><div class="chip phys" onclick="togChip(this)">Retención de líquidos</div><div class="chip phys" onclick="togChip(this)">Antojos</div><div class="chip phys" onclick="togChip(this)">Insomnio</div><div class="chip phys" onclick="togChip(this)">Manchado</div><div class="chip phys" onclick="togChip(this)">Diarrea</div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>Datos biométricos</div>
+          <div class="fg-row">
+            <div class="fg"><label>Intensidad del dolor (0–5)</label>
+              <div class="pain-row" id="pain-sel">
+                <div class="pain-opt" data-pain="0" onclick="selPain(this)">0</div><div class="pain-opt" data-pain="1" onclick="selPain(this)">1</div><div class="pain-opt" data-pain="2" onclick="selPain(this)">2</div><div class="pain-opt" data-pain="3" onclick="selPain(this)">3</div><div class="pain-opt" data-pain="4" onclick="selPain(this)">4</div><div class="pain-opt" data-pain="5" onclick="selPain(this)">5</div>
+              </div>
+            </div>
+          </div>
+          <div class="fg-row" style="margin-top:.6rem">
+            <div class="fg"><label>Temperatura basal (°C)</label><div class="mini-met"><input type="number" id="log-temp" step="0.01" min="35" max="40" placeholder="36.5"><span class="unit">°C</span></div></div>
+            <div class="fg"><label>Nivel de energía</label>
+              <select id="log-energy"><option value="">—</option><option value="muy-baja">Muy baja</option><option value="baja">Baja</option><option value="normal">Normal</option><option value="alta">Alta</option><option value="muy-alta">Muy alta</option></select>
+            </div>
+          </div>
+          <div class="fg-row" style="margin-top:.2rem">
+            <div class="fg"><label>Calidad del sueño</label>
+              <select id="log-sleep"><option value="">—</option><option value="malo">Malo (&lt;5h)</option><option value="regular">Regular (5–6h)</option><option value="bueno">Bueno (7–8h)</option><option value="excelente">Excelente (8h+)</option></select>
+            </div>
+            <div class="fg"><label>Moco cervical</label>
+              <select id="log-mucus"><option value="">—</option><option value="seco">Seco</option><option value="cremoso">Cremoso</option><option value="acuoso">Acuoso</option><option value="clara">Clara de huevo</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima
+            <span style="font-size:.68rem;color:var(--text3);font-weight:400;margin-left:auto">Dato privado</span>
+          </div>
+          <div class="toggle-row" onclick="togIntimate()">
+            <div class="tgl" id="intimate-tgl"></div>
+            <span class="tgl-label" id="intimate-lbl">No registrada</span>
+          </div>
+          <p style="font-size:.7rem;color:var(--text3);margin-top:.5rem;font-style:italic">Solo visible al abrir el detalle del día</p>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notas del día</div>
+          <div class="fg"><textarea id="log-notes" placeholder="¿Cómo te sentiste hoy?..."></textarea></div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="saveLog()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Guardar</button>
+            <button class="btn btn-secondary" onclick="clearLog()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TAB: ANÁLISIS ── -->
+      <div class="tab-page" id="tp-analisis">
+        <div class="sec-header" style="margin-top:0"><div class="sec-title">Tu perfil menstrual</div></div>
+        <div id="analysis-content"></div>
+      </div>
+
+      <!-- ── TAB: HISTORIAL ── -->
+      <div class="tab-page" id="tp-historial">
+        <div class="sec-header" style="margin-top:0"><div class="sec-title">Estadísticas</div></div>
+        <div class="card" id="stats-card"></div>
+        <div class="sec-header"><div class="sec-title">Registros</div></div>
+        <div class="log-list" id="log-list"></div>
+      </div>
+
+      <!-- ── TAB: APRENDE ── -->
+      <div class="tab-page" id="tp-aprende">
+        <div id="learn-age-tip"></div>
+        <div class="sec-header" style="margin-top:0"><div class="sec-title">Las 4 fases</div></div>
+        <div class="card">
+          <div class="cyc-bar"><div class="cb-seg cb-m" style="flex:5">1–5</div><div class="cb-seg cb-f" style="flex:8">6–13</div><div class="cb-seg cb-o" style="flex:3">14–16</div><div class="cb-seg cb-l" style="flex:12">17–28</div></div>
+          <div class="phase-tiles">
+            <div class="phase-tile pt-mens"><div class="pt-day">Días 1–5</div><div class="pt-name">Menstrual</div></div>
+            <div class="phase-tile pt-foll"><div class="pt-day">Días 6–13</div><div class="pt-name">Folicular</div></div>
+            <div class="phase-tile pt-ovul"><div class="pt-day">~Día 14</div><div class="pt-name">Ovulación</div></div>
+            <div class="phase-tile pt-lute"><div class="pt-day">Días 15–28</div><div class="pt-name">Lútea</div></div>
+          </div>
+        </div>
+        <div class="sec-header"><div class="sec-title">Guías</div></div>
+        <div class="card" style="margin-bottom:.7rem"><div class="card-title">Fase Menstrual — Días 1–5</div><p style="font-size:.81rem;color:var(--text2);line-height:1.7">El revestimiento uterino se desprende. Hormonas en su punto más bajo. Cólicos, fatiga y cambios de humor son normales. Descansa, hidrátate y consume alimentos ricos en hierro. El calor local alivia los cólicos musculares.</p></div>
+        <div class="card" style="margin-bottom:.7rem"><div class="card-title">Fase Folicular — Días 6–13</div><p style="font-size:.81rem;color:var(--text2);line-height:1.7">Los estrógenos suben y los folículos maduran. Más energía, claridad mental y ánimo elevado. Mejor momento para ejercicio intenso, nuevos proyectos y socialización. La piel suele verse más luminosa.</p></div>
+        <div class="card" style="margin-bottom:.7rem"><div class="card-title">Ovulación — ~Día 14</div><p style="font-size:.81rem;color:var(--text2);line-height:1.7">El óvulo es liberado. El estrógeno alcanza su pico y la temperatura basal sube 0.2–0.5°C. Moco tipo clara de huevo, mayor libido y energía. <strong>Ventana fértil:</strong> 6 días previos + 5 días posteriores a la ovulación.</p></div>
+        <div class="card" style="margin-bottom:.7rem"><div class="card-title">Fase Lútea — Días 15–28</div><p style="font-size:.81rem;color:var(--text2);line-height:1.7">La progesterona domina. Hacia el final pueden aparecer síntomas del SPM: hinchazón, sensibilidad en senos, irritabilidad, antojos, insomnio. El magnesio, vitamina B6 y reducir cafeína ayudan.</p></div>
+        <div class="card" style="margin-bottom:.7rem"><div class="card-title">Temperatura Basal y Moco Cervical</div><p style="font-size:.81rem;color:var(--text2);line-height:1.7"><strong>TBC:</strong> Mídela cada mañana antes de levantarte. Un aumento de 0.2–0.5°C sostenido por 3 días confirma que ya ocurrió la ovulación.<br><br><strong>Moco:</strong> Seco = baja fertilidad · Cremoso = fertilidad en aumento · Acuoso = alta · Clara de huevo = máxima fertilidad.</p></div>
+        <div class="card" style="margin-bottom:.7rem">
+          <div class="card-title" style="color:var(--rose-d)">Señales que requieren atención médica</div>
+          <div class="insight-box ib-rose" style="margin-bottom:0"><strong>Cuándo consultar a tu médica</strong>Ciclos menores de 21 o mayores de 35 días · Menstruaciones que duran más de 8 días · Dolor que interfiere con actividades diarias · Sangrado entre periodos · Ausencia de periodo por 3+ meses · SPM muy severo · Cambios bruscos en tu ciclo habitual</div>
+        </div>
+        <div class="sec-header"><div class="sec-title">Tu ciclo según la edad</div></div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.6rem;margin-bottom:1rem">
+          <div style="background:var(--gold-l);border-radius:var(--r-md);padding:.85rem;font-size:.75rem;line-height:1.55;color:#6a4a00"><strong style="display:block;font-size:.8rem;margin-bottom:3px">Adolescencia (12–19)</strong>Ciclos irregulares los primeros 2–3 años. Un ciclo de 21–45 días es normal.</div>
+          <div style="background:var(--sage-l);border-radius:var(--r-md);padding:.85rem;font-size:.75rem;line-height:1.55;color:#2d5a4a"><strong style="display:block;font-size:.8rem;margin-bottom:3px">Tus 20s</strong>Los años más fértiles. El ciclo se regulariza. Mejor momento para conocer tu patrón base.</div>
+          <div style="background:var(--sky-l);border-radius:var(--r-md);padding:.85rem;font-size:.75rem;line-height:1.55;color:#1e4a6a"><strong style="display:block;font-size:.8rem;margin-bottom:3px">Tus 30s</strong>Regular hasta los 35. El SPM puede intensificarse. Mayor riesgo de fibromas y endometriosis.</div>
+          <div style="background:var(--plum-l);border-radius:var(--r-md);padding:.85rem;font-size:.75rem;line-height:1.55;color:#4a2d62"><strong style="display:block;font-size:.8rem;margin-bottom:3px">40s y perimenopausia</strong>Mayor irregularidad. El flujo y duración pueden variar. La ovulación es menos predecible.</div>
+        </div>
+      </div>
+
+    </div><!-- end app-content -->
+
+    <!-- BOTTOM NAV -->
+    <nav class="app-nav">
+      <div class="nav-item active" onclick="showTab('inicio')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item" onclick="showTab('registro')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span class="nav-label">Registrar</span>
+      </div>
+      <div class="nav-item" onclick="showTab('analisis')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-label">Análisis</span>
+      </div>
+      <div class="nav-item" onclick="showTab('historial')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4" fill="none"/><path d="M3 6h18M3 18h18"/></svg>
+        <span class="nav-label">Historial</span>
+      </div>
+      <div class="nav-item" onclick="showTab('aprende')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nav-label">Aprende</span>
+      </div>
+    </nav>
+
+  </div>
+</div>
+
+<!-- ════ DAY MODAL ════ -->
+<div class="modal-bg" id="modal-bg" onclick="closeMBG(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-phase-chip"></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const DEF={name:'',age:null,contra:'no',goal:'conocer',lastPeriod:'',cycleLength:28,periodLength:5,pin:'',cycles:[],logs:{}};
+let S={...DEF};
+let calMonth=new Date(),intimateOn=false,setupCurrentStep=0,setupPin='',pinBuffer='',pinAttempts=0;
+
+function save(){localStorage.setItem('luna_v3',JSON.stringify(S));}
+function loadS(){const s=localStorage.getItem('luna_v3');if(s){S={...DEF,...JSON.parse(s)};return true;}return false;}
+
+// ══════════════════════════════════════════════
+//  DATE UTILS
+// ══════════════════════════════════════════════
+const td=()=>new Date().toISOString().split('T')[0];
+const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+const ad=(dt,n)=>{const d=new Date(dt);d.setDate(d.getDate()+n);return d;};
+const ds=d=>d.toISOString().split('T')[0];
+const dd=(a,b)=>Math.round((b-a)/86400000);
+const fmtS=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'short'}):'—';
+const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'}):'—';
+
+// ══════════════════════════════════════════════
+//  CYCLE MATH
+// ══════════════════════════════════════════════
+function cycleMap(){
+  if(!S.lastPeriod)return{};
+  const m={};
+  S.cycles.forEach(c=>{for(let i=0;i<c.duration;i++)m[ds(ad(pd(c.start),i))]='period';});
+  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+  let base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  for(let cy=0;cy<9;cy++){
+    const start=ad(base,cy*S.cycleLength);
+    for(let i=0;i<S.periodLength;i++){const d=ds(ad(start,i));if(!m[d])m[d]='period-pred';}
+    const ov=ad(start,13);m[ds(ov)]='ovulation';
+    for(let i=-6;i<=5;i++){if(i===0)continue;const d=ds(ad(ov,i));if(!m[d])m[d]='fertile';}
+  }
+  return m;
+}
+function nextEvt(types){
+  const m=cycleMap(),t=td();
+  return Object.entries(m).filter(([d,tp])=>d>t&&types.includes(tp)).sort(([a],[b])=>a.localeCompare(b))[0]?.[0]||null;
+}
+function dayIC(){
+  if(!S.lastPeriod)return 1;
+  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  let d=dd(base,new Date());d=d%S.cycleLength;return d<0?d+S.cycleLength:d+1;
+}
+function curPhase(){
+  const m=cycleMap(),t=m[td()],day=dayIC();
+  if(t==='period'||t==='period-pred')return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
+  if(t==='ovulation')return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
+  if(t==='fertile')return{name:'Ventana Fértil',short:'Fértil',color:'var(--sage-d)'};
+  if(day<=S.periodLength)return{name:'Fase Menstrual',short:'Menstrual',color:'var(--rose-d)'};
+  if(day<=13)return{name:'Fase Folicular',short:'Folicular',color:'var(--sage-d)'};
+  if(day===14)return{name:'Ovulación',short:'Ovulación',color:'var(--plum-d)'};
+  return{name:'Fase Lútea',short:'Lútea',color:'var(--gold-d)'};
+}
+function cycleStats(){
+  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+  let avg=S.cycleLength,vari=0;
+  if(sorted.length>=2){
+    const diffs=[];
+    for(let i=1;i<sorted.length;i++)diffs.push(dd(pd(sorted[i-1].start),pd(sorted[i].start)));
+    avg=Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length);
+    if(diffs.length>1){const sq=diffs.map(d=>(d-avg)**2);vari=Math.round(Math.sqrt(sq.reduce((a,b)=>a+b,0)/sq.length));}
+  }
+  return{avg,vari,count:sorted.length};
+}
+
+// ══════════════════════════════════════════════
+//  PIN / LOCK
+// ══════════════════════════════════════════════
+function hashPin(pin){let h=0;for(let i=0;i<pin.length;i++){h=((h<<5)-h)+pin.charCodeAt(i);h|=0;}return h.toString();}
+
+function pinInput(d){
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=d;
+  updatePinDots();
+  if(pinBuffer.length===4)setTimeout(checkPin,150);
+}
+function pinDel(){if(pinBuffer.length>0){pinBuffer=pinBuffer.slice(0,-1);updatePinDots();}}
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const el=document.getElementById('pd'+i);
+    el.classList.toggle('filled',i<pinBuffer.length);
+    el.classList.remove('error');
+  }
+}
+function checkPin(){
+  if(hashPin(pinBuffer)===S.pin){
+    pinBuffer='';pinAttempts=0;
+    showScreen('screen-app');
+    renderAll();
+  }else{
+    pinAttempts++;
+    for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.add('error');
+    document.getElementById('lock-error').textContent=`PIN incorrecto. Intento ${pinAttempts}.`;
+    setTimeout(()=>{pinBuffer='';updatePinDots();},600);
+  }
+}
+function lockApp(){showScreen('screen-lock');}
+
+// Setup PIN
+function setupPinInput(d){
+  if(setupPin.length>=4)return;
+  setupPin+=d;
+  for(let i=0;i<4;i++){const el=document.getElementById('psd'+i);if(i<setupPin.length){el.textContent='●';el.classList.add('set');}else{el.textContent='—';el.classList.remove('set');}}
+  const okBtn=document.getElementById('btn-pin-ok');
+  if(setupPin.length===4){okBtn.disabled=false;okBtn.style.opacity='1';}
+}
+function setupPinDel(){
+  if(setupPin.length>0){
+    setupPin=setupPin.slice(0,-1);
+    for(let i=0;i<4;i++){const el=document.getElementById('psd'+i);if(i<setupPin.length){el.textContent='●';el.classList.add('set');}else{el.textContent='—';el.classList.remove('set');}}
+    document.getElementById('btn-pin-ok').disabled=true;document.getElementById('btn-pin-ok').style.opacity='.4';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  SETUP FLOW
+// ══════════════════════════════════════════════
+document.getElementById('s-cycle').addEventListener('change',function(){document.getElementById('custom-cyc-w').classList.toggle('hidden',this.value!=='custom');});
+
+function setupGo(step){
+  if(step===2&&!document.getElementById('s-lastperiod').value){showToast('Ingresa la fecha de tu último periodo');return;}
+  document.getElementById('scard-'+setupCurrentStep).classList.remove('active');
+  document.getElementById('seg'+setupCurrentStep).classList.add('done');
+  setupCurrentStep=step;
+  document.getElementById('scard-'+step).classList.add('active');
+  if(step>0)document.getElementById('seg'+(step-1)).classList.add('done');
+}
+function finishSetup(){
+  S.name=document.getElementById('s-name').value.trim();
+  S.age=parseInt(document.getElementById('s-age').value)||null;
+  S.contra=document.getElementById('s-contra').value;
+  S.goal=document.getElementById('s-goal').value;
+  S.lastPeriod=document.getElementById('s-lastperiod').value;
+  const cyc=document.getElementById('s-cycle').value;
+  S.cycleLength=cyc==='custom'?parseInt(document.getElementById('s-cycle-custom').value)||28:parseInt(cyc);
+  S.periodLength=parseInt(document.getElementById('s-plen').value);
+  S.pin=hashPin(setupPin);
+  S.cycles=[{start:S.lastPeriod,duration:S.periodLength}];
+  save();
+  launchApp();
+}
+
+// ══════════════════════════════════════════════
+//  SCREEN MANAGEMENT
+// ══════════════════════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function initLockScreen(){
+  if(!loadS()||!S.lastPeriod){
+    // First time
+    document.getElementById('lock-title').textContent='Luna';
+    document.getElementById('lock-sub').textContent='Tu registro menstrual privado';
+    setTimeout(()=>showScreen('screen-setup'),1200);
+  }else{
+    document.getElementById('lock-title').textContent='Hola de nuevo'+(S.name?' '+S.name.split(' ')[0]:'');
+    document.getElementById('lock-sub').textContent='Ingresa tu PIN para continuar';
+    document.getElementById('lock-name-display').textContent=S.name||'Usuario';
+    document.getElementById('lock-pin-area').classList.remove('hidden');
+  }
+}
+
+// ══════════════════════════════════════════════
+//  APP LAUNCH & RENDER
+// ══════════════════════════════════════════════
+function launchApp(){
+  showScreen('screen-app');
+  calMonth=new Date();calMonth.setDate(1);
+  document.getElementById('log-date').value=td();
+  document.getElementById('r-start').value=td();
+  renderAll();
+}
+function renderAll(){
+  renderHero();renderStats_summary();renderCalendar();renderDailyTip();
+  renderStatsCard();renderLogList();renderAnalysis();renderLearnAge();
+  const ph=curPhase();
+  document.getElementById('topbar-phase').textContent=ph.short;
+}
+
+// ══════════════════════════════════════════════
+//  HERO
+// ══════════════════════════════════════════════
+function renderHero(){
+  const ph=curPhase(),day=dayIC(),pct=Math.round((day/S.cycleLength)*100);
+  const hr=new Date().getHours();
+  
+  const name=S.name?', '+S.name.split(' ')[0]:'';
+  document.getElementById('hero-greeting').textContent=(hr<12?'Buenos días':hr<18?'Buenas tardes':'Buenas noches')+name;
+  document.getElementById('hero-phase').textContent=ph.name;
+  document.getElementById('hero-daycount').textContent=`Día ${day} de tu ciclo de ${S.cycleLength} días`;
+  document.getElementById('hero-meter').style.width=pct+'%';
+  document.getElementById('meter-end').textContent='Día '+S.cycleLength;
+
+  const nextP=nextEvt(['period-pred','period']),nextOv=nextEvt(['ovulation']);
+  const today=new Date(),map=cycleMap(),tt=map[td()];
+  const isFert=tt==='fertile'||tt==='ovulation';
+  const dP=nextP?dd(today,pd(nextP)):'—',dO=nextOv?dd(today,pd(nextOv)):'—';
+
+  const s=(id,v,s2)=>{const el=document.getElementById(id);if(el){el.textContent=v;el.classList.add('count-anim');setTimeout(()=>el.classList.remove('count-anim'),600);}if(s2)document.getElementById(id+'-sub').textContent=s2;};
+  s('s-nextperiod',dP===0?'Hoy':dP+(typeof dP==='number'?'d':''),nextP?fmtS(nextP):'—');
+  s('s-nextov',dO===0?'Hoy':dO+(typeof dO==='number'?'d':''),nextOv?fmtS(nextOv):'—');
+  s('s-dayic',day,'de '+S.cycleLength+' días');
+  document.getElementById('s-fertility').textContent=tt==='ovulation'?'Pico fértil':isFert?'Ventana fértil':'Fertilidad baja';
+  document.getElementById('s-fertility-sub').textContent=tt==='ovulation'?'Día de ovulación':isFert?'Alta probabilidad':'Fuera de ventana';
+  const statF=document.getElementById('s-fertility');
+  statF.style.fontSize='.88rem';statF.style.paddingTop='4px';
+}
+
+// ══════════════════════════════════════════════
+//  CALENDAR
+// ══════════════════════════════════════════════
+function renderCalendar(){
+  const MONTHS=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DAYS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const map=cycleMap(),today=td(),y=calMonth.getFullYear(),m=calMonth.getMonth();
+  document.getElementById('cal-month-lbl').textContent=MONTHS[m]+' '+y;
+  document.getElementById('cal-dnames').innerHTML=DAYS.map(d=>`<div class="cal-dname">${d}</div>`).join('');
+  const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
+  let h='';
+  for(let i=fd-1;i>=0;i--)h+=`<div class="cal-day dim"><span class="dn">${prev-i}</span></div>`;
+  for(let d=1;d<=dim;d++){
+    const dstr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const tp=map[dstr],log=S.logs[dstr]||{};
+    let cls='cal-day';
+    if(tp==='period'||tp==='period-pred')cls+=' is-period';
+    else if(tp==='ovulation')cls+=' is-ovulation';
+    else if(tp==='fertile')cls+=' is-fertile';
+    if(dstr===today)cls+=' is-today';
+    let pips='';
+    if(log.flow&&log.flow!=='sin')pips+=`<div class="pip pip-flow"></div>`;
+    if(log.moods&&log.moods.length)pips+=`<div class="pip pip-mood"></div>`;
+    if(log.intimate)pips+=`<div class="pip pip-intimate"></div>`;
+    h+=`<div class="${cls}" onclick="openDayModal('${dstr}')"><span class="dn">${d}</span>${pips?`<div class="day-pips">${pips}</div>`:''}</div>`;
+  }
+  const rem=42-fd-dim;for(let i=1;i<=rem&&rem<7;i++)h+=`<div class="cal-day dim"><span class="dn">${i}</span></div>`;
+  document.getElementById('cal-grid').innerHTML=h;
+}
+function changeMonth(d){calMonth.setMonth(calMonth.getMonth()+d);renderCalendar();}
+
+// ══════════════════════════════════════════════
+//  DAY MODAL
+// ══════════════════════════════════════════════
+function openDayModal(dstr){
+  const map=cycleMap(),tp=map[dstr],log=S.logs[dstr]||{};
+  const tpLabels={'period':'Día de menstruación','period-pred':'Periodo previsto','ovulation':'Día de ovulación','fertile':'Ventana fértil'};
+  const tpColors={'period':'background:var(--rose-l);color:var(--rose-d)','period-pred':'background:var(--rose-l);color:var(--rose-d)','ovulation':'background:var(--plum-l);color:var(--plum-d)','fertile':'background:var(--sage-l);color:var(--sage-d)'};
+  document.getElementById('modal-title').textContent=fmtL(dstr);
+  const chipStyle=tpColors[tp]||'background:var(--surface2);color:var(--text2)';
+  document.getElementById('modal-phase-chip').innerHTML=`<span class="modal-phase-chip" style="${chipStyle}">${tpLabels[tp]||'Día regular'}</span>`;
+  const rows=[
+    log.flow&&log.flow!=='sin'?['Flujo menstrual',log.flow]:null,
+    log.pain!=null&&log.pain!==''&&log.pain!==undefined?['Intensidad del dolor',log.pain+'/5']:null,
+    log.moods&&log.moods.length?['Estado de ánimo',log.moods.join(', ')]:null,
+    log.symptoms&&log.symptoms.length?['Síntomas físicos',log.symptoms.join(', ')]:null,
+    log.temp?['Temperatura basal',log.temp+'°C']:null,
+    log.sleep?['Calidad del sueño',log.sleep]:null,
+    log.mucus?['Moco cervical',log.mucus]:null,
+    log.energy?['Nivel de energía',log.energy]:null,
+    log.intimate?['Actividad íntima','Registrada']:null,
+    log.notes?['Notas',log.notes]:null,
+  ].filter(Boolean);
+  let body='';
+  if(rows.length)body=rows.map(([k,v])=>`<div class="modal-det-row"><span class="modal-det-key">${k}</span><span class="modal-det-val">${v}</span></div>`).join('');
+  else body=`<p style="font-size:.82rem;color:var(--text3);font-style:italic;padding:.5rem 0">Sin registro para este día.</p>`;
+  body+=`<div class="btn-row" style="margin-top:1rem"><button class="btn btn-primary btn-sm" onclick="goToLog('${dstr}')">Editar registro</button><button class="btn btn-secondary btn-sm" onclick="closeMDirect()">Cerrar</button></div>`;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('modal-bg').classList.add('open');
+}
+function goToLog(ds){closeMDirect();document.getElementById('log-date').value=ds;showTab('registro');}
+function closeMBG(e){if(e.target===document.getElementById('modal-bg'))closeMDirect();}
+function closeMDirect(){document.getElementById('modal-bg').classList.remove('open');}
+
+// ══════════════════════════════════════════════
+//  LOG FORM
+// ══════════════════════════════════════════════
+function selFlow(el){document.querySelectorAll('.flow-opt').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+function selPain(el){document.querySelectorAll('.pain-opt').forEach(b=>b.classList.remove('on'));el.classList.add('on');}
+function togChip(el){el.classList.toggle('on');}
+function togIntimate(){
+  intimateOn=!intimateOn;
+  document.getElementById('intimate-tgl').classList.toggle('on',intimateOn);
+  document.getElementById('intimate-lbl').textContent=intimateOn?'Registrada':'No registrada';
+}
+function clearLog(){
+  document.querySelectorAll('.flow-opt,.pain-opt').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  ['log-temp','log-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['log-sleep','log-mucus','log-energy'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  intimateOn=false;
+  document.getElementById('intimate-tgl').classList.remove('on');
+  document.getElementById('intimate-lbl').textContent='No registrada';
+}
+function saveLog(){
+  const date=document.getElementById('log-date').value;
+  if(!date){showToast('Selecciona una fecha');return;}
+  const flow=document.querySelector('.flow-opt.on')?.dataset.flow||'';
+  const pain=document.querySelector('.pain-opt.on')?.dataset.pain;
+  const moods=[...document.querySelectorAll('#mood-chips .chip.on')].map(c=>c.textContent.trim());
+  const symptoms=[...document.querySelectorAll('#phys-chips .chip.on')].map(c=>c.textContent.trim());
+  S.logs[date]={flow,pain:pain!==undefined?parseInt(pain):null,moods,symptoms,
+    temp:document.getElementById('log-temp').value,
+    sleep:document.getElementById('log-sleep').value,
+    mucus:document.getElementById('log-mucus').value,
+    energy:document.getElementById('log-energy').value,
+    notes:document.getElementById('log-notes').value,
+    intimate:intimateOn};
+  save();showToast('Guardado');clearLog();renderAll();
+}
+function saveCycle(){
+  const start=document.getElementById('r-start').value;
+  const dur=parseInt(document.getElementById('r-dur').value)||S.periodLength;
+  if(!start){showToast('Selecciona la fecha');return;}
+  if(!S.lastPeriod||start>S.lastPeriod)S.lastPeriod=start;
+  const idx=S.cycles.findIndex(c=>c.start===start);
+  if(idx>=0)S.cycles[idx].duration=dur;else S.cycles.push({start,duration:dur});
+  save();showToast('Ciclo guardado');renderAll();
+}
+
+// ══════════════════════════════════════════════
+//  STATS SUMMARY
+// ══════════════════════════════════════════════
+function renderStats_summary(){
+  const{avg,vari,count}=cycleStats();
+  const nextP=nextEvt(['period-pred','period']),nextOv=nextEvt(['ovulation']);
+  const logs=Object.values(S.logs),ws=logs.filter(l=>l.symptoms&&l.symptoms.length).length;
+  const vClass=vari<=2?'pill-low':vari<=4?'pill-med':'pill-high';
+  document.getElementById('stats-card').innerHTML=`
+    <div class="card-title">Estadísticas del ciclo</div>
+    <div class="stat-row"><span class="sk">Ciclos registrados</span><span class="sv">${count}</span></div>
+    <div class="stat-row"><span class="sk">Duración promedio</span><span class="sv">${avg} días</span></div>
+    <div class="stat-row"><span class="sk">Variabilidad</span><span class="sv"><span class="pill ${vClass}">±${vari}d</span></span></div>
+    <div class="stat-row"><span class="sk">Último periodo</span><span class="sv">${S.lastPeriod?fmtL(S.lastPeriod):'—'}</span></div>
+    <div class="stat-row"><span class="sk">Próximo periodo</span><span class="sv">${nextP?fmtL(nextP):'—'}</span></div>
+    <div class="stat-row"><span class="sk">Próxima ovulación</span><span class="sv">${nextOv?fmtL(nextOv):'—'}</span></div>
+    <div class="stat-row"><span class="sk">Días con síntomas</span><span class="sv">${ws}</span></div>
+    <div style="margin-top:.85rem"><button class="btn btn-ghost btn-sm" onclick="if(confirm('¿Segura? Se borrarán todos los datos.'))resetApp()" style="color:var(--rose-d)">Restablecer cuenta</button></div>`;
+}
+
+// ══════════════════════════════════════════════
+//  LOG LIST
+// ══════════════════════════════════════════════
+function renderLogList(){
+  const el=document.getElementById('log-list');
+  const entries=Object.entries(S.logs).filter(([,l])=>l.flow||(l.moods&&l.moods.length)||(l.symptoms&&l.symptoms.length)||l.notes).sort(([a],[b])=>b.localeCompare(a)).slice(0,25);
+  if(!entries.length){el.innerHTML=`<p style="color:var(--text3);font-size:.82rem;padding:1rem 0;text-align:center">Aún no hay registros. ¡Comienza en Registrar!</p>`;return;}
+  el.innerHTML=entries.map(([d,l])=>{
+    const tags=[
+      l.flow&&l.flow!=='sin'?`<span class="lt lt-flow">${l.flow}</span>`:'',
+      ...(l.moods||[]).slice(0,2).map(m=>`<span class="lt lt-mood">${m}</span>`),
+      ...(l.symptoms||[]).slice(0,2).map(s=>`<span class="lt lt-phys">${s}</span>`),
+      l.intimate?`<span class="lt lt-int">íntimo</span>`:'',
+    ].filter(Boolean).join('');
+    return`<div class="log-item" onclick="openDayModal('${d}')">
+      <div class="log-date-col">${fmtS(d)}</div>
+      <div><div class="log-tags">${tags||'<span style="color:var(--text3);font-size:.7rem">sin etiquetas</span>'}</div>
+      ${l.notes?`<p style="font-size:.73rem;color:var(--text2);margin-top:3px">${l.notes.substring(0,65)}${l.notes.length>65?'…':''}</p>`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+//  DAILY TIP
+// ══════════════════════════════════════════════
+function renderDailyTip(){
+  const map=cycleMap(),tp=map[td()]||'',day=dayIC();
+  const TIPS={
+    period:{cls:'ib-rose',t:'Estás en tu periodo',b:'Descansa lo que necesites. El calor local alivia los cólicos. Consume alimentos ricos en hierro: espinacas, lentejas, carnes magras. Mantente bien hidratada.'},
+    'period-pred':{cls:'ib-gold',t:'Tu periodo se acerca',b:'El magnesio (nueces, chocolate negro 70%) puede reducir los cólicos antes de que empiecen. Prepara tu kit de higiene menstrual y descansa un poco más.'},
+    ovulation:{cls:'ib-plum',t:'Hoy es tu día de ovulación',b:'Pico máximo de estrógenos. Tu temperatura basal sube levemente y puedes notar moco tipo clara de huevo. Tienes más energía y claridad mental.'},
+    fertile:{cls:'ib-sage',t:'Estás en ventana fértil',b:'Tu cuerpo se prepara para la ovulación. Los estrógenos están altos: más energía, claridad mental y deseo de conectar con otros.'},
+    follicular:{cls:'ib-sage',t:'Fase folicular — tu mejor semana',b:'Los estrógenos suben y traen energía y motivación. Mejor momento para ejercicio intenso, nuevos proyectos y aprendizaje.'},
+    luteal:{cls:'ib-gold',t:'Fase lútea',b:'La progesterona domina. Si notas hinchazón o cambios de humor, es el SPM. Reducir azúcar, alcohol y cafeína marca una gran diferencia.'},
+  };
+  const key=tp==='period'||tp==='period-pred'?tp:tp==='ovulation'||tp==='fertile'?tp:day>=6&&day<=13?'follicular':'luteal';
+  const tip=TIPS[key]||TIPS.luteal;
+  document.getElementById('daily-tip').innerHTML=`<div class="insight-box ${tip.cls}"><strong>${tip.t}</strong>${tip.b}</div>`;
+}
+
+// ══════════════════════════════════════════════
+//  ANALYSIS — WITH CHARTS
+// ══════════════════════════════════════════════
+function renderAnalysis(){
+  const logs=Object.entries(S.logs).sort(([a],[b])=>b.localeCompare(a));
+  const{avg,vari}=cycleStats();
+  const sCnt={},mCnt={},slDist={excelente:0,bueno:0,regular:0,malo:0},flDist={abundante:0,moderado:0,ligero:0,sin:0};
+  let slTot=0,flTot=0;
+  logs.forEach(([,l])=>{
+    (l.symptoms||[]).forEach(s=>{sCnt[s]=(sCnt[s]||0)+1;});
+    (l.moods||[]).forEach(m=>{mCnt[m]=(mCnt[m]||0)+1;});
+    if(l.sleep&&slDist[l.sleep]!==undefined){slDist[l.sleep]++;slTot++;}
+    if(l.flow&&flDist[l.flow]!==undefined){flDist[l.flow]++;flTot++;}
+  });
+  const topS=Object.entries(sCnt).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  const topM=Object.entries(mCnt).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const pains=logs.map(([,l])=>l.pain).filter(p=>p!=null&&p!=='');
+  const avgPain=pains.length?(pains.reduce((a,b)=>a+b,0)/pains.length).toFixed(1):'—';
+  const intimateCount=logs.filter(([,l])=>l.intimate).length;
+  const vClass=vari<=2?'pill-low':vari<=4?'pill-med':'pill-high';
+
+  // ── KPI row ──
+  let h=`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1rem">
+    <div class="stat-card c-sage" style="padding:.9rem"><div class="stat-icon c-sage" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+      <div class="stat-label">Ciclo promedio</div><div class="stat-value">${avg}d</div><div class="stat-sub">${S.cycles.length} ciclo(s)</div></div>
+    <div class="stat-card c-gold" style="padding:.9rem"><div class="stat-icon c-gold" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+      <div class="stat-label">Variabilidad</div><div class="stat-value"><span class="pill ${vClass}" style="font-size:.9rem">±${vari}d</span></div><div class="stat-sub">${vari<=2?'Ciclo muy regular':vari<=4?'Leve variación':'Variable'}</div></div>
+    <div class="stat-card c-rose" style="padding:.9rem"><div class="stat-icon c-rose" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div>
+      <div class="stat-label">Dolor promedio</div><div class="stat-value">${avgPain}${avgPain!=='—'?'/5':''}</div><div class="stat-sub">${pains.length?pains.length+' días':' Sin datos'}</div></div>
+    <div class="stat-card c-plum" style="padding:.9rem"><div class="stat-icon c-plum" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      <div class="stat-label">Días registrados</div><div class="stat-value">${logs.length}</div><div class="stat-sub">en tu diario</div></div>
+  </div>`;
+
+  // ── Cycle ring chart (SVG animated) ──
+  const cyclePct=Math.round((dayIC()/avg)*100);
+  const r=42,circ=2*Math.PI*r;
+  const strokeLen=Math.round((cyclePct/100)*circ);
+  h+=`<div class="card" style="margin-bottom:.85rem">
+    <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>Posición en el ciclo actual</div>
+    <div style="display:flex;align-items:center;gap:1.5rem">
+      <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink:0">
+        <circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--border)" stroke-width="10"/>
+        <circle cx="50" cy="50" r="${r}" fill="none" stroke="url(#cgrad)" stroke-width="10"
+          stroke-dasharray="${strokeLen} ${circ}" stroke-dashoffset="${circ/4}"
+          stroke-linecap="round" style="transition:stroke-dasharray 1s ease">
+          <animate attributeName="stroke-dasharray" from="0 ${circ}" to="${strokeLen} ${circ}" dur=".9s" fill="freeze"/>
+        </circle>
+        <defs><linearGradient id="cgrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--c1d)"/><stop offset="100%" stop-color="var(--c2d)"/></linearGradient></defs>
+        <text x="50" y="46" text-anchor="middle" font-size="18" font-weight="700" font-family="Playfair Display,serif" fill="var(--text)">Día ${dayIC()}</text>
+        <text x="50" y="60" text-anchor="middle" font-size="9" fill="var(--text3)">de ${avg}</text>
+      </svg>
+      <div style="flex:1">
+        <div style="display:flex;flex-direction:column;gap:.55rem">
+          ${buildPhaseRows()}
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── Donut: Flujo ──
+  if(flTot>0){
+    const flColors={abundante:'#e8879a',moderado:'#d4a5c9',ligero:'#a8c5da',sin:'#e8e4df'};
+    const flLabels={abundante:'Abundante',moderado:'Moderado',ligero:'Ligero',sin:'Sin flujo'};
+    const flEntries=Object.entries(flDist).filter(([,v])=>v>0);
+    h+=`<div class="card" style="margin-bottom:.85rem">
+      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>Distribución del flujo</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="90" height="90" viewBox="0 0 90 90">${buildDonut(flEntries.map(([k,v])=>({val:v,color:flColors[k],label:flLabels[k]})),flTot)}</svg>
+        <div class="donut-legend">${flEntries.map(([k,v])=>`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:${flColors[k]}"></div><span class="donut-leg-label">${flLabels[k]}</span><span class="donut-leg-val">${Math.round((v/flTot)*100)}%</span></div>`).join('')}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── Bar chart: Síntomas frecuentes ──
+  if(topS.length){
+    const mxS=topS[0][1];
+    const symptColors=['#e8879a','#d4a5c9','#a8c5da','#aed9c8','#f9dfa3','#e8c4b4','#c5bde0'];
+    h+=`<div class="card" style="margin-bottom:.85rem">
+      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Síntomas más frecuentes</div>
+      <div style="display:flex;gap:.5rem;align-items:flex-end;height:100px;margin-bottom:.5rem">`;
+    topS.forEach(([s,c],i)=>{
+      const pct=Math.round((c/mxS)*88);
+      h+=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+        <div style="width:100%;border-radius:5px 5px 0 0;background:${symptColors[i%symptColors.length]};min-height:4px;transition:height .7s ease" data-target="${pct}px">
+          <div style="height:${pct}px;border-radius:5px 5px 0 0;background:${symptColors[i%symptColors.length]}"></div>
+        </div>
+        <div style="font-size:.6rem;color:var(--text3);text-align:center;line-height:1.2;width:100%">${s.substring(0,8)}<br>${c}×</div>
+      </div>`;
+    });
+    h+=`</div></div>`;
+  }
+
+  // ── Mood donut ──
+  if(topM.length){
+    const moodColors={'Feliz':'#aed9c8','Tranquila':'#c5bde0','Energética':'#f9dfa3','Sensible':'#f4c0d1','Cansada':'#b4cdb8','Triste':'#b8d4e8','Irritable':'#e8879a','Ansiosa':'#f0b470','Confundida':'#c5bde0','Motivada':'#f9dfa3'};
+    const mTot=topM.reduce((a,[,v])=>a+v,0);
+    h+=`<div class="card" style="margin-bottom:.85rem">
+      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg>Emociones registradas</div>
+      <div class="donut-wrap">
+        <svg class="donut-svg" width="90" height="90" viewBox="0 0 90 90">${buildDonut(topM.slice(0,5).map(([k,v])=>({val:v,color:moodColors[k]||'#ccc',label:k})),mTot)}</svg>
+        <div class="donut-legend">${topM.slice(0,5).map(([k,v])=>`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:${moodColors[k]||'#ccc'}"></div><span class="donut-leg-label">${k}</span><span class="donut-leg-val">${Math.round((v/mTot)*100)}%</span></div>`).join('')}</div>
+      </div>
+    </div>`;
+  }
+
+  // ── Sleep bar chart ──
+  if(slTot>0){
+    const buenas=slDist.excelente+slDist.bueno,pct=Math.round((buenas/slTot)*100);
+    const recentLogs=logs.slice(0,20).reverse();
+    const slColors={excelente:'#7fb5a0',bueno:'#aed9c8',regular:'#f9dfa3',malo:'#e8879a'};
+    h+=`<div class="card" style="margin-bottom:.85rem">
+      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Calidad del sueño</div>
+      <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.85rem">
+        <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:600;color:var(--sage)">${pct}%</div>
+        <div style="font-size:.78rem;color:var(--text2)">noches buenas o excelentes<br><span style="font-size:.7rem;color:var(--text3)">de ${slTot} noches registradas</span></div>
+      </div>
+      <div style="display:flex;gap:3px;align-items:flex-end;height:50px">
+      ${recentLogs.map(([,l])=>{const sl=l.sleep;const col=slColors[sl]||'var(--border)';const h2=sl==='excelente'?100:sl==='bueno'?80:sl==='regular'?55:sl==='malo'?30:12;return`<div style="flex:1;height:${h2}%;border-radius:3px 3px 0 0;background:${col}"></div>`;}).join('')}
+      </div>
+      <div class="donut-legend" style="margin-top:.6rem;gap:.5rem">
+        ${Object.entries(slColors).map(([k,c])=>`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:${c}"></div><span class="donut-leg-label" style="text-transform:capitalize">${k}</span><span class="donut-leg-val">${slDist[k]||0}n</span></div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // ── Personal insights ──
+  const insights=[];
+  if(avg<25)insights.push({cls:'ib-sky',t:'Ciclo corto',b:'Tu ciclo es más corto que el promedio. Si es constante, es normal para ti. Ciclos menores a 21 días requieren consulta médica.'});
+  if(avg>32)insights.push({cls:'ib-sky',t:'Ciclo largo',b:'Los ciclos de 21 a 35 días se consideran normales si son consistentes. El tuyo está en el rango largo del espectro normal.'});
+  if(vari>=5)insights.push({cls:'ib-gold',t:'Ciclo variable',b:'El estrés, los cambios de peso, el sueño irregular y la alimentación son los principales factores. Este diario te ayuda a identificarlos.'});
+  if(topS.length&&topS[0][0]==='Cólicos')insights.push({cls:'ib-rose',t:'Los cólicos son tu síntoma principal',b:'El ibuprofeno (antiinflamatorio), el calor local, el magnesio y el ejercicio moderado son las estrategias más efectivas basadas en evidencia.'});
+  if(topM.length&&['Irritable','Triste','Ansiosa'].includes(topM[0][0]))insights.push({cls:'ib-plum',t:'El SPM parece afectarte',b:'Tus emociones más frecuentes sugieren síntomas premenstruales. Nota en qué días del ciclo ocurren — si son siempre los días 14–28, es SPM clásico.'});
+  if(slTot>5&&(slDist.malo+slDist.regular)/slTot>0.5)insights.push({cls:'ib-gold',t:'Tu sueño necesita atención',b:'Más de la mitad de tus noches son de baja calidad. La privación de sueño amplifica los síntomas hormonales y el dolor.'});
+  if(S.age&&S.age>=35&&vari>=4)insights.push({cls:'ib-sky',t:'Variación normal a tu edad',b:'A partir de los 35 años es esperable que el ciclo muestre más variabilidad. Sigue registrando para distinguir cambios normales de los que requieren atención.'});
+  if(S.contra&&S.contra!=='no'&&S.contra!=='diu-c')insights.push({cls:'ib-rose',t:'Anticonceptivos hormonales',b:'Los anticonceptivos hormonales modifican tu ciclo natural. Las predicciones de ovulación son estimadas y no deben usarse para control de fertilidad.'});
+  if(intimateCount>0)insights.push({cls:'ib-sage',t:'Actividad íntima registrada',b:`Has registrado ${intimateCount} día(s). Muchas mujeres notan variaciones en el deseo ligadas a las fases del ciclo — este dato puede ayudarte a comprenderlas.`});
+  if(!insights.length)insights.push({cls:'ib-sage',t:'Sigue registrando',b:'Con más datos, Luna podrá darte insights personalizados sobre tu ciclo, síntomas y patrones emocionales.'});
+
+  h+=`<div class="card" style="border-left:3px solid var(--sage)"><div class="card-title">Lo que tus datos te dicen</div>`;
+  h+=insights.map(i=>`<div class="insight-box ${i.cls}"><strong>${i.t}</strong>${i.b}</div>`).join('');
+  h+=`</div>`;
+
+  document.getElementById('analysis-content').innerHTML=h;
+}
+
+function buildPhaseRows(){
+  const day=dayIC(),avg=cycleStats().avg;
+  const phases=[
+    {name:'Menstrual',days:`1–${S.periodLength}`,start:1,end:S.periodLength,cls:'pt-mens'},
+    {name:'Folicular',days:`${S.periodLength+1}–13`,start:S.periodLength+1,end:13,cls:'pt-foll'},
+    {name:'Ovulación',days:'~14',start:13,end:16,cls:'pt-ovul'},
+    {name:'Lútea',days:`15–${avg}`,start:15,end:avg,cls:'pt-lute'},
+  ];
+  const colors={'.pt-mens':'var(--rose-d)','.pt-foll':'#2d7a50','.pt-ovul':'var(--plum-d)','.pt-lute':'var(--gold-d)'};
+  const bgs={'pt-mens':'var(--rose-l)','pt-foll':'#f0f9f5','pt-ovul':'var(--plum-l)','pt-lute':'var(--gold-l)'};
+  return phases.map(p=>{
+    const isActive=day>=p.start&&day<=p.end;
+    return`<div style="display:flex;align-items:center;gap:.5rem;padding:.3rem .5rem;border-radius:8px;background:${isActive?bgs[p.cls]:'transparent'};transition:background .3s">
+      <div style="width:8px;height:8px;border-radius:50%;background:${isActive?'currentColor':'var(--border)'}"></div>
+      <span style="font-size:.78rem;font-weight:${isActive?'600':'400'};color:${isActive?'var(--text)':'var(--text2)'};">${p.name}</span>
+      <span style="font-size:.68rem;color:var(--text3);margin-left:auto">${p.days}</span>
+    </div>`;
+  }).join('');
+}
+
+function buildDonut(items,total){
+  const cx=45,cy=45,r=32,circ=2*Math.PI*r;
+  let offset=-(circ/4);let paths='';
+  items.forEach(item=>{
+    const pct=item.val/total;const len=pct*circ;
+    paths+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${item.color}" stroke-width="11"
+      stroke-dasharray="${len} ${circ}" stroke-dashoffset="${-offset}" stroke-linecap="butt">
+      <animate attributeName="stroke-dasharray" from="0 ${circ}" to="${len} ${circ}" dur=".8s" fill="freeze"/>
+    </circle>`;
+    offset-=len;
+  });
+  return paths;
+}
+
+// ══════════════════════════════════════════════
+//  LEARN AGE
+// ══════════════════════════════════════════════
+function renderLearnAge(){
+  const age=S.age;if(!age){document.getElementById('learn-age-tip').innerHTML='';return;}
+  let tip='';
+  if(age<20)tip=`<div class="insight-box ib-gold"><strong>Para ti — Adolescencia</strong>Es completamente normal que tu ciclo sea irregular. El cuerpo tarda 2–3 años desde la primera menstruación en establecer un ritmo estable. Registrar cada mes te ayudará a conocer tu patrón.</div>`;
+  else if(age<30)tip=`<div class="insight-box ib-sage"><strong>Para ti — Tus 20s</strong>Estás en tus años más fértiles. Tu ciclo debería ser bastante regular. Si notas irregularidades persistentes, puede ser señal de PCOS o endometriosis, condiciones tratables a tiempo.</div>`;
+  else if(age<35)tip=`<div class="insight-box ib-sage"><strong>Para ti — 30–34 años</strong>Tu ciclo debería ser regular. El SPM puede volverse más intenso. Ejercicio regular, dieta antiinflamatoria y manejo del estrés son los mejores aliados.</div>`;
+  else if(age<45)tip=`<div class="insight-box ib-sky"><strong>Para ti — 35–44 años</strong>Es normal notar variaciones en la duración o el flujo. La fertilidad desciende gradualmente. Si buscas embarazo, habla con tu médica sobre monitoreo de ovulación.</div>`;
+  else tip=`<div class="insight-box ib-plum"><strong>Para ti — Perimenopausia</strong>Los ciclos irregulares son normales en esta transición. Puedes experimentar cambios en el flujo, sofocos y alteraciones del sueño. Tus registros son invaluables para tu médica.</div>`;
+  document.getElementById('learn-age-tip').innerHTML=tip;
+}
+
+// ══════════════════════════════════════════════
+//  STATS CARD
+// ══════════════════════════════════════════════
+function renderStatsCard(){renderStats_summary();}
+
+// ══════════════════════════════════════════════
+//  NAV TABS
+// ══════════════════════════════════════════════
+function showTab(name){
+  const tabs=['inicio','registro','analisis','historial','aprende'];
+  tabs.forEach(t=>{document.getElementById('tp-'+t).classList.remove('active');});
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tp-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
+  if(name==='analisis')setTimeout(()=>renderAnalysis(),100);
+}
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ══════════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════════
+function resetApp(){localStorage.removeItem('luna_v3');location.reload();}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+initLockScreen();
+</script>
+</body>
+</html>
