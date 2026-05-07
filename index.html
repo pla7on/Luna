@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Luna — Registro Menstrual</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -22,7 +22,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;overflow-x:hidden;}input,select,textarea{font-size:16px!important;}
 /* ─── SVG ICONS ─── */
 .ic{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 .ic svg{display:block;}
@@ -72,7 +72,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 /* ─── FORM ELEMENTS ─── */
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;}
 .fg label{font-size:.72rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;}
-.fg input,.fg select,.fg textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;font-family:'Nunito',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:all .2s;width:100%;}
+.fg input,.fg select,.fg textarea{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:.62rem .85rem;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:all .2s;width:100%;}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--plum);background:white;box-shadow:0 0 0 3px rgba(184,118,176,.12);}
 .fg textarea{resize:vertical;min-height:68px;}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.85rem;}
@@ -302,13 +302,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 </style>
 </head>
 <body>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <!-- ══════════════════════════════════════════
      LOCK SCREEN
 ══════════════════════════════════════════ -->
-<div class="screen active" id="screen-lock">
+<div class="screen" id="screen-lock">
   <div class="lock-orb">
     <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
       <circle cx="22" cy="18" r="8" fill="white" fill-opacity=".9"/>
@@ -317,7 +317,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
   <div class="lock-title" id="lock-title">Luna</div>
   <div class="lock-sub" id="lock-sub">Cargando...</div>
-
+ 
   <!-- First time: redirect to setup -->
   <div id="lock-pin-area" class="hidden">
     <div class="lock-card">
@@ -357,11 +357,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
   </div>
 </div>
-
+ 
 <!-- ══════════════════════════════════════════
      SETUP SCREEN
 ══════════════════════════════════════════ -->
-<div class="screen" id="screen-setup">
+<div class="screen active" id="screen-setup">
   <div style="width:100%;max-width:480px;margin:0 auto;">
     <div class="setup-header">
       <div class="logo-mark">
@@ -377,7 +377,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <div class="step-seg" id="seg2"></div>
         <div class="step-seg" id="seg3"></div>
       </div>
-
+ 
       <!-- Step 0: Perfil -->
       <div class="step-card active" id="scard-0">
         <h3>Tu perfil</h3>
@@ -394,7 +394,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
         <div class="btn-row"><button class="btn btn-primary" style="width:100%" onclick="setupGo(1)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button></div>
       </div>
-
+ 
       <!-- Step 1: Ciclo -->
       <div class="step-card" id="scard-1">
         <h3>Tu ciclo</h3>
@@ -411,7 +411,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <div class="fg hidden" id="custom-cyc-w"><label>Días exactos</label><input type="number" id="s-cycle-custom" min="18" max="55" placeholder="Ej. 34"></div>
         <div class="btn-row"><button class="btn btn-ghost" onclick="setupGo(0)">← Atrás</button><button class="btn btn-primary" style="flex:1" onclick="setupGo(2)">Continuar <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button></div>
       </div>
-
+ 
       <!-- Step 2: PIN -->
       <div class="step-card" id="scard-2">
         <h3>Crea tu PIN</h3>
@@ -438,7 +438,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
         <div class="btn-row"><button class="btn btn-ghost" onclick="setupGo(1)">← Atrás</button><button class="btn btn-primary" id="btn-pin-ok" style="flex:1;opacity:.4" disabled onclick="setupGo(3)">Confirmar PIN</button></div>
       </div>
-
+ 
       <!-- Step 3: Confirmación -->
       <div class="step-card" id="scard-3">
         <h3>¡Todo listo!</h3>
@@ -456,13 +456,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     </div>
   </div>
 </div>
-
+ 
 <!-- ══════════════════════════════════════════
      MAIN APP
 ══════════════════════════════════════════ -->
 <div class="screen" id="screen-app">
   <div style="width:100%;display:flex;flex-direction:column;min-height:100vh;">
-
+ 
     <div class="app-topbar">
       <div class="app-logo">
         <div class="logo-dot"></div>
@@ -475,9 +475,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
       </div>
     </div>
-
+ 
     <div class="app-content">
-
+ 
       <!-- ── TAB: INICIO ── -->
       <div class="tab-page active" id="tp-inicio">
         <div class="hero-card">
@@ -489,13 +489,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
             <div class="meter-labels"><span>Día 1</span><span id="meter-mid">Ovulación</span><span id="meter-end">Día 28</span></div>
           </div>
         </div>
-
+ 
         <div class="stat-grid">
           <div class="stat-card c-rose">
             <div class="stat-icon c-rose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg></div>
             <div class="stat-label">Próx. periodo</div>
-            <div class="stat-value" id="s-nextperiod">—</div>
-            <div class="stat-sub" id="s-nextperiod-date">—</div>
+            <div class="stat-value" id="s-nextperiod" style="font-size:1rem;padding-top:4px">—</div>
+            <div class="stat-sub" id="s-nextperiod-date" style="font-weight:600;color:var(--text2);font-size:.75rem">—</div>
+            <div class="stat-sub" id="s-nextperiod-days">—</div>
           </div>
           <div class="stat-card c-plum">
             <div class="stat-icon c-plum"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
@@ -516,11 +517,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
             <div class="stat-sub" id="s-fertility-sub">—</div>
           </div>
         </div>
-
+ 
         <div class="sec-header">
           <div class="sec-title">Calendario</div>
-          <button class="btn btn-secondary btn-sm" onclick="openDayModal(todayStr())">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          <button class="btn btn-secondary btn-sm" onclick="goToTodayMonth()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
             Hoy
           </button>
         </div>
@@ -539,11 +540,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
             <div class="leg-item"><div class="leg-swatch ls-today"></div>Hoy</div>
           </div>
         </div>
-
+ 
         <div class="sec-header"><div class="sec-title">Consejo del día</div></div>
         <div id="daily-tip"></div>
       </div>
-
+ 
       <!-- ── TAB: REGISTRAR ── -->
       <div class="tab-page" id="tp-registro">
         <div class="sec-header" style="margin-top:0"><div class="sec-title">Registrar ciclo</div></div>
@@ -555,7 +556,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
           </div>
           <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveCycle()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>Guardar ciclo</button></div>
         </div>
-
+ 
         <div class="sec-header"><div class="sec-title">Diario del día</div>
           <input type="date" id="log-date" style="font-size:.76rem;padding:.32rem .6rem;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);outline:none;font-family:'Nunito',sans-serif;">
         </div>
@@ -596,23 +597,74 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
             </div>
           </div>
           <div class="fg-row" style="margin-top:.2rem">
-            <div class="fg"><label>Calidad del sueño</label>
-              <select id="log-sleep"><option value="">—</option><option value="malo">Malo (&lt;5h)</option><option value="regular">Regular (5–6h)</option><option value="bueno">Bueno (7–8h)</option><option value="excelente">Excelente (8h+)</option></select>
-            </div>
             <div class="fg"><label>Moco cervical</label>
               <select id="log-mucus"><option value="">—</option><option value="seco">Seco</option><option value="cremoso">Cremoso</option><option value="acuoso">Acuoso</option><option value="clara">Clara de huevo</option></select>
+            </div>
+            <div class="fg"><label>Calidad del sueño (resumen)</label>
+              <select id="log-sleep"><option value="">—</option><option value="malo">Malo</option><option value="regular">Regular</option><option value="bueno">Bueno</option><option value="excelente">Excelente</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="card mt">
+          <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Registro de sueño detallado</div>
+          <div class="fg-row">
+            <div class="fg"><label>Hora de dormir</label><input type="time" id="log-sleep-from" placeholder="23:00"></div>
+            <div class="fg"><label>Hora de despertar</label><input type="time" id="log-sleep-to" placeholder="07:00"></div>
+          </div>
+          <div id="sleep-calc-display" style="display:none;margin-top:.6rem;background:var(--sage-l);border-radius:10px;padding:.6rem .85rem;font-size:.8rem;color:var(--sage-d)">
+            <strong id="sleep-calc-hours"></strong> <span id="sleep-calc-label"></span>
+          </div>
+          <div class="fg" style="margin-top:.6rem"><label>Calidad subjetiva</label>
+            <div class="chips" id="sleep-quality-chips">
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="profundo">Sueño profundo</div>
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="ligero">Sueño ligero</div>
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="interrumpido">Interrumpido</div>
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="pesadillas">Pesadillas</div>
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="descansada">Me desperté descansada</div>
+              <div class="chip gen" onclick="togSleepChip(this)" data-sq="cansada">Me desperté cansada</div>
             </div>
           </div>
         </div>
         <div class="card mt">
           <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima
-            <span style="font-size:.68rem;color:var(--text3);font-weight:400;margin-left:auto">Dato privado</span>
+            <span style="font-size:.68rem;color:var(--text3);font-weight:400;margin-left:auto">Privado</span>
           </div>
-          <div class="toggle-row" onclick="togIntimate()">
+          <div class="toggle-row" onclick="togIntimate()" style="margin-bottom:.85rem">
             <div class="tgl" id="intimate-tgl"></div>
             <span class="tgl-label" id="intimate-lbl">No registrada</span>
           </div>
-          <p style="font-size:.7rem;color:var(--text3);margin-top:.5rem;font-style:italic">Solo visible al abrir el detalle del día</p>
+          <div id="intimate-details" style="display:none">
+            <div class="fg" style="margin-bottom:.75rem"><label>¿Cómo te sentiste después?</label>
+              <div class="chips" id="intimate-feeling-chips">
+                <div class="chip gen" onclick="togChip(this)">Bien / Feliz</div>
+                <div class="chip gen" onclick="togChip(this)">Conectada</div>
+                <div class="chip gen" onclick="togChip(this)">Relajada</div>
+                <div class="chip gen" onclick="togChip(this)">Plena</div>
+                <div class="chip gen" onclick="togChip(this)">Indiferente</div>
+                <div class="chip gen" onclick="togChip(this)">Incómoda</div>
+                <div class="chip gen" onclick="togChip(this)">Triste</div>
+                <div class="chip gen" onclick="togChip(this)">Culpable</div>
+              </div>
+            </div>
+            <div class="fg-row" style="margin-bottom:.75rem">
+              <div class="fg"><label>Tipo de actividad</label>
+                <select id="intimate-type"><option value="">—</option><option value="sola">Sola</option><option value="pareja">Con pareja</option><option value="relacion">Relación sexual</option></select>
+              </div>
+              <div class="fg"><label>¿Hubo orgasmo?</label>
+                <select id="intimate-orgasm"><option value="">—</option><option value="si">Sí</option><option value="no">No</option><option value="parcial">Parcial</option></select>
+              </div>
+            </div>
+            <div class="fg-row">
+              <div class="fg"><label>Nivel de deseo previo</label>
+                <select id="intimate-desire"><option value="">—</option><option value="muy-bajo">Muy bajo</option><option value="bajo">Bajo</option><option value="moderado">Moderado</option><option value="alto">Alto</option><option value="muy-alto">Muy alto</option></select>
+              </div>
+              <div class="fg"><label>Nivel de satisfacción</label>
+                <select id="intimate-satisfaction"><option value="">—</option><option value="1">1 – Baja</option><option value="2">2</option><option value="3">3 – Media</option><option value="4">4</option><option value="5">5 – Alta</option></select>
+              </div>
+            </div>
+            <div class="fg" style="margin-top:.5rem"><label>Notas íntimas</label><textarea id="intimate-notes" placeholder="Solo tú puedes ver esto..." style="min-height:54px"></textarea></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--text3);font-style:italic">Solo visible al abrir el detalle del día</p>
         </div>
         <div class="card mt">
           <div class="card-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notas del día</div>
@@ -623,13 +675,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
           </div>
         </div>
       </div>
-
+ 
       <!-- ── TAB: ANÁLISIS ── -->
       <div class="tab-page" id="tp-analisis">
         <div class="sec-header" style="margin-top:0"><div class="sec-title">Tu perfil menstrual</div></div>
         <div id="analysis-content"></div>
       </div>
-
+ 
       <!-- ── TAB: HISTORIAL ── -->
       <div class="tab-page" id="tp-historial">
         <div class="sec-header" style="margin-top:0"><div class="sec-title">Estadísticas</div></div>
@@ -637,7 +689,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <div class="sec-header"><div class="sec-title">Registros</div></div>
         <div class="log-list" id="log-list"></div>
       </div>
-
+ 
       <!-- ── TAB: APRENDE ── -->
       <div class="tab-page" id="tp-aprende">
         <div id="learn-age-tip"></div>
@@ -669,9 +721,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
           <div style="background:var(--plum-l);border-radius:var(--r-md);padding:.85rem;font-size:.75rem;line-height:1.55;color:#4a2d62"><strong style="display:block;font-size:.8rem;margin-bottom:3px">40s y perimenopausia</strong>Mayor irregularidad. El flujo y duración pueden variar. La ovulación es menos predecible.</div>
         </div>
       </div>
-
+ 
     </div><!-- end app-content -->
-
+ 
     <!-- BOTTOM NAV -->
     <nav class="app-nav">
       <div class="nav-item active" onclick="showTab('inicio')">
@@ -695,10 +747,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
         <span class="nav-label">Aprende</span>
       </div>
     </nav>
-
+ 
   </div>
 </div>
-
+ 
 <!-- ════ DAY MODAL ════ -->
 <div class="modal-bg" id="modal-bg" onclick="closeMBG(event)">
   <div class="modal-sheet">
@@ -708,7 +760,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
     <div id="modal-body"></div>
   </div>
 </div>
-
+ 
 <script>
 // ══════════════════════════════════════════════
 //  STATE
@@ -716,10 +768,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 const DEF={name:'',age:null,contra:'no',goal:'conocer',lastPeriod:'',cycleLength:28,periodLength:5,pin:'',cycles:[],logs:{}};
 let S={...DEF};
 let calMonth=new Date(),intimateOn=false,setupCurrentStep=0,setupPin='',pinBuffer='',pinAttempts=0;
-
-function save(){localStorage.setItem('luna_v3',JSON.stringify(S));}
-function loadS(){const s=localStorage.getItem('luna_v3');if(s){S={...DEF,...JSON.parse(s)};return true;}return false;}
-
+ 
+function save(){try{localStorage.setItem('luna_v3',JSON.stringify(S));}catch(e){console.warn('Storage unavailable');}}
+function loadS(){try{const s=localStorage.getItem('luna_v3');if(s){S={...DEF,...JSON.parse(s)};return true;}}catch(e){console.warn('Storage unavailable');}return false;}
+ 
 // ══════════════════════════════════════════════
 //  DATE UTILS
 // ══════════════════════════════════════════════
@@ -730,7 +782,7 @@ const ds=d=>d.toISOString().split('T')[0];
 const dd=(a,b)=>Math.round((b-a)/86400000);
 const fmtS=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'short'}):'—';
 const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'}):'—';
-
+ 
 // ══════════════════════════════════════════════
 //  CYCLE MATH
 // ══════════════════════════════════════════════
@@ -779,12 +831,12 @@ function cycleStats(){
   }
   return{avg,vari,count:sorted.length};
 }
-
+ 
 // ══════════════════════════════════════════════
 //  PIN / LOCK
 // ══════════════════════════════════════════════
 function hashPin(pin){let h=0;for(let i=0;i<pin.length;i++){h=((h<<5)-h)+pin.charCodeAt(i);h|=0;}return h.toString();}
-
+ 
 function pinInput(d){
   if(pinBuffer.length>=4)return;
   pinBuffer+=d;
@@ -812,7 +864,7 @@ function checkPin(){
   }
 }
 function lockApp(){showScreen('screen-lock');}
-
+ 
 // Setup PIN
 function setupPinInput(d){
   if(setupPin.length>=4)return;
@@ -828,12 +880,12 @@ function setupPinDel(){
     document.getElementById('btn-pin-ok').disabled=true;document.getElementById('btn-pin-ok').style.opacity='.4';
   }
 }
-
+ 
 // ══════════════════════════════════════════════
 //  SETUP FLOW
 // ══════════════════════════════════════════════
 document.getElementById('s-cycle').addEventListener('change',function(){document.getElementById('custom-cyc-w').classList.toggle('hidden',this.value!=='custom');});
-
+ 
 function setupGo(step){
   if(step===2&&!document.getElementById('s-lastperiod').value){showToast('Ingresa la fecha de tu último periodo');return;}
   document.getElementById('scard-'+setupCurrentStep).classList.remove('active');
@@ -856,28 +908,37 @@ function finishSetup(){
   save();
   launchApp();
 }
-
+ 
 // ══════════════════════════════════════════════
 //  SCREEN MANAGEMENT
 // ══════════════════════════════════════════════
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.screen').forEach(function(s){
+    s.classList.remove('active');
+    s.style.opacity='';
+  });
+  var el=document.getElementById(id);
+  if(el){
+    el.classList.add('active');
+  }
 }
 function initLockScreen(){
   if(!loadS()||!S.lastPeriod){
-    // First time
-    document.getElementById('lock-title').textContent='Luna';
-    document.getElementById('lock-sub').textContent='Tu registro menstrual privado';
-    setTimeout(()=>showScreen('screen-setup'),1200);
+    // Primera vez: setup ya está visible por defecto en HTML, nada que hacer
+    // Aseguramos que sea la pantalla activa
+    showScreen('screen-setup');
   }else{
-    document.getElementById('lock-title').textContent='Hola de nuevo'+(S.name?' '+S.name.split(' ')[0]:'');
-    document.getElementById('lock-sub').textContent='Ingresa tu PIN para continuar';
-    document.getElementById('lock-name-display').textContent=S.name||'Usuario';
-    document.getElementById('lock-pin-area').classList.remove('hidden');
+    // Usuaria registrada: mostrar pantalla de PIN
+    try {
+      document.getElementById('lock-title').textContent='Hola'+(S.name?' '+S.name.split(' ')[0]:'');
+      document.getElementById('lock-sub').textContent='Ingresa tu PIN para continuar';
+      document.getElementById('lock-name-display').textContent=S.name||'Usuaria';
+      document.getElementById('lock-pin-area').classList.remove('hidden');
+    } catch(e){}
+    showScreen('screen-lock');
   }
 }
-
+ 
 // ══════════════════════════════════════════════
 //  APP LAUNCH & RENDER
 // ══════════════════════════════════════════════
@@ -894,7 +955,7 @@ function renderAll(){
   const ph=curPhase();
   document.getElementById('topbar-phase').textContent=ph.short;
 }
-
+ 
 // ══════════════════════════════════════════════
 //  HERO
 // ══════════════════════════════════════════════
@@ -908,14 +969,18 @@ function renderHero(){
   document.getElementById('hero-daycount').textContent=`Día ${day} de tu ciclo de ${S.cycleLength} días`;
   document.getElementById('hero-meter').style.width=pct+'%';
   document.getElementById('meter-end').textContent='Día '+S.cycleLength;
-
+ 
   const nextP=nextEvt(['period-pred','period']),nextOv=nextEvt(['ovulation']);
   const today=new Date(),map=cycleMap(),tt=map[td()];
   const isFert=tt==='fertile'||tt==='ovulation';
   const dP=nextP?dd(today,pd(nextP)):'—',dO=nextOv?dd(today,pd(nextOv)):'—';
-
-  const s=(id,v,s2)=>{const el=document.getElementById(id);if(el){el.textContent=v;el.classList.add('count-anim');setTimeout(()=>el.classList.remove('count-anim'),600);}if(s2)document.getElementById(id+'-sub').textContent=s2;};
-  s('s-nextperiod',dP===0?'Hoy':dP+(typeof dP==='number'?'d':''),nextP?fmtS(nextP):'—');
+ 
+  const s=(id,v,s2)=>{const el=document.getElementById(id);if(el){el.textContent=v;el.classList.add('count-anim');setTimeout(()=>el.classList.remove('count-anim'),600);}if(s2){const e2=document.getElementById(id+'-sub');if(e2)e2.textContent=s2;}};
+  // Period card: date prominent, days as note
+  const pDE=document.getElementById('s-nextperiod'),pSE=document.getElementById('s-nextperiod-date'),pDE2=document.getElementById('s-nextperiod-days');
+  if(pDE){pDE.textContent=nextP?fmtL(nextP):'—';pDE.style.fontSize='.82rem';pDE.style.paddingTop='3px';pDE.classList.add('count-anim');setTimeout(()=>pDE.classList.remove('count-anim'),600);}
+  if(pSE)pSE.textContent=nextP?(dP===0?'Es hoy':dP===1?'Mañana':'En '+dP+' días'):'—';
+  if(pDE2)pDE2.textContent='';
   s('s-nextov',dO===0?'Hoy':dO+(typeof dO==='number'?'d':''),nextOv?fmtS(nextOv):'—');
   s('s-dayic',day,'de '+S.cycleLength+' días');
   document.getElementById('s-fertility').textContent=tt==='ovulation'?'Pico fértil':isFert?'Ventana fértil':'Fertilidad baja';
@@ -923,7 +988,7 @@ function renderHero(){
   const statF=document.getElementById('s-fertility');
   statF.style.fontSize='.88rem';statF.style.paddingTop='4px';
 }
-
+ 
 // ══════════════════════════════════════════════
 //  CALENDAR
 // ══════════════════════════════════════════════
@@ -936,7 +1001,11 @@ function renderCalendar(){
   const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
   let h='';
   for(let i=fd-1;i>=0;i--)h+=`<div class="cal-day dim"><span class="dn">${prev-i}</span></div>`;
-  for(let d=1;d<=dim;d++){
+  // Compute cycle base once, safely
+  const calBase = (S.lastPeriod && S.cycles.length) ?
+    pd([...S.cycles].sort((a,b)=>a.start.localeCompare(b.start)).slice(-1)[0].start) :
+    (S.lastPeriod ? pd(S.lastPeriod) : null);
+    for(let d=1;d<=dim;d++){
     const dstr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const tp=map[dstr],log=S.logs[dstr]||{};
     let cls='cal-day';
@@ -948,13 +1017,17 @@ function renderCalendar(){
     if(log.flow&&log.flow!=='sin')pips+=`<div class="pip pip-flow"></div>`;
     if(log.moods&&log.moods.length)pips+=`<div class="pip pip-mood"></div>`;
     if(log.intimate)pips+=`<div class="pip pip-intimate"></div>`;
-    h+=`<div class="${cls}" onclick="openDayModal('${dstr}')"><span class="dn">${d}</span>${pips?`<div class="day-pips">${pips}</div>`:''}</div>`;
+    const cycDay = calBase ? (()=>{ let diff=dd(calBase,pd(dstr)); diff=diff%S.cycleLength; return diff<0?diff+S.cycleLength:diff+1; })() : '';
+    const cycDaySpan = cycDay ? `<span style="font-size:.52rem;color:var(--text3);line-height:1">${cycDay}</span>` : '';
+    const pipsHtml = pips ? `<div class="day-pips">${pips}</div>` : '';
+    h += `<div class="${cls}" onclick="openDayModal('${dstr}')"><span class="dn">${d}</span>${cycDaySpan}${pipsHtml}</div>`;
   }
   const rem=42-fd-dim;for(let i=1;i<=rem&&rem<7;i++)h+=`<div class="cal-day dim"><span class="dn">${i}</span></div>`;
   document.getElementById('cal-grid').innerHTML=h;
 }
 function changeMonth(d){calMonth.setMonth(calMonth.getMonth()+d);renderCalendar();}
-
+function goToTodayMonth(){calMonth=new Date();calMonth.setDate(1);renderCalendar();}
+ 
 // ══════════════════════════════════════════════
 //  DAY MODAL
 // ══════════════════════════════════════════════
@@ -975,6 +1048,13 @@ function openDayModal(dstr){
     log.mucus?['Moco cervical',log.mucus]:null,
     log.energy?['Nivel de energía',log.energy]:null,
     log.intimate?['Actividad íntima','Registrada']:null,
+    log.intimateData?.feelings?.length?['Sensaciones post-acto',log.intimateData.feelings.join(', ')]:null,
+    log.intimateData?.orgasm?['Orgasmo',{si:'Sí',no:'No',parcial:'Parcial'}[log.intimateData.orgasm]||log.intimateData.orgasm]:null,
+    log.intimateData?.satisfaction?['Satisfacción',log.intimateData.satisfaction+'/5']:null,
+    log.intimateData?.desire?['Deseo previo',log.intimateData.desire]:null,
+    log.intimateData?.notes?['Notas íntimas',log.intimateData.notes]:null,
+    log.sleepFrom&&log.sleepTo?['Sueño',log.sleepFrom+' → '+log.sleepTo+(log.sleepHours?' ('+log.sleepHours+'h)':'')]:null,
+    log.sleepQuality?['Calidad del sueño',log.sleepQuality]:null,
     log.notes?['Notas',log.notes]:null,
   ].filter(Boolean);
   let body='';
@@ -987,7 +1067,7 @@ function openDayModal(dstr){
 function goToLog(ds){closeMDirect();document.getElementById('log-date').value=ds;showTab('registro');}
 function closeMBG(e){if(e.target===document.getElementById('modal-bg'))closeMDirect();}
 function closeMDirect(){document.getElementById('modal-bg').classList.remove('open');}
-
+ 
 // ══════════════════════════════════════════════
 //  LOG FORM
 // ══════════════════════════════════════════════
@@ -998,15 +1078,43 @@ function togIntimate(){
   intimateOn=!intimateOn;
   document.getElementById('intimate-tgl').classList.toggle('on',intimateOn);
   document.getElementById('intimate-lbl').textContent=intimateOn?'Registrada':'No registrada';
+  const det=document.getElementById('intimate-details');
+  if(det)det.style.display=intimateOn?'block':'none';
 }
 function clearLog(){
   document.querySelectorAll('.flow-opt,.pain-opt').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-  ['log-temp','log-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['log-sleep','log-mucus','log-energy'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['log-temp','log-notes','log-sleep-from','log-sleep-to','intimate-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['log-sleep','log-mucus','log-energy','intimate-type','intimate-orgasm','intimate-desire','intimate-satisfaction'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const scd=document.getElementById('sleep-calc-display');if(scd)scd.style.display='none';
+  const idet=document.getElementById('intimate-details');if(idet)idet.style.display='none';
   intimateOn=false;
   document.getElementById('intimate-tgl').classList.remove('on');
   document.getElementById('intimate-lbl').textContent='No registrada';
+}
+function calcSleepHours(from,to){
+  if(!from||!to)return null;
+  const [fh,fm]=from.split(':').map(Number),[th,tm]=to.split(':').map(Number);
+  let mins=(th*60+tm)-(fh*60+fm);
+  if(mins<0)mins+=24*60;
+  return Math.round(mins/60*10)/10;
+}
+function togSleepChip(el){
+  document.querySelectorAll('#sleep-quality-chips .chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+}
+function updateSleepCalc(){
+  const from=document.getElementById('log-sleep-from').value,to=document.getElementById('log-sleep-to').value;
+  const hrs=calcSleepHours(from,to);const disp=document.getElementById('sleep-calc-display');
+  if(hrs!==null&&disp){
+    disp.style.display='block';
+    document.getElementById('sleep-calc-hours').textContent=hrs+' horas';
+    const q=hrs>=8?'excelente':hrs>=7?'bueno':hrs>=5?'regular':'malo';
+    const labels={excelente:'de sueño — Excelente',bueno:'de sueño — Bueno',regular:'de sueño — Regular',malo:'de sueño — Insuficiente'};
+    document.getElementById('sleep-calc-label').textContent=labels[q];
+    // auto-set quality select
+    document.getElementById('log-sleep').value=q;
+  }else if(disp){disp.style.display='none';}
 }
 function saveLog(){
   const date=document.getElementById('log-date').value;
@@ -1015,13 +1123,31 @@ function saveLog(){
   const pain=document.querySelector('.pain-opt.on')?.dataset.pain;
   const moods=[...document.querySelectorAll('#mood-chips .chip.on')].map(c=>c.textContent.trim());
   const symptoms=[...document.querySelectorAll('#phys-chips .chip.on')].map(c=>c.textContent.trim());
+  const slFrom=document.getElementById('log-sleep-from').value;
+  const slTo=document.getElementById('log-sleep-to').value;
+  const slHours=calcSleepHours(slFrom,slTo);
+  const slQuality=document.querySelector('#sleep-quality-chips .chip.on')?.dataset.sq||'';
+  // Intimate details
+  let intimateData=null;
+  if(intimateOn){
+    const feelings=[...document.querySelectorAll('#intimate-feeling-chips .chip.on')].map(c=>c.textContent.trim());
+    intimateData={
+      feelings,
+      type:document.getElementById('intimate-type').value,
+      orgasm:document.getElementById('intimate-orgasm').value,
+      desire:document.getElementById('intimate-desire').value,
+      satisfaction:document.getElementById('intimate-satisfaction').value,
+      notes:document.getElementById('intimate-notes').value,
+    };
+  }
   S.logs[date]={flow,pain:pain!==undefined?parseInt(pain):null,moods,symptoms,
     temp:document.getElementById('log-temp').value,
     sleep:document.getElementById('log-sleep').value,
+    sleepFrom:slFrom,sleepTo:slTo,sleepHours:slHours,sleepQuality:slQuality,
     mucus:document.getElementById('log-mucus').value,
     energy:document.getElementById('log-energy').value,
     notes:document.getElementById('log-notes').value,
-    intimate:intimateOn};
+    intimate:intimateOn,intimateData};
   save();showToast('Guardado');clearLog();renderAll();
 }
 function saveCycle(){
@@ -1033,7 +1159,7 @@ function saveCycle(){
   if(idx>=0)S.cycles[idx].duration=dur;else S.cycles.push({start,duration:dur});
   save();showToast('Ciclo guardado');renderAll();
 }
-
+ 
 // ══════════════════════════════════════════════
 //  STATS SUMMARY
 // ══════════════════════════════════════════════
@@ -1053,7 +1179,7 @@ function renderStats_summary(){
     <div class="stat-row"><span class="sk">Días con síntomas</span><span class="sv">${ws}</span></div>
     <div style="margin-top:.85rem"><button class="btn btn-ghost btn-sm" onclick="if(confirm('¿Segura? Se borrarán todos los datos.'))resetApp()" style="color:var(--rose-d)">Restablecer cuenta</button></div>`;
 }
-
+ 
 // ══════════════════════════════════════════════
 //  LOG LIST
 // ══════════════════════════════════════════════
@@ -1075,7 +1201,7 @@ function renderLogList(){
     </div>`;
   }).join('');
 }
-
+ 
 // ══════════════════════════════════════════════
 //  DAILY TIP
 // ══════════════════════════════════════════════
@@ -1093,7 +1219,7 @@ function renderDailyTip(){
   const tip=TIPS[key]||TIPS.luteal;
   document.getElementById('daily-tip').innerHTML=`<div class="insight-box ${tip.cls}"><strong>${tip.t}</strong>${tip.b}</div>`;
 }
-
+ 
 // ══════════════════════════════════════════════
 //  ANALYSIS — WITH CHARTS
 // ══════════════════════════════════════════════
@@ -1114,7 +1240,7 @@ function renderAnalysis(){
   const avgPain=pains.length?(pains.reduce((a,b)=>a+b,0)/pains.length).toFixed(1):'—';
   const intimateCount=logs.filter(([,l])=>l.intimate).length;
   const vClass=vari<=2?'pill-low':vari<=4?'pill-med':'pill-high';
-
+ 
   // ── KPI row ──
   let h=`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-bottom:1rem">
     <div class="stat-card c-sage" style="padding:.9rem"><div class="stat-icon c-sage" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
@@ -1126,7 +1252,7 @@ function renderAnalysis(){
     <div class="stat-card c-plum" style="padding:.9rem"><div class="stat-icon c-plum" style="width:30px;height:30px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
       <div class="stat-label">Días registrados</div><div class="stat-value">${logs.length}</div><div class="stat-sub">en tu diario</div></div>
   </div>`;
-
+ 
   // ── Cycle ring chart (SVG animated) ──
   const cyclePct=Math.round((dayIC()/avg)*100);
   const r=42,circ=2*Math.PI*r;
@@ -1152,7 +1278,7 @@ function renderAnalysis(){
       </div>
     </div>
   </div>`;
-
+ 
   // ── Donut: Flujo ──
   if(flTot>0){
     const flColors={abundante:'#e8879a',moderado:'#d4a5c9',ligero:'#a8c5da',sin:'#e8e4df'};
@@ -1166,7 +1292,7 @@ function renderAnalysis(){
       </div>
     </div>`;
   }
-
+ 
   // ── Bar chart: Síntomas frecuentes ──
   if(topS.length){
     const mxS=topS[0][1];
@@ -1185,7 +1311,7 @@ function renderAnalysis(){
     });
     h+=`</div></div>`;
   }
-
+ 
   // ── Mood donut ──
   if(topM.length){
     const moodColors={'Feliz':'#aed9c8','Tranquila':'#c5bde0','Energética':'#f9dfa3','Sensible':'#f4c0d1','Cansada':'#b4cdb8','Triste':'#b8d4e8','Irritable':'#e8879a','Ansiosa':'#f0b470','Confundida':'#c5bde0','Motivada':'#f9dfa3'};
@@ -1198,7 +1324,7 @@ function renderAnalysis(){
       </div>
     </div>`;
   }
-
+ 
   // ── Sleep bar chart ──
   if(slTot>0){
     const buenas=slDist.excelente+slDist.bueno,pct=Math.round((buenas/slTot)*100);
@@ -1218,7 +1344,7 @@ function renderAnalysis(){
       </div>
     </div>`;
   }
-
+ 
   // ── Personal insights ──
   const insights=[];
   if(avg<25)insights.push({cls:'ib-sky',t:'Ciclo corto',b:'Tu ciclo es más corto que el promedio. Si es constante, es normal para ti. Ciclos menores a 21 días requieren consulta médica.'});
@@ -1231,14 +1357,17 @@ function renderAnalysis(){
   if(S.contra&&S.contra!=='no'&&S.contra!=='diu-c')insights.push({cls:'ib-rose',t:'Anticonceptivos hormonales',b:'Los anticonceptivos hormonales modifican tu ciclo natural. Las predicciones de ovulación son estimadas y no deben usarse para control de fertilidad.'});
   if(intimateCount>0)insights.push({cls:'ib-sage',t:'Actividad íntima registrada',b:`Has registrado ${intimateCount} día(s). Muchas mujeres notan variaciones en el deseo ligadas a las fases del ciclo — este dato puede ayudarte a comprenderlas.`});
   if(!insights.length)insights.push({cls:'ib-sage',t:'Sigue registrando',b:'Con más datos, Luna podrá darte insights personalizados sobre tu ciclo, síntomas y patrones emocionales.'});
-
+ 
   h+=`<div class="card" style="border-left:3px solid var(--sage)"><div class="card-title">Lo que tus datos te dicen</div>`;
   h+=insights.map(i=>`<div class="insight-box ${i.cls}"><strong>${i.t}</strong>${i.b}</div>`).join('');
   h+=`</div>`;
-
+ 
+  // Append sleep and intimate analysis
+  h += renderSleepAnalysis();
+  h += renderIntimateAnalysis();
   document.getElementById('analysis-content').innerHTML=h;
 }
-
+ 
 function buildPhaseRows(){
   const day=dayIC(),avg=cycleStats().avg;
   const phases=[
@@ -1258,7 +1387,7 @@ function buildPhaseRows(){
     </div>`;
   }).join('');
 }
-
+ 
 function buildDonut(items,total){
   const cx=45,cy=45,r=32,circ=2*Math.PI*r;
   let offset=-(circ/4);let paths='';
@@ -1272,7 +1401,7 @@ function buildDonut(items,total){
   });
   return paths;
 }
-
+ 
 // ══════════════════════════════════════════════
 //  LEARN AGE
 // ══════════════════════════════════════════════
@@ -1286,12 +1415,12 @@ function renderLearnAge(){
   else tip=`<div class="insight-box ib-plum"><strong>Para ti — Perimenopausia</strong>Los ciclos irregulares son normales en esta transición. Puedes experimentar cambios en el flujo, sofocos y alteraciones del sueño. Tus registros son invaluables para tu médica.</div>`;
   document.getElementById('learn-age-tip').innerHTML=tip;
 }
-
+ 
 // ══════════════════════════════════════════════
 //  STATS CARD
 // ══════════════════════════════════════════════
 function renderStatsCard(){renderStats_summary();}
-
+ 
 // ══════════════════════════════════════════════
 //  NAV TABS
 // ══════════════════════════════════════════════
@@ -1303,7 +1432,7 @@ function showTab(name){
   document.querySelectorAll('.nav-item')[tabs.indexOf(name)].classList.add('active');
   if(name==='analisis')setTimeout(()=>renderAnalysis(),100);
 }
-
+ 
 // ══════════════════════════════════════════════
 //  TOAST
 // ══════════════════════════════════════════════
@@ -1312,16 +1441,244 @@ function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
 }
-
+ 
 // ══════════════════════════════════════════════
 //  RESET
 // ══════════════════════════════════════════════
 function resetApp(){localStorage.removeItem('luna_v3');location.reload();}
-
+ 
+ 
+// ══════════════════════════════════════════════
+//  SLEEP HOURS INPUT EVENTS
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded',()=>{
+  const sf=document.getElementById('log-sleep-from'),st=document.getElementById('log-sleep-to');
+  if(sf)sf.addEventListener('change',updateSleepCalc);
+  if(st)st.addEventListener('change',updateSleepCalc);
+});
+ 
+// ══════════════════════════════════════════════
+//  SLEEP ANALYSIS
+// ══════════════════════════════════════════════
+function renderSleepAnalysis(){
+  const logs=Object.entries(S.logs).sort(([a],[b])=>b.localeCompare(a));
+  const withSleep=logs.filter(([,l])=>l.sleepHours);
+  if(!withSleep.length)return`<div class="card" style="margin-bottom:.85rem"><div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Análisis de sueño</div><p style="font-size:.8rem;color:var(--text3);font-style:italic">Registra tu hora de dormir y despertar para ver análisis aquí.</p></div>`;
+ 
+  const hrs=withSleep.map(([,l])=>l.sleepHours);
+  const avgHrs=Math.round((hrs.reduce((a,b)=>a+b,0)/hrs.length)*10)/10;
+  const minHrs=Math.min(...hrs),maxHrs=Math.max(...hrs);
+ 
+  // Avg bedtime
+  const fromTimes=withSleep.filter(([,l])=>l.sleepFrom).map(([,l])=>l.sleepFrom);
+  let avgBed='—',avgWake='—';
+  if(fromTimes.length){
+    const mins=fromTimes.map(t=>{const[h,m]=t.split(':').map(Number);return h<12?h*60+m+1440:h*60+m;});
+    const avgM=Math.round(mins.reduce((a,b)=>a+b,0)/mins.length)%1440;
+    avgBed=`${String(Math.floor(avgM/60)).padStart(2,'0')}:${String(avgM%60).padStart(2,'0')}`;
+  }
+  const toTimes=withSleep.filter(([,l])=>l.sleepTo).map(([,l])=>l.sleepTo);
+  if(toTimes.length){
+    const mins=toTimes.map(t=>{const[h,m]=t.split(':').map(Number);return h*60+m;});
+    const avgM=Math.round(mins.reduce((a,b)=>a+b,0)/mins.length);
+    avgWake=`${String(Math.floor(avgM/60)).padStart(2,'0')}:${String(avgM%60).padStart(2,'0')}`;
+  }
+ 
+  // Sleep quality chips distribution
+  const qDist={};
+  withSleep.forEach(([,l])=>{if(l.sleepQuality)qDist[l.sleepQuality]=(qDist[l.sleepQuality]||0)+1;});
+  const qLabels={profundo:'Profundo',ligero:'Ligero',interrumpido:'Interrumpido',pesadillas:'Pesadillas',descansada:'Descansada',cansada:'Cansada'};
+  const qColors={profundo:'var(--sage)',ligero:'var(--sky)',interrumpido:'var(--c5d)',pesadillas:'var(--rose)',descansada:'var(--c4d)',cansada:'var(--c2d)'};
+ 
+  // Recommendations
+  const recs=[];
+  if(avgHrs<7)recs.push({cls:'ib-rose',t:'Dormís poco en promedio',b:`Tu promedio es ${avgHrs}h. Se recomiendan 7–9 horas. Dormir menos reduce la tolerancia al dolor menstrual y amplifica el SPM. Intenta acostarte 30 min antes esta semana.`});
+  else if(avgHrs>=7&&avgHrs<9)recs.push({cls:'ib-sage',t:'Tu sueño está en buen rango',b:`Promedio de ${avgHrs}h — dentro del rango recomendado (7–9h). El sueño de calidad regula el cortisol y la progesterona.`});
+  else recs.push({cls:'ib-sky',t:'Dormís mucho en promedio',b:`Tu promedio es ${avgHrs}h. Más de 9 horas regularmente puede estar relacionado con fatiga hormonal. Consulta con tu médica si es constante.`});
+  if(avgBed!=='—'){const[bh]=avgBed.split(':').map(Number);if(bh>=0&&bh<=2||bh>=23)recs.push({cls:'ib-gold',t:'Horario de sueño tardío',b:`Tu hora promedio de dormir es ${avgBed}. Acostarte antes de las 23:00 mejora la calidad del sueño y los niveles de melatonina, lo que influye directamente en el equilibrio hormonal.`});}
+ 
+  let h=`<div class="card" style="margin-bottom:.85rem">
+    <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Análisis de sueño</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.9rem">
+      <div style="background:var(--sage-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:var(--sage-d)">${avgHrs}h</div>
+        <div style="font-size:.65rem;color:var(--sage-d);font-weight:600">Promedio</div>
+      </div>
+      <div style="background:var(--plum-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--plum-d)">${avgBed}</div>
+        <div style="font-size:.65rem;color:var(--plum-d);font-weight:600">Hora dormir</div>
+      </div>
+      <div style="background:var(--sky-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:600;color:var(--sky-d)">${avgWake}</div>
+        <div style="font-size:.65rem;color:var(--sky-d);font-weight:600">Hora despertar</div>
+      </div>
+    </div>`;
+ 
+  // Recent sleep bar chart
+  if(withSleep.length>1){
+    const recent=withSleep.slice(0,14).reverse();
+    const maxH=Math.max(...recent.map(([,l])=>l.sleepHours),8);
+    h+=`<div style="margin-bottom:.75rem">
+      <div style="font-size:.72rem;color:var(--text3);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Horas por noche</div>
+      <div style="display:flex;gap:3px;align-items:flex-end;height:60px">`;
+    recent.forEach(([d,l])=>{
+      const pct=Math.round((l.sleepHours/maxH)*100);
+      const col=l.sleepHours>=8?'var(--sage)':l.sleepHours>=7?'var(--c4d)':l.sleepHours>=5?'var(--c5d)':'var(--rose)';
+      h+=`<div title="${fmtS(d)}: ${l.sleepHours}h" style="flex:1;height:${pct}%;border-radius:3px 3px 0 0;background:${col};min-height:3px"></div>`;
+    });
+    h+=`</div><div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text3);margin-top:3px"><span>−${recent.length}d</span><span>Hoy</span></div></div>`;
+  }
+ 
+  // Quality distribution
+  if(Object.keys(qDist).length){
+    const tot=Object.values(qDist).reduce((a,b)=>a+b,0);
+    h+=`<div style="font-size:.72rem;color:var(--text3);margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Tipo de sueño</div>
+    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.85rem">`;
+    Object.entries(qDist).forEach(([k,v])=>{
+      h+=`<div style="background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:.72rem;font-weight:500;color:var(--text2)"><span style="color:${qColors[k]||'var(--text2)'}">●</span> ${qLabels[k]||k}: ${v}×</div>`;
+    });
+    h+=`</div>`;
+  }
+ 
+  h+=recs.map(r=>`<div class="insight-box ${r.cls}"><strong>${r.t}</strong>${r.b}</div>`).join('');
+  h+=`</div>`;
+  return h;
+}
+ 
+// ══════════════════════════════════════════════
+//  INTIMATE ANALYSIS
+// ══════════════════════════════════════════════
+function renderIntimateAnalysis(){
+  const logs=Object.entries(S.logs).sort(([a],[b])=>b.localeCompare(a));
+  const intimateLogs=logs.filter(([,l])=>l.intimate);
+  if(!intimateLogs.length)return`<div class="card" style="margin-bottom:.85rem"><div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima</div><p style="font-size:.8rem;color:var(--text3);font-style:italic">Aún no hay registros de actividad íntima.</p></div>`;
+ 
+  const total=intimateLogs.length;
+  // Frequency by cycle phase
+  const cmap=cycleMap();
+  const phaseDist={period:0,fertile:0,ovulation:0,luteal:0,follicular:0};
+  intimateLogs.forEach(([d])=>{
+    const tp=cmap[d];
+    if(tp==='period'||tp==='period-pred')phaseDist.period++;
+    else if(tp==='ovulation')phaseDist.ovulation++;
+    else if(tp==='fertile')phaseDist.fertile++;
+    else{const day2=getDayOfCycleFor(d);if(day2<=13)phaseDist.follicular++;else phaseDist.luteal++;}
+  });
+ 
+  // Feelings distribution
+  const feelDist={};
+  intimateLogs.forEach(([,l])=>{(l.intimateData?.feelings||[]).forEach(f=>{feelDist[f]=(feelDist[f]||0)+1;});});
+  const topFeelings=Object.entries(feelDist).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ 
+  // Orgasm stats
+  const orgasmLogs=intimateLogs.filter(([,l])=>l.intimateData?.orgasm);
+  const orgasmDist={si:0,no:0,parcial:0};
+  orgasmLogs.forEach(([,l])=>{if(orgasmDist[l.intimateData.orgasm]!==undefined)orgasmDist[l.intimateData.orgasm]++;});
+  const orgasmPct=orgasmLogs.length?Math.round(((orgasmDist.si+orgasmDist.parcial*0.5)/orgasmLogs.length)*100):null;
+ 
+  // Satisfaction avg
+  const satLogs=intimateLogs.filter(([,l])=>l.intimateData?.satisfaction);
+  const avgSat=satLogs.length?Math.round((satLogs.map(([,l])=>parseInt(l.intimateData.satisfaction)).reduce((a,b)=>a+b,0)/satLogs.length*10))/10:null;
+ 
+  // Phase colors
+  const pColors={period:'var(--rose)',fertile:'var(--sage)',ovulation:'var(--plum)',follicular:'#7fb5a0',luteal:'var(--gold-d)'};
+  const pLabels={period:'Menstrual',fertile:'Ventana fértil',ovulation:'Ovulación',follicular:'Folicular',luteal:'Lútea'};
+ 
+  let h=`<div class="card" style="margin-bottom:.85rem">
+    <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima
+    <span style="font-size:.68rem;color:var(--text3);font-weight:400;margin-left:auto">Privado</span></div>
+ 
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:.9rem">
+      <div style="background:var(--rose-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:var(--rose-d)">${total}</div>
+        <div style="font-size:.65rem;color:var(--rose-d);font-weight:600">Veces</div>
+      </div>
+      ${orgasmPct!==null?`<div style="background:var(--plum-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:var(--plum-d)">${orgasmPct}%</div>
+        <div style="font-size:.65rem;color:var(--plum-d);font-weight:600">Con orgasmo</div>
+      </div>`:''}
+      ${avgSat!==null?`<div style="background:var(--sage-l);border-radius:var(--r-md);padding:.75rem;text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:600;color:var(--sage-d)">${avgSat}/5</div>
+        <div style="font-size:.65rem;color:var(--sage-d);font-weight:600">Satisfacción</div>
+      </div>`:''}
+    </div>`;
+ 
+  // Phase frequency donut
+  const phaseEntries=Object.entries(phaseDist).filter(([,v])=>v>0);
+  if(phaseEntries.length){
+    h+=`<div style="font-size:.72rem;color:var(--text3);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Frecuencia por fase del ciclo</div>
+    <div class="donut-wrap" style="margin-bottom:.85rem">
+      <svg class="donut-svg" width="90" height="90" viewBox="0 0 90 90">${buildDonut(phaseEntries.map(([k,v])=>({val:v,color:pColors[k],label:pLabels[k]})),total)}</svg>
+      <div class="donut-legend">${phaseEntries.map(([k,v])=>`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:${pColors[k]}"></div><span class="donut-leg-label">${pLabels[k]}</span><span class="donut-leg-val">${v}×</span></div>`).join('')}</div>
+    </div>`;
+  }
+ 
+  // Feelings
+  if(topFeelings.length){
+    const maxF=topFeelings[0][1];
+    const fColors={'Bien / Feliz':'var(--sage)','Conectada':'var(--c3d)','Relajada':'var(--c4d)','Plena':'var(--plum)','Indiferente':'var(--text3)','Incómoda':'var(--gold-d)','Triste':'var(--sky-d)','Culpable':'var(--rose-d)'};
+    h+=`<div style="font-size:.72rem;color:var(--text3);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Cómo te sentiste después</div>
+    <div style="display:flex;flex-direction:column;gap:.38rem;margin-bottom:.85rem">`;
+    topFeelings.forEach(([f,c])=>{
+      const pct=Math.round((c/maxF)*100);
+      h+=`<div style="display:flex;align-items:center;gap:.6rem;font-size:.78rem">
+        <span style="width:100px;color:var(--text2);flex-shrink:0;font-size:.74rem">${f}</span>
+        <div style="flex:1;height:6px;background:var(--border);border-radius:5px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${fColors[f]||'var(--sage)'};border-radius:5px"></div></div>
+        <span style="font-size:.7rem;color:var(--text3);min-width:20px;text-align:right">${c}×</span>
+      </div>`;
+    });
+    h+=`</div>`;
+  }
+ 
+  // Orgasm distribution
+  if(orgasmLogs.length){
+    h+=`<div style="font-size:.72rem;color:var(--text3);margin-bottom:.55rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600">Orgasmo</div>
+    <div class="donut-wrap" style="margin-bottom:.65rem">
+      <svg class="donut-svg" width="90" height="90" viewBox="0 0 90 90">${buildDonut([{val:orgasmDist.si,color:'var(--sage)',label:'Sí'},{val:orgasmDist.parcial,color:'var(--c4d)',label:'Parcial'},{val:orgasmDist.no,color:'var(--border)',label:'No'}].filter(x=>x.val>0),orgasmLogs.length)}</svg>
+      <div class="donut-legend">
+        ${orgasmDist.si?`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--sage)"></div><span class="donut-leg-label">Sí</span><span class="donut-leg-val">${orgasmDist.si}×</span></div>`:''}
+        ${orgasmDist.parcial?`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--c4d)"></div><span class="donut-leg-label">Parcial</span><span class="donut-leg-val">${orgasmDist.parcial}×</span></div>`:''}
+        ${orgasmDist.no?`<div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--border)"></div><span class="donut-leg-label">No</span><span class="donut-leg-val">${orgasmDist.no}×</span></div>`:''}
+      </div>
+    </div>`;
+  }
+ 
+  // Insight: phase with most activity
+  if(phaseEntries.length){
+    const peak=phaseEntries.sort((a,b)=>b[1]-a[1])[0];
+    const insights={
+      fertile:`Tu actividad íntima es más frecuente durante la ventana fértil. Los estrógenos altos aumentan naturalmente el deseo sexual en esta fase.`,
+      ovulation:`Más actividad en el día de ovulación — el pico estrogénico aumenta el deseo al máximo. Es la fase donde las mujeres reportan mayor satisfacción sexual.`,
+      follicular:`Tu actividad es más frecuente en la fase folicular. El aumento gradual de estrógenos eleva la energía y el deseo. ¡Aprovechas bien esta energía!`,
+      luteal:`Mayor actividad en la fase lútea. La progesterona puede reducir el deseo para algunas mujeres, pero esto varía mucho. Tu patrón es único.`,
+      period:`Actividad durante el periodo — esto es completamente normal. Algunas mujeres reportan mayor deseo en estos días, posiblemente por el aumento de sensibilidad pélvica.`,
+    };
+    h+=`<div class="insight-box ib-plum"><strong>Tu patrón de deseo</strong>${insights[peak[0]]||''}</div>`;
+  }
+ 
+  h+=`</div>`;
+  return h;
+}
+ 
+function getDayOfCycleFor(dstr){
+  const sorted=[...S.cycles].sort((a,b)=>a.start.localeCompare(b.start));
+  const base=sorted.length?pd(sorted[sorted.length-1].start):pd(S.lastPeriod);
+  let d=dd(base,new Date(dstr.replace(/-/g,'/')));d=d%S.cycleLength;return d<0?d+S.cycleLength:d+1;
+}
+ 
 // ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════
-initLockScreen();
+// Iniciar app
+try {
+  initLockScreen();
+} catch(err) {
+  console.error('Luna init error:', err);
+  // Fallback: show setup screen directly
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  var setupEl = document.getElementById('screen-setup');
+  if(setupEl) setupEl.classList.add('active');
+}
 </script>
 </body>
 </html>
