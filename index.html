@@ -170,6 +170,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);min-
 .cal-day.is-ovulation{background:#f5ecf8;}
 .cal-day.is-ovulation .dn{color:var(--plum-d);font-weight:700;}
 .cal-day.is-today .dn{background:var(--gold-d);color:white;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;}
+.cal-day.is-day1 .dn{font-weight:700;}
+.cal-day.is-day1::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%;background:var(--rose-d);}
+.cal-day.is-period.is-day1{background:#fce0e0;}
+.cal-day.is-period.is-day1 .dn{color:var(--rose-d);}
 .day-pips{display:flex;gap:2px;height:5px;align-items:center;}
 .pip{width:4px;height:4px;border-radius:50%;flex-shrink:0;}
 .pip-flow{background:var(--rose-d);}
@@ -897,10 +901,14 @@ function nextEvt(types){
  
 function dayIC(){
   if(!S.lastPeriod) return 1;
-  const curStart=currentCycleStart();
-  if(!curStart) return 1;
-  const daysSince=dd(curStart,new Date());
-  return daysSince+1; // Day 1 = first day of current cycle
+  const sc=sortedCycles();
+  if(!sc.length) return 1;
+  const avg=avgCycleLength();
+  const today=new Date();
+  const todayStr=td();
+  // Use getDayOfCycleFor for consistency
+  const day=getDayOfCycleFor(todayStr);
+  return day>0?day:1;
 }
  
 function cycleStats(){
@@ -924,15 +932,36 @@ function getDayOfCycleFor(dstr){
   const avg=avgCycleLength();
   const sc=sortedCycles();
   const target=pd(dstr);
-  const earliest=pd(sc.length?sc[0].start:S.lastPeriod);
-  // Date is before all known data - no cycle number to show
+  if(!sc.length) return 0;
+  const earliest=pd(sc[0].start);
+  const latest=pd(sc[sc.length-1].start);
+  // Before earliest logged data → nothing to show
   if(dd(earliest,target)<0) return 0;
-  // Use last known cycle as reference and work both forward and backward
-  const base=pd(sc.length?sc[sc.length-1].start:S.lastPeriod);
-  const daysSinceBase=dd(base,target); // can be negative (past) or positive (future)
-  const fullCycles=Math.floor(daysSinceBase/avg); // floor works correctly for negatives too
-  const cycleStart=ad(base,fullCycles*avg);
-  return dd(cycleStart,target)+1;
+  // FIRST: check if target falls within a LOGGED cycle window
+  for(let i=sc.length-1;i>=0;i--){
+    const cStart=pd(sc[i].start);
+    const dayIn=dd(cStart,target);
+    if(dayIn>=0&&dayIn<avg) return dayIn+1;
+  }
+  // BETWEEN two logged cycles → use actual distance between them
+  for(let i=1;i<sc.length;i++){
+    const cPrev=pd(sc[i-1].start);
+    const cNext=pd(sc[i].start);
+    const dPrev=dd(cPrev,target);
+    const dNext=dd(target,cNext);
+    if(dPrev>=0&&dNext>0){
+      // target is between cPrev and cNext
+      return dPrev+1;
+    }
+  }
+  // AFTER latest logged cycle → math from latest
+  if(dd(latest,target)>=0){
+    const daysSince=dd(latest,target);
+    const fc=Math.floor(daysSince/avg);
+    const cs=ad(latest,fc*avg);
+    return dd(cs,target)+1;
+  }
+  return 0;
 }
  
 function curPhase(){
@@ -1127,10 +1156,11 @@ function renderCalendar(){
   const fd=new Date(y,m,1).getDay(),dim=new Date(y,m+1,0).getDate(),prev=new Date(y,m,0).getDate();
   let h='';
   for(let i=fd-1;i>=0;i--)h+=`<div class="cal-day dim"><span class="dn">${prev-i}</span></div>`;
-  // Compute cycle base once, safely
-  const calBase = (S.lastPeriod && S.cycles.length) ?
-    pd([...S.cycles].sort((a,b)=>a.start.localeCompare(b.start)).slice(-1)[0].start) :
-    (S.lastPeriod ? pd(S.lastPeriod) : null);
+  // calBase: for cycle day display, use the same logic as getDayOfCycleFor
+  const _sc=sortedCycles();
+  const _avg=avgCycleLength();
+  // We'll compute cycle day per-day inline using getDayOfCycleFor logic
+  const calBase = (_sc.length>0) ? pd(_sc[_sc.length-1].start) : (S.lastPeriod ? pd(S.lastPeriod) : null);
     for(let d=1;d<=dim;d++){
     const dstr=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const tp=map[dstr],log=S.logs[dstr]||{};
@@ -1143,7 +1173,8 @@ function renderCalendar(){
     if(log.flow&&log.flow!=='sin')pips+=`<div class="pip pip-flow"></div>`;
     if(log.moods&&log.moods.length)pips+=`<div class="pip pip-mood"></div>`;
     if(log.intimate)pips+=`<div class="pip pip-intimate"></div>`;
-    const cycDay = calBase ? (()=>{ let diff=dd(calBase,pd(dstr)); diff=diff%S.cycleLength; return diff<0?diff+S.cycleLength:diff+1; })() : '';
+    const cycDay = S.lastPeriod ? getDayOfCycleFor(dstr) : 0;
+    if(cycDay===1)cls+=' is-day1';
     const cycDaySpan = (cycDay&&cycDay>0) ? `<span style="font-size:.52rem;color:var(--text3);line-height:1">${cycDay}</span>` : '';
     const pipsHtml = pips ? `<div class="day-pips">${pips}</div>` : '';
     h += `<div class="${cls}" onclick="openDayModal('${dstr}')"><span class="dn">${d}</span>${cycDaySpan}${pipsHtml}</div>`;
