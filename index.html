@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Luna — Registro Menstrual</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -784,10 +787,10 @@ function loadS(){try{const s=localStorage.getItem('luna_v3');if(s){S={...DEF,...
 // ══════════════════════════════════════════════
 //  DATE UTILS
 // ══════════════════════════════════════════════
-const td=()=>new Date().toISOString().split('T')[0];
+const td=()=>{const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');};
 const pd=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
 const ad=(dt,n)=>{const d=new Date(dt);d.setDate(d.getDate()+n);return d;};
-const ds=d=>d.toISOString().split('T')[0];
+const ds=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const dd=(a,b)=>Math.floor((b-a)/86400000);
 const fmtS=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'short'}):'—';
 const fmtL=s=>s?pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'}):'—';
@@ -1087,7 +1090,16 @@ function renderHero(){
   const nextP=nextEvt(['period-pred','period']),nextOv=nextEvt(['ovulation']);
   const today=new Date(),map=cycleMap(),tt=map[td()];
   const isFert=tt==='fertile'||tt==='ovulation';
-  const dP=nextP?dd(today,pd(nextP)):'—',dO=nextOv?dd(today,pd(nextOv)):'—';
+  // Use date string comparison to avoid timezone/time-of-day rounding errors
+  const todayStr=td();
+  function daysUntil(dateStr){
+    if(!dateStr) return '—';
+    if(dateStr===todayStr) return 0;
+    // Compare strings: YYYY-MM-DD sorts correctly
+    const a=pd(todayStr), b=pd(dateStr);
+    return Math.round((b-a)/86400000); // both at local midnight, no timezone issue
+  }
+  const dP=daysUntil(nextP), dO=daysUntil(nextOv);
  
   const s=(id,v,s2)=>{const el=document.getElementById(id);if(el){el.textContent=v;el.classList.add('count-anim');setTimeout(()=>el.classList.remove('count-anim'),600);}if(s2){const e2=document.getElementById(id+'-sub');if(e2)e2.textContent=s2;}};
   // Period card: date prominent, days as note
