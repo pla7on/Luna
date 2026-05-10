@@ -121,7 +121,7 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
 /* ════════════════════════════════
    MAIN APP
 ════════════════════════════════ */
-#screen-app{flex-direction:column;align-items:stretch;}
+#screen-app{flex-direction:column;align-items:stretch;min-height:100vh;}
 .topbar{position:sticky;top:0;z-index:50;background:rgba(250,248,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.85rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
 .topbar-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;display:flex;align-items:center;gap:.45rem;}
 .logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--c1d),var(--c2d));}
@@ -503,7 +503,7 @@ input[type=date]{-webkit-appearance:none;appearance:none;}
      MAIN APP
 ══════════════════════════════════ -->
 <div class="screen" id="screen-app">
-  <div style="display:flex;flex-direction:column;min-height:100vh;width:100%">
+  <div style="display:flex;flex-direction:column;min-height:100%;width:100%">
  
     <div class="topbar">
       <div class="topbar-logo"><div class="logo-dot"></div>Luna</div>
@@ -1104,14 +1104,26 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const el=document.getElementById(id);
   if(el){el.classList.add('active');el.style.display='flex';}
+  // Always reset scroll when switching screens
+  window.scrollTo(0,0);
+  document.body.scrollTop=0;
 }
  
 function launchApp(){
   showScreen('screen-app');
   calMonth=new Date(); calMonth.setDate(1);
-  document.getElementById('log-date').value=td();
-  document.getElementById('r-date').value=td();
   renderAll();
+  // Set input values AFTER render to avoid scroll-into-view on mobile
+  setTimeout(()=>{
+    const ld=document.getElementById('log-date');
+    const rd=document.getElementById('r-date');
+    if(ld) ld.value=td();
+    if(rd) rd.value=td();
+    // Force scroll to top
+    window.scrollTo({top:0,behavior:'instant'});
+    document.body.scrollTop=0;
+    document.documentElement.scrollTop=0;
+  },0);
 }
  
 function renderAll(){
