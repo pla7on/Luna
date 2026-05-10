@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -30,360 +29,356 @@
 html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;overflow-x:hidden;}
 input,select,textarea{font-size:16px!important;font-family:'DM Sans',sans-serif;}
 input[type=date]{-webkit-appearance:none;appearance:none;}
-
+ 
 /* ── SCREENS ── */
 .screen{display:none;min-height:100vh;}
 .screen.active{display:flex;}
-
+ 
 /* ════════════════════════════════
-PIN SCREEN
+   PIN SCREEN
 ════════════════════════════════ */
 #screen-lock{background:linear-gradient(145deg,#fdf6fa 0%,#f0eaf8 40%,#e8f4f0 100%);align-items:center;justify-content:center;padding:2rem;flex-direction:column;}
-.lock-orb{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(–c1) 0%,var(–c2) 50%,var(–c3) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;box-shadow:0 8px 32px rgba(180,120,160,.25);animation:bob 4s ease-in-out infinite;}
+.lock-orb{width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--c1d) 0%,var(--c2d) 50%,var(--c3d) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;box-shadow:0 8px 32px rgba(180,120,160,.35);animation:bob 4s ease-in-out infinite;}
 @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 .lock-orb svg{filter:drop-shadow(0 2px 4px rgba(255,255,255,.5));}
-.lock-title{font-family:‘Cormorant Garamond’,serif;font-size:2.4rem;font-weight:600;color:var(–text);margin-bottom:.3rem;text-align:center;}
-.lock-sub{color:var(–text2);font-size:.9rem;margin-bottom:2.5rem;text-align:center;}
-.lock-card{background:white;border-radius:var(–r-xl);padding:2.2rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,.1);border:1px solid var(–border);}
-.lock-icon{display:none;}
+.lock-title{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--text);margin-bottom:.3rem;text-align:center;}
+.lock-sub{color:var(--text2);font-size:.9rem;margin-bottom:2.5rem;text-align:center;}
 .pin-dots{display:flex;gap:.75rem;justify-content:center;margin-bottom:1.5rem;}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(–border2);transition:all .2s;}
-.pin-dot.on{background:var(–plum);border-color:var(–plum);transform:scale(1.1);}
-.pin-dot.err{background:var(–rose);border-color:var(–rose-d);animation:shk .3s ease;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);transition:all .2s;}
+.pin-dot.on{background:var(--plum);border-color:var(--plum);transform:scale(1.1);}
+.pin-dot.err{background:var(--rose);border-color:var(--rose-d);animation:shk .3s ease;}
 @keyframes shk{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px;}
-.pkey{width:72px;height:72px;border-radius:50%;border:1px solid var(–border);background:var(–surface2);color:var(–text);font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-tap-highlight-color:transparent;}
-.pkey:active,.pkey:hover{background:var(–plum-l);border-color:var(–plum);transform:scale(.95);}
-.pkey.del{font-size:16px;color:var(–text2);}
+.pin-pad{display:grid;grid-template-columns:repeat(3,72px);gap:14px;width:244px;margin:0 auto;}
+.pkey{width:72px;height:72px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);color:var(--text)!important;font-size:22px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;box-shadow:0 2px 8px rgba(0,0,0,.08);-webkit-tap-highlight-color:transparent;-webkit-appearance:none;appearance:none;}
+.pkey:active,.pkey:hover{background:var(--plum-l);border-color:var(--plum);transform:scale(.95);}
+.pkey.del{font-size:16px;color:var(--text2);}
 .pkey.empty{opacity:0;pointer-events:none;}
-.pin-label{text-align:center;font-size:.78rem;color:var(–text3);margin-bottom:1.2rem;}
-.lock-card{background:white;border-radius:var(–r-xl);padding:1.8rem 2rem;width:100%;max-width:340px;box-shadow:0 4px 24px rgba(0,0,0,.1);border:1px solid var(–border);}
-.pin-err{font-size:.8rem;color:var(–rose-d);margin-top:.8rem;min-height:18px;text-align:center;}
-
+.pin-label{text-align:center;font-size:.78rem;color:var(--text3);margin-bottom:1.2rem;}
+.lock-card{background:white;border-radius:var(--r-xl);padding:1.5rem 1.8rem;width:calc(244px + 3.6rem);max-width:92vw;box-shadow:0 4px 24px rgba(0,0,0,.1);border:1px solid var(--border);}
+.pin-err{font-size:.8rem;color:var(--rose-d);margin-top:.8rem;min-height:18px;text-align:center;}
+ 
 /* ════════════════════════════════
-SETUP SCREEN
+   SETUP SCREEN
 ════════════════════════════════ */
 #screen-setup{
-flex-direction:column;align-items:center;
-background:radial-gradient(ellipse at 20% 10%,rgba(155,127,196,.15) 0%,transparent 50%),
-radial-gradient(ellipse at 80% 90%,rgba(106,173,144,.12) 0%,transparent 50%),var(–bg);
-padding:0;
+  flex-direction:column;align-items:center;
+  background:radial-gradient(ellipse at 20% 10%,rgba(155,127,196,.15) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 90%,rgba(106,173,144,.12) 0%,transparent 50%),var(--bg);
+  padding:0;
 }
 .setup-scroll{width:100%;max-width:480px;padding:2.5rem 1.5rem 4rem;margin:0 auto;}
-.setup-logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(–plum),var(–sage));display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
+.setup-logo{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--plum),var(--sage));display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;}
 .setup-logo svg{color:white;}
-.setup-title{font-family:‘Cormorant Garamond’,serif;font-size:2rem;font-weight:600;margin-bottom:.35rem;}
-.setup-sub{color:var(–text2);font-size:.88rem;margin-bottom:2rem;line-height:1.6;}
+.setup-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;margin-bottom:.35rem;}
+.setup-sub{color:var(--text2);font-size:.88rem;margin-bottom:2rem;line-height:1.6;}
 /* step progress */
 .step-segs{display:flex;gap:.4rem;margin-bottom:2rem;}
-.step-seg{flex:1;height:3px;border-radius:3px;background:var(–border);transition:background .35s;}
-.step-seg.done{background:linear-gradient(90deg,var(–plum),var(–sage));}
+.step-seg{flex:1;height:3px;border-radius:3px;background:var(--border);transition:background .35s;}
+.step-seg.done{background:linear-gradient(90deg,var(--plum),var(--sage));}
 .step-card{display:none;animation:fadeUp .3s ease;}
 .step-card.active{display:block;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
-.step-card h3{font-family:‘Cormorant Garamond’,serif;font-size:1.3rem;font-weight:600;margin-bottom:.3rem;}
-.step-card .sdesc{font-size:.82rem;color:var(–text2);margin-bottom:1.2rem;line-height:1.6;}
-
+.step-card h3{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;margin-bottom:.3rem;}
+.step-card .sdesc{font-size:.82rem;color:var(--text2);margin-bottom:1.2rem;line-height:1.6;}
+ 
 /* ── FORM ELEMENTS ── */
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:.85rem;min-width:0;}
-.fg label{font-size:.7rem;font-weight:500;color:var(–text2);text-transform:uppercase;letter-spacing:.6px;}
-.fg input,.fg select,.fg textarea{background:var(–bg);border:1.5px solid var(–border);border-radius:10px;padding:.58rem .82rem;color:var(–text);outline:none;transition:border-color .15s;width:100%;}
-.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(–plum);background:var(–card);}
+.fg label{font-size:.7rem;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.6px;}
+.fg input,.fg select,.fg textarea{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:.58rem .82rem;color:var(--text);outline:none;transition:border-color .15s;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--plum);background:var(--card);}
 .fg textarea{resize:vertical;min-height:64px;}
 .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
 @media(max-width:440px){.fg-row{grid-template-columns:1fr;}}
-
+ 
 /* ── BUTTONS ── */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;padding:.65rem 1.4rem;border-radius:var(–r);font-family:‘DM Sans’,sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .18s;border:none;}
-.btn-primary{background:linear-gradient(135deg,var(–plum),var(–sage));color:white;box-shadow:0 4px 16px rgba(155,127,196,.3);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;padding:.65rem 1.4rem;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;cursor:pointer;transition:all .18s;border:none;}
+.btn-primary{background:linear-gradient(135deg,var(--plum),var(--sage));color:white;box-shadow:0 4px 16px rgba(155,127,196,.3);}
 .btn-primary:hover{box-shadow:0 6px 22px rgba(155,127,196,.45);transform:translateY(-1px);}
-.btn-secondary{background:var(–card);color:var(–text2);border:1.5px solid var(–border);}
-.btn-secondary:hover{border-color:var(–border2);}
-.btn-ghost{background:transparent;color:var(–text2);padding:.5rem .9rem;font-size:.82rem;}
+.btn-secondary{background:var(--card);color:var(--text2);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:var(--border2);}
+.btn-ghost{background:transparent;color:var(--text2);padding:.5rem .9rem;font-size:.82rem;}
 .btn-sm{padding:.38rem .9rem;font-size:.8rem;border-radius:10px;}
-.btn-danger{background:var(–rose-l);color:var(–rose-d);border:1px solid var(–rose);}
+.btn-danger{background:var(--rose-l);color:var(--rose-d);border:1px solid var(--rose);}
 .btn:active{transform:scale(.97);}
 .btn-row{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.5rem;}
-
+ 
 /* Cycle entry row in setup */
-.cycle-entry{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:var(–bg);border:1.5px solid var(–border);border-radius:10px;margin-bottom:.45rem;}
+.cycle-entry{display:flex;align-items:center;gap:.5rem;padding:.55rem .75rem;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;margin-bottom:.45rem;}
 .cycle-entry .ce-date{flex:1;font-size:.85rem;font-weight:500;}
-.cycle-entry .ce-dur{font-size:.78rem;color:var(–text2);}
-.ce-del{width:26px;height:26px;border-radius:50%;background:none;border:1px solid var(–border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(–text3);transition:all .15s;}
-.ce-del:hover{background:var(–rose-l);border-color:var(–rose);color:var(–rose-d);}
-
+.cycle-entry .ce-dur{font-size:.78rem;color:var(--text2);}
+.ce-del{width:26px;height:26px;border-radius:50%;background:none;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all .15s;}
+.ce-del:hover{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
+ 
 /* Setup PIN numpad */
 .setup-pin-dots{display:flex;gap:12px;justify-content:center;margin-bottom:1.5rem;}
-.setup-pin-dot{width:42px;height:42px;border-radius:10px;border:2px solid var(–border);background:var(–bg);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:var(–plum);transition:all .2s;}
-.setup-pin-dot.set{background:var(–plum-l);border-color:var(–plum);}
+.setup-pin-dot{width:42px;height:42px;border-radius:10px;border:2px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:var(--plum);transition:all .2s;}
+.setup-pin-dot.set{background:var(--plum-l);border-color:var(--plum);}
 .spad{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;max-width:230px;margin:0 auto 1rem;}
-.skey{background:var(–bg);border:1.5px solid var(–border);border-radius:10px;height:50px;font-size:1.1rem;font-weight:500;cursor:pointer;transition:all .15s;}
-.skey:hover{background:var(–plum-l);border-color:var(–plum);}
+.skey{background:var(--bg);border:1.5px solid var(--border);border-radius:10px;height:50px;font-size:1.1rem;font-weight:500;cursor:pointer;transition:all .15s;}
+.skey:hover{background:var(--plum-l);border-color:var(--plum);}
 .skey:active{transform:scale(.95);}
-
+ 
 /* ════════════════════════════════
-MAIN APP
+   MAIN APP
 ════════════════════════════════ */
 #screen-app{flex-direction:column;align-items:stretch;}
-.topbar{position:sticky;top:0;z-index:50;background:rgba(250,248,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(–border);padding:.85rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
-.topbar-logo{font-family:‘Cormorant Garamond’,serif;font-size:1.6rem;font-weight:600;display:flex;align-items:center;gap:.45rem;}
-.logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(–c1d),var(–c2d));}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(250,248,251,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.85rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;display:flex;align-items:center;gap:.45rem;}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--c1d),var(--c2d));}
 .topbar-right{display:flex;align-items:center;gap:.55rem;}
-.phase-chip{font-size:.73rem;font-weight:600;padding:4px 12px;border-radius:20px;background:var(–sage-l);color:var(–sage-d);}
-.lock-btn{width:34px;height:34px;border-radius:50%;background:var(–bg);border:1.5px solid var(–border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
-.lock-btn:hover{background:var(–rose-l);}
-
+.phase-chip{font-size:.73rem;font-weight:600;padding:4px 12px;border-radius:20px;background:var(--sage-l);color:var(--sage-d);}
+.lock-btn{width:34px;height:34px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;}
+.lock-btn:hover{background:var(--rose-l);}
+ 
 /* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(250,248,251,.95);backdrop-filter:blur(14px);border-top:1px solid var(–border);padding:.55rem 1rem env(safe-area-inset-bottom,.4rem);display:grid;grid-template-columns:repeat(5,1fr);}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(250,248,251,.95);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:.55rem 1rem env(safe-area-inset-bottom,.4rem);display:grid;grid-template-columns:repeat(5,1fr);}
 .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:.38rem;cursor:pointer;transition:all .15s;border-radius:10px;}
-.nav-item svg{color:var(–text3);transition:all .15s;}
-.nav-item .nav-lbl{font-size:.6rem;font-weight:500;color:var(–text3);}
-.nav-item.active svg{color:var(–plum);}
-.nav-item.active .nav-lbl{color:var(–plum-d);}
-
+.nav-item svg{color:var(--text3);transition:all .15s;}
+.nav-item .nav-lbl{font-size:.6rem;font-weight:500;color:var(--text3);}
+.nav-item.active svg{color:var(--plum);}
+.nav-item.active .nav-lbl{color:var(--plum-d);}
+ 
 /* Content */
 .content{flex:1;padding:1.4rem 1.2rem 6rem;max-width:680px;margin:0 auto;width:100%;}
 .tab-page{display:none;}
 .tab-page.active{display:block;animation:fadeUp .25s ease;}
-
+ 
 /* ── CARDS ── */
-.card{background:var(–card);border:1px solid var(–border);border-radius:var(–r-lg);padding:1.2rem;box-shadow:0 2px 16px rgba(0,0,0,.07);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.2rem;box-shadow:0 2px 16px rgba(0,0,0,.07);}
 .card+.card{margin-top:.8rem;}
 .card-title{font-weight:500;font-size:.88rem;margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:1.6rem 0 .85rem;}
 .sec-hdr:first-child{margin-top:0;}
-.sec-title{font-family:‘Cormorant Garamond’,serif;font-size:1.2rem;font-weight:600;}
-
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;}
+ 
 /* ── HERO CARD ── */
-.hero{background:linear-gradient(135deg,#faeef5 0%,#ede4f5 50%,#e2f2ec 100%);border:1px solid #ddd0ea;border-radius:var(–r-xl);padding:1.5rem;margin-bottom:1.1rem;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(180,120,160,.1);}
-.hero::before{content:’’;position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(155,127,196,.12),transparent 70%);}
-.hero-greet{font-size:.75rem;font-weight:500;color:var(–text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.25rem;}
-.hero-phase{font-family:‘Cormorant Garamond’,serif;font-size:1.75rem;font-weight:600;color:var(–text);margin-bottom:.2rem;}
-.hero-day{font-size:.85rem;color:var(–text2);}
+.hero{background:linear-gradient(135deg,#faeef5 0%,#ede4f5 50%,#e2f2ec 100%);border:1px solid #ddd0ea;border-radius:var(--r-xl);padding:1.5rem;margin-bottom:1.1rem;position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(180,120,160,.1);}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(155,127,196,.12),transparent 70%);}
+.hero-greet{font-size:.75rem;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:.25rem;}
+.hero-phase{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.hero-day{font-size:.85rem;color:var(--text2);}
 .hero-bar{margin-top:1rem;}
 .bar-track{height:5px;background:rgba(0,0,0,.07);border-radius:5px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(–rose),var(–plum),var(–sage));transition:width .9s cubic-bezier(.4,0,.2,1);}
-.bar-labels{display:flex;justify-content:space-between;margin-top:.38rem;font-size:.63rem;color:var(–text3);}
-
+.bar-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--rose),var(--plum),var(--sage));transition:width .9s cubic-bezier(.4,0,.2,1);}
+.bar-labels{display:flex;justify-content:space-between;margin-top:.38rem;font-size:.63rem;color:var(--text3);}
+ 
 /* ── STAT GRID ── */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1.1rem;}
-.stat-card{background:var(–card);border:1px solid var(–border);border-radius:var(–r-lg);padding:1.1rem;box-shadow:0 2px 16px rgba(0,0,0,.08);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem;box-shadow:0 2px 16px rgba(0,0,0,.08);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s;}
 .stat-card:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.12);}
-.stat-card::before{content:’’;position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(–r-lg) var(–r-lg) 0 0;}
-.sc-rose::before,.c-rose::before{background:linear-gradient(90deg,var(–c1d),#e8a0b4);}
-.sc-plum::before,.c-plum::before{background:linear-gradient(90deg,var(–c2d),#9b87c4);}
-.sc-sage::before,.c-sage::before{background:linear-gradient(90deg,var(–c4d),var(–sage));}
-.sc-gold::before,.c-gold::before{background:linear-gradient(90deg,var(–c5d),#e8c87a);}
-.stat-icon{width:34px;height:34px;border-radius:var(–r-sm,10px);display:flex;align-items:center;justify-content:center;margin-bottom:.65rem;}
-.si-rose,.c-rose.stat-icon{background:var(–rose-l);color:var(–rose-d);}
-.si-plum,.c-plum.stat-icon{background:var(–plum-l);color:var(–plum-d);}
-.si-sage,.c-sage.stat-icon{background:var(–sage-l);color:var(–sage-d);}
-.si-gold,.c-gold.stat-icon{background:var(–gold-l);color:var(–gold-d);}
-.stat-lbl,.stat-label{font-size:.67rem;font-weight:500;color:var(–text3);text-transform:uppercase;letter-spacing:.55px;}
-.stat-val,.stat-value{font-family:‘Cormorant Garamond’,serif;font-size:1.5rem;font-weight:600;color:var(–text);line-height:1.1;margin:.12rem 0;}
-.stat-sub{font-size:.68rem;color:var(–text3);}
-
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--r-lg) var(--r-lg) 0 0;}
+.sc-rose::before,.c-rose::before{background:linear-gradient(90deg,var(--c1d),#e8a0b4);}
+.sc-plum::before,.c-plum::before{background:linear-gradient(90deg,var(--c2d),#9b87c4);}
+.sc-sage::before,.c-sage::before{background:linear-gradient(90deg,var(--c4d),var(--sage));}
+.sc-gold::before,.c-gold::before{background:linear-gradient(90deg,var(--c5d),#e8c87a);}
+.stat-icon{width:34px;height:34px;border-radius:var(--r-sm,10px);display:flex;align-items:center;justify-content:center;margin-bottom:.65rem;}
+.si-rose,.c-rose.stat-icon{background:var(--rose-l);color:var(--rose-d);}
+.si-plum,.c-plum.stat-icon{background:var(--plum-l);color:var(--plum-d);}
+.si-sage,.c-sage.stat-icon{background:var(--sage-l);color:var(--sage-d);}
+.si-gold,.c-gold.stat-icon{background:var(--gold-l);color:var(--gold-d);}
+.stat-lbl,.stat-label{font-size:.67rem;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:.55px;}
+.stat-val,.stat-value{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:600;color:var(--text);line-height:1.1;margin:.12rem 0;}
+.stat-sub{font-size:.68rem;color:var(--text3);}
+ 
 /* ── CALENDAR ── */
-.cal-wrap{background:var(–card);border:1px solid var(–border);border-radius:var(–r-lg);overflow:hidden;box-shadow:var(–sh);}
-.cal-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(–border);}
-.cal-month{font-family:‘Cormorant Garamond’,serif;font-size:1.05rem;font-weight:600;text-transform:capitalize;}
-.cal-nav-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(–border);background:var(–bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(–text2);}
-.cal-nav-btn:hover{border-color:var(–plum);color:var(–plum);background:var(–plum-l);}
+.cal-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh);}
+.cal-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(--border);}
+.cal-month{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;text-transform:capitalize;}
+.cal-nav-btn{width:28px;height:28px;border-radius:50%;border:1px solid var(--border);background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--text2);}
+.cal-nav-btn:hover{border-color:var(--plum);color:var(--plum);background:var(--plum-l);}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
-.cal-dname{text-align:center;font-size:.62rem;font-weight:600;color:var(–text3);text-transform:uppercase;letter-spacing:.4px;padding:.5rem 0;border-bottom:1px solid var(–border);}
+.cal-dname{text-align:center;font-size:.62rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;padding:.5rem 0;border-bottom:1px solid var(--border);}
 .cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:.78rem;font-weight:400;position:relative;transition:background .1s;gap:1px;}
-.cal-day:hover{background:var(–bg);}
-.cal-day.dim .dn{color:var(–text3);}
+.cal-day:hover{background:var(--bg);}
+.cal-day.dim .dn{color:var(--text3);}
 /* cycle day number */
-.cyc-num{font-size:.5rem;color:var(–text3);line-height:1;}
+.cyc-num{font-size:.5rem;color:var(--text3);line-height:1;}
 /* states */
 .cal-day.is-period{background:#fde8ed;}
-.cal-day.is-period .dn{color:var(–rose-d);font-weight:600;}
+.cal-day.is-period .dn{color:var(--rose-d);font-weight:600;}
 .cal-day.is-fertile{background:#edf7f2;}
-.cal-day.is-fertile .dn{color:var(–sage-d);}
+.cal-day.is-fertile .dn{color:var(--sage-d);}
 .cal-day.is-ovulation{background:#f3eff9;}
-.cal-day.is-ovulation .dn{color:var(–plum-d);font-weight:700;}
-.cal-day.is-today .dn{background:var(–gold);color:white;border-radius:50%;width:23px;height:23px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;}
+.cal-day.is-ovulation .dn{color:var(--plum-d);font-weight:700;}
+.cal-day.is-today .dn{background:var(--gold);color:white;border-radius:50%;width:23px;height:23px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;}
 /* prediction */
 .cal-day.is-pred-main{background:#fdf2f4;}
-.cal-day.is-pred-main .dn{color:var(–rose-d);font-weight:600;}
+.cal-day.is-pred-main .dn{color:var(--rose-d);font-weight:600;}
 .cal-day.is-pred-adj{background:#fdf7f8;}
-.cal-day.is-pred-adj .dn{color:var(–rose);}
+.cal-day.is-pred-adj .dn{color:var(--rose);}
 /* day 1 indicator dot */
-.cal-day.is-day1::after{content:’’;position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(–rose-d);}
+.cal-day.is-day1::after{content:'';position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--rose-d);}
 /* pips */
 .day-pips{display:flex;gap:2px;height:4px;align-items:center;}
 .pip{width:3px;height:3px;border-radius:50%;flex-shrink:0;}
-.pip-flow{background:var(–rose-d);}
-.pip-mood{background:var(–plum);}
-.pip-int{background:var(–text3);opacity:.4;}
+.pip-flow{background:var(--rose-d);}
+.pip-mood{background:var(--plum);}
+.pip-int{background:var(--text3);opacity:.4;}
 /* legend */
-.cal-legend{display:flex;flex-wrap:wrap;gap:.55rem;padding:.65rem 1.1rem;border-top:1px solid var(–border);}
-.leg-item{display:flex;align-items:center;gap:4px;font-size:.67rem;color:var(–text2);}
+.cal-legend{display:flex;flex-wrap:wrap;gap:.55rem;padding:.65rem 1.1rem;border-top:1px solid var(--border);}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:.67rem;color:var(--text2);}
 .leg-sw{width:9px;height:9px;border-radius:2px;}
-.ls-p{background:var(–rose-d);}
-.ls-f{background:var(–sage-d);}
-.ls-o{background:var(–plum-d);}
-.ls-t{background:var(–gold);}
+.ls-p{background:var(--rose-d);}
+.ls-f{background:var(--sage-d);}
+.ls-o{background:var(--plum-d);}
+.ls-t{background:var(--gold);}
 .ls-pr{background:#f0b0c0;}
-
+ 
 /* ── CHIPS ── */
 .chips{display:flex;flex-wrap:wrap;gap:.32rem;}
-.chip{background:var(–bg);border:1.5px solid var(–border);border-radius:20px;padding:4px 10px;font-size:.74rem;cursor:pointer;transition:all .15s;user-select:none;color:var(–text2);}
+.chip{background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:4px 10px;font-size:.74rem;cursor:pointer;transition:all .15s;user-select:none;color:var(--text2);}
 .chip.on{font-weight:500;}
-.chip.mood.on{background:var(–plum-l);border-color:var(–plum);color:var(–plum-d);}
-.chip.phys.on{background:var(–rose-l);border-color:var(–rose);color:var(–rose-d);}
-.chip.gen.on{background:var(–sage-l);border-color:var(–sage);color:var(–sage-d);}
-
+.chip.mood.on{background:var(--plum-l);border-color:var(--plum);color:var(--plum-d);}
+.chip.phys.on{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
+.chip.gen.on{background:var(--sage-l);border-color:var(--sage);color:var(--sage-d);}
+ 
 /* ── FLOW/PAIN ── */
 .flow-row{display:flex;gap:.4rem;}
-.flow-opt{flex:1;background:var(–bg);border:1.5px solid var(–border);border-radius:9px;padding:.48rem .3rem;text-align:center;cursor:pointer;font-size:.74rem;font-weight:500;color:var(–text2);transition:all .15s;user-select:none;}
-.flow-opt.on{background:var(–rose-l);border-color:var(–rose);color:var(–rose-d);}
+.flow-opt{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:9px;padding:.48rem .3rem;text-align:center;cursor:pointer;font-size:.74rem;font-weight:500;color:var(--text2);transition:all .15s;user-select:none;}
+.flow-opt.on{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
 .pain-row{display:flex;gap:.3rem;}
-.pain-opt{flex:1;background:var(–bg);border:1.5px solid var(–border);border-radius:8px;padding:.42rem;text-align:center;cursor:pointer;font-size:.82rem;font-weight:600;color:var(–text2);transition:all .12s;user-select:none;}
-.pain-opt.on{background:var(–rose-l);border-color:var(–rose-d);color:var(–rose-d);}
-
+.pain-opt{flex:1;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:.42rem;text-align:center;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--text2);transition:all .12s;user-select:none;}
+.pain-opt.on{background:var(--rose-l);border-color:var(--rose-d);color:var(--rose-d);}
+ 
 /* ── TOGGLE ── */
 .tgl-row{display:flex;align-items:center;gap:.7rem;cursor:pointer;user-select:none;}
-.tgl{width:38px;height:20px;background:var(–border);border-radius:20px;position:relative;transition:background .2s;flex-shrink:0;}
-.tgl.on{background:var(–plum);}
-.tgl::after{content:’’;position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tgl{width:38px;height:20px;background:var(--border);border-radius:20px;position:relative;transition:background .2s;flex-shrink:0;}
+.tgl.on{background:var(--plum);}
+.tgl::after{content:'';position:absolute;top:3px;left:3px;width:14px;height:14px;background:white;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
 .tgl.on::after{left:21px;}
-.tgl-lbl{font-size:.82rem;font-weight:500;color:var(–text2);}
-
+.tgl-lbl{font-size:.82rem;font-weight:500;color:var(--text2);}
+ 
 /* ── LOG LIST ── */
 .log-list{display:flex;flex-direction:column;gap:.45rem;}
-.log-item{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:var(–card);border:1px solid var(–border);border-radius:var(–r);cursor:pointer;transition:all .15s;}
-.log-item:hover{border-color:var(–plum);box-shadow:0 2px 8px rgba(155,127,196,.12);}
-.log-date-col{min-width:52px;font-weight:500;color:var(–text2);font-size:.7rem;padding-top:2px;}
+.log-item{display:flex;align-items:flex-start;gap:.65rem;padding:.65rem .9rem;background:var(--card);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:all .15s;}
+.log-item:hover{border-color:var(--plum);box-shadow:0 2px 8px rgba(155,127,196,.12);}
+.log-date-col{min-width:52px;font-weight:500;color:var(--text2);font-size:.7rem;padding-top:2px;}
 .log-tags{display:flex;flex-wrap:wrap;gap:3px;}
 .lt{border-radius:12px;padding:2px 7px;font-size:.67rem;font-weight:500;}
-.lt-flow{background:var(–rose-l);color:var(–rose-d);}
-.lt-mood{background:var(–plum-l);color:var(–plum-d);}
-.lt-phys{background:var(–sage-l);color:var(–sage-d);}
-.lt-int{background:var(–gold-l);color:var(–gold-d);}
-
+.lt-flow{background:var(--rose-l);color:var(--rose-d);}
+.lt-mood{background:var(--plum-l);color:var(--plum-d);}
+.lt-phys{background:var(--sage-l);color:var(--sage-d);}
+.lt-int{background:var(--gold-l);color:var(--gold-d);}
+ 
 /* ── STAT ROWS ── */
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(–border);font-size:.83rem;}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--border);font-size:.83rem;}
 .stat-row:last-child{border-bottom:none;}
-.stat-row .sk{color:var(–text2);}
+.stat-row .sk{color:var(--text2);}
 .stat-row .sv{font-weight:600;}
-
+ 
 /* ── ANALYSIS ── */
-.insight-box{border-radius:var(–r);padding:.85rem 1rem;font-size:.8rem;line-height:1.65;margin-bottom:.55rem;}
-.ib-sage{background:var(–sage-l);border-left:3px solid var(–sage);color:#2a5a40;}
-.ib-rose{background:var(–rose-l);border-left:3px solid var(–rose);color:#7a2530;}
-.ib-plum{background:var(–plum-l);border-left:3px solid var(–plum);color:#4a2a6a;}
-.ib-gold{background:var(–gold-l);border-left:3px solid var(–gold);color:#6a4500;}
-.ib-sky{background:var(–sky-l);border-left:3px solid var(–sky);color:#1a4a70;}
+.insight-box{border-radius:var(--r);padding:.85rem 1rem;font-size:.8rem;line-height:1.65;margin-bottom:.55rem;}
+.ib-sage{background:var(--sage-l);border-left:3px solid var(--sage);color:#2a5a40;}
+.ib-rose{background:var(--rose-l);border-left:3px solid var(--rose);color:#7a2530;}
+.ib-plum{background:var(--plum-l);border-left:3px solid var(--plum);color:#4a2a6a;}
+.ib-gold{background:var(--gold-l);border-left:3px solid var(--gold);color:#6a4500;}
+.ib-sky{background:var(--sky-l);border-left:3px solid var(--sky);color:#1a4a70;}
 .insight-box strong{display:block;font-weight:600;margin-bottom:3px;font-size:.82rem;}
 .bar-chart{display:flex;gap:4px;align-items:flex-end;height:80px;margin:.5rem 0;}
 .bc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
 .bc-bar{width:100%;border-radius:4px 4px 0 0;min-height:3px;}
-.bc-lbl{font-size:.55rem;color:var(–text3);text-align:center;line-height:1.2;}
+.bc-lbl{font-size:.55rem;color:var(--text3);text-align:center;line-height:1.2;}
 .donut-wrap{display:flex;align-items:center;gap:1.5rem;}
 .donut-leg{display:flex;flex-direction:column;gap:.45rem;}
 .dl-item{display:flex;align-items:center;gap:.45rem;font-size:.76rem;}
 .dl-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.dl-lbl{color:var(–text2);}
+.dl-lbl{color:var(--text2);}
 .dl-val{font-weight:600;margin-left:auto;padding-left:.4rem;}
 .sympt-freq{display:flex;flex-direction:column;gap:.4rem;}
 .sf-row{display:flex;align-items:center;gap:.6rem;font-size:.76rem;}
-.sf-name{width:120px;color:var(–text2);flex-shrink:0;font-size:.72rem;}
-.sf-bg{flex:1;height:5px;background:var(–border);border-radius:5px;overflow:hidden;}
-.sf-fill{height:100%;border-radius:5px;background:var(–rose);}
-.sf-cnt{font-size:.68rem;color:var(–text3);min-width:20px;text-align:right;}
-
+.sf-name{width:120px;color:var(--text2);flex-shrink:0;font-size:.72rem;}
+.sf-bg{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden;}
+.sf-fill{height:100%;border-radius:5px;background:var(--rose);}
+.sf-cnt{font-size:.68rem;color:var(--text3);min-width:20px;text-align:right;}
+ 
 /* ── PHASES INFO ── */
 .phase-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem;}
 @media(min-width:400px){.phase-tiles{grid-template-columns:repeat(4,1fr);}}
-.phase-tile{border-radius:var(–r);padding:.7rem;text-align:center;}
+.phase-tile{border-radius:var(--r);padding:.7rem;text-align:center;}
 .pt-day{font-size:.6rem;font-weight:600;opacity:.7;margin-bottom:2px;}
 .pt-name{font-size:.75rem;font-weight:700;}
-.pt-m{background:var(–rose-l);color:var(–rose-d);}
+.pt-m{background:var(--rose-l);color:var(--rose-d);}
 .pt-f{background:#f0f9f5;color:#2d7a50;}
-.pt-o{background:var(–plum-l);color:var(–plum-d);}
-.pt-l{background:var(–gold-l);color:var(–gold-d);}
+.pt-o{background:var(--plum-l);color:var(--plum-d);}
+.pt-l{background:var(--gold-l);color:var(--gold-d);}
 .cyc-bar{display:flex;height:22px;border-radius:8px;overflow:hidden;margin-bottom:.6rem;}
 .cb-s{display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:600;}
-.cb-m{background:var(–rose-l);color:var(–rose-d);}
+.cb-m{background:var(--rose-l);color:var(--rose-d);}
 .cb-f{background:#f0f9f5;color:#2d7a50;}
-.cb-o{background:var(–plum-l);color:var(–plum-d);}
-.cb-l{background:var(–gold-l);color:var(–gold-d);}
-.info-card{background:var(–card);border:1px solid var(–border);border-radius:var(–r-lg);padding:.95rem 1.05rem;margin-bottom:.65rem;}
+.cb-o{background:var(--plum-l);color:var(--plum-d);}
+.cb-l{background:var(--gold-l);color:var(--gold-d);}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.95rem 1.05rem;margin-bottom:.65rem;}
 .info-card-title{font-weight:500;font-size:.88rem;margin-bottom:.45rem;}
-.info-card p{font-size:.8rem;color:var(–text2);line-height:1.7;}
+.info-card p{font-size:.8rem;color:var(--text2);line-height:1.7;}
 .age-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:.5rem;margin-top:.65rem;}
-.age-card{border-radius:var(–r);padding:.78rem;font-size:.73rem;line-height:1.55;}
+.age-card{border-radius:var(--r);padding:.78rem;font-size:.73rem;line-height:1.55;}
 .age-card strong{display:block;font-size:.77rem;margin-bottom:3px;}
-.ac-teen{background:var(–gold-l);color:#6a4500;}
-.ac-20{background:var(–sage-l);color:#2d5a40;}
-.ac-30{background:var(–sky-l);color:#1a4a70;}
-.ac-40{background:var(–plum-l);color:#4a2a6a;}
-
+.ac-teen{background:var(--gold-l);color:#6a4500;}
+.ac-20{background:var(--sage-l);color:#2d5a40;}
+.ac-30{background:var(--sky-l);color:#1a4a70;}
+.ac-40{background:var(--plum-l);color:#4a2a6a;}
+ 
 /* ── CYCLE HISTORY in Registro ── */
 .cycles-list{display:flex;flex-direction:column;gap:.4rem;}
-.cycle-row{display:flex;align-items:center;gap:.65rem;padding:.5rem .75rem;background:var(–bg);border-radius:9px;font-size:.81rem;}
+.cycle-row{display:flex;align-items:center;gap:.65rem;padding:.5rem .75rem;background:var(--bg);border-radius:9px;font-size:.81rem;}
 .cy-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.cy-active{background:var(–sage);}
-.cy-past{background:var(–border2);}
+.cy-active{background:var(--sage);}
+.cy-past{background:var(--border2);}
 .cy-date{flex:1;font-weight:500;}
-.cy-dur{font-size:.72rem;color:var(–text3);}
-.cy-len{font-size:.72rem;color:var(–text2);}
-.cy-del{width:24px;height:24px;border-radius:50%;background:none;border:1px solid var(–border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(–text3);transition:all .12s;}
-.cy-del:hover{background:var(–rose-l);border-color:var(–rose);color:var(–rose-d);}
+.cy-dur{font-size:.72rem;color:var(--text3);}
+.cy-len{font-size:.72rem;color:var(--text2);}
+.cy-del{width:24px;height:24px;border-radius:50%;background:none;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text3);transition:all .12s;}
+.cy-del:hover{background:var(--rose-l);border-color:var(--rose);color:var(--rose-d);}
 .pill{display:inline-block;font-size:.68rem;font-weight:500;padding:2px 8px;border-radius:12px;}
-.pill-low{background:var(–sage-l);color:var(–sage-d);}
-.pill-med{background:var(–gold-l);color:var(–gold-d);}
-.pill-high{background:var(–rose-l);color:var(–rose-d);}
-
+.pill-low{background:var(--sage-l);color:var(--sage-d);}
+.pill-med{background:var(--gold-l);color:var(--gold-d);}
+.pill-high{background:var(--rose-l);color:var(--rose-d);}
+ 
 /* ── MODAL ── */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.32);z-index:200;align-items:flex-end;justify-content:center;padding:0;}
 .modal-bg.open{display:flex;animation:mBgIn .2s ease;}
 @keyframes mBgIn{from{opacity:0;}to{opacity:1;}}
-.modal-sheet{background:var(–card);border-radius:var(–r-xl) var(–r-xl) 0 0;padding:1.4rem;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:shUp .28s cubic-bezier(.4,0,.2,1);}
+.modal-sheet{background:var(--card);border-radius:var(--r-xl) var(--r-xl) 0 0;padding:1.4rem;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;animation:shUp .28s cubic-bezier(.4,0,.2,1);}
 @keyframes shUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-.modal-handle{width:34px;height:4px;background:var(–border);border-radius:4px;margin:0 auto 1.1rem;}
-.modal-title{font-family:‘Cormorant Garamond’,serif;font-size:1.15rem;font-weight:600;margin-bottom:1rem;}
-.modal-det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(–border);font-size:.81rem;gap:.5rem;}
+.modal-handle{width:34px;height:4px;background:var(--border);border-radius:4px;margin:0 auto 1.1rem;}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;margin-bottom:1rem;}
+.modal-det-row{display:flex;justify-content:space-between;align-items:flex-start;padding:.45rem 0;border-bottom:1px solid var(--border);font-size:.81rem;gap:.5rem;}
 .modal-det-row:last-child{border-bottom:none;}
-.modal-det-row .mk{color:var(–text2);flex-shrink:0;}
-.modal-det-row .mv{color:var(–text);font-weight:500;text-align:right;}
-
+.modal-det-row .mk{color:var(--text2);flex-shrink:0;}
+.modal-det-row .mv{color:var(--text);font-weight:500;text-align:right;}
+ 
 /* ── MINI METRIC ── */
 .mini-met{display:flex;gap:.4rem;align-items:center;}
 .mini-met input{flex:1;}
-.unit{font-size:.75rem;color:var(–text3);min-width:24px;}
-
+.unit{font-size:.75rem;color:var(--text3);min-width:24px;}
+ 
 /* ── SLEEP BARS ── */
 .sl-chart{display:flex;gap:3px;align-items:flex-end;height:48px;}
 .sl-bar{flex:1;border-radius:3px 3px 0 0;min-height:2px;}
-.sl-ex{background:var(–sage-d);}
-.sl-ok{background:var(–gold);}
-.sl-bad{background:var(–rose);opacity:.7;}
-.sl-none{background:var(–border);}
-
+.sl-ex{background:var(--sage-d);}
+.sl-ok{background:var(--gold);}
+.sl-bad{background:var(--rose);opacity:.7;}
+.sl-none{background:var(--border);}
+ 
 /* ── TOAST ── */
-.toast{position:fixed;bottom:5.2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(–text);color:white;padding:.58rem 1.1rem;border-radius:20px;font-size:.8rem;font-weight:500;z-index:300;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;}
+.toast{position:fixed;bottom:5.2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:white;padding:.58rem 1.1rem;border-radius:20px;font-size:.8rem;font-weight:500;z-index:300;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
+ 
 /* ── SLEEP TRACKING ── */
-#sleep-calc{display:none;margin-top:.55rem;background:var(–sage-l);border-radius:9px;padding:.55rem .82rem;font-size:.8rem;color:var(–sage-d);}
-
+#sleep-calc{display:none;margin-top:.55rem;background:var(--sage-l);border-radius:9px;padding:.55rem .82rem;font-size:.8rem;color:var(--sage-d);}
+ 
 /* Responsive */
 @media(max-width:380px){.stat-grid{grid-template-columns:1fr 1fr;gap:.55rem;}.content{padding:1.1rem .9rem 6rem;}}
 .hidden{display:none!important;}
 </style>
-
 </head>
 <body>
-
+ 
 <div class="toast" id="toast"></div>
-
+ 
 <!-- ══════════════════════════════════
      PIN SCREEN
 ══════════════════════════════════ -->
-
 <div class="screen active" id="screen-lock">
   <div class="lock-orb">
     <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
@@ -403,21 +398,20 @@ MAIN APP
         <div class="pin-dot" id="pd3"></div>
       </div>
       <div class="pin-pad">
-        <button class="pkey" onclick="pinKey('1')">1</button><button class="pkey" onclick="pinKey('2')">2</button><button class="pkey" onclick="pinKey('3')">3</button>
-        <button class="pkey" onclick="pinKey('4')">4</button><button class="pkey" onclick="pinKey('5')">5</button><button class="pkey" onclick="pinKey('6')">6</button>
-        <button class="pkey" onclick="pinKey('7')">7</button><button class="pkey" onclick="pinKey('8')">8</button><button class="pkey" onclick="pinKey('9')">9</button>
-        <button class="pkey empty"></button><button class="pkey" onclick="pinKey('0')">0</button>
-        <button class="pkey del" onclick="pinDel()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12H3m9-9l-9 9 9 9"/></svg></button>
+        <button type="button" class="pkey" onclick="pinKey('1')">1</button><button type="button" class="pkey" onclick="pinKey('2')">2</button><button type="button" class="pkey" onclick="pinKey('3')">3</button>
+        <button type="button" class="pkey" onclick="pinKey('4')">4</button><button type="button" class="pkey" onclick="pinKey('5')">5</button><button type="button" class="pkey" onclick="pinKey('6')">6</button>
+        <button type="button" class="pkey" onclick="pinKey('7')">7</button><button type="button" class="pkey" onclick="pinKey('8')">8</button><button type="button" class="pkey" onclick="pinKey('9')">9</button>
+        <button type="button" class="pkey empty"></button><button type="button" class="pkey" onclick="pinKey('0')">0</button>
+        <button type="button" class="pkey del" onclick="pinDel()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12H3m9-9l-9 9 9 9"/></svg></button>
       </div>
       <div class="pin-err" id="pin-err"></div>
     </div>
   </div>
 </div>
-
+ 
 <!-- ══════════════════════════════════
      SETUP SCREEN
 ══════════════════════════════════ -->
-
 <div class="screen" id="screen-setup">
   <div class="setup-scroll">
     <div class="setup-logo"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
@@ -429,324 +423,316 @@ MAIN APP
       <div class="step-seg" id="seg2"></div>
       <div class="step-seg" id="seg3"></div>
     </div>
-
-```
-<!-- Step 0: Perfil -->
-<div class="step-card active" id="sc-0" style="display:block">
-  <h3>Tu perfil</h3>
-  <p class="sdesc">Cuéntanos un poco sobre ti para personalizar tu experiencia.</p>
-  <div class="fg"><label>Tu nombre</label><input type="text" id="s-name" placeholder="¿Cómo te llamas?"></div>
-  <div class="fg-row">
-    <div class="fg"><label>Edad</label><input type="number" id="s-age" min="10" max="60" placeholder="Ej. 26"></div>
-    <div class="fg"><label>Objetivo principal</label>
-      <select id="s-goal"><option value="conocer">Conocer mi ciclo</option><option value="embarazo">Buscar embarazo</option><option value="evitar">Evitar embarazo</option><option value="sintomas">Controlar síntomas</option><option value="salud">Salud general</option></select>
+ 
+    <!-- Step 0: Perfil -->
+    <div class="step-card active" id="sc-0" style="display:block">
+      <h3>Tu perfil</h3>
+      <p class="sdesc">Cuéntanos un poco sobre ti para personalizar tu experiencia.</p>
+      <div class="fg"><label>Tu nombre</label><input type="text" id="s-name" placeholder="¿Cómo te llamas?"></div>
+      <div class="fg-row">
+        <div class="fg"><label>Edad</label><input type="number" id="s-age" min="10" max="60" placeholder="Ej. 26"></div>
+        <div class="fg"><label>Objetivo principal</label>
+          <select id="s-goal"><option value="conocer">Conocer mi ciclo</option><option value="embarazo">Buscar embarazo</option><option value="evitar">Evitar embarazo</option><option value="sintomas">Controlar síntomas</option><option value="salud">Salud general</option></select>
+        </div>
+      </div>
+      <div class="fg"><label>Anticonceptivos</label>
+        <select id="s-contra"><option value="no">No uso</option><option value="pildora">Píldora combinada</option><option value="mini">Minipíldora</option><option value="diu-h">DIU hormonal</option><option value="diu-c">DIU de cobre</option><option value="implante">Implante</option><option value="inyeccion">Inyección</option><option value="otro">Otro</option></select>
+      </div>
+      <div class="btn-row"><button type="button" class="btn btn-primary" style="width:100%" onclick="goStep(1)">Continuar →</button></div>
+    </div>
+ 
+    <!-- Step 1: Ciclos -->
+    <div class="step-card" id="sc-1">
+      <h3>Tus ciclos</h3>
+      <p class="sdesc">Registrá el primer día de sangrado de cada periodo que recuerdes. Con más registros, las predicciones serán más precisas.</p>
+      <div class="fg"><label>Duración del sangrado (días)</label>
+        <select id="s-plen"><option value="3">3 días</option><option value="4">4 días</option><option value="5" selected>5 días</option><option value="6">6 días</option><option value="7">7 días</option><option value="8">8 días</option></select>
+      </div>
+      <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:.85rem;">
+        <div style="font-size:.78rem;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;">Agregar periodo</div>
+        <div class="fg-row">
+          <div class="fg"><label>Fecha del primer sangrado</label><input type="date" id="s-cycle-date"></div>
+          <div class="fg"><label>Duración sangrado</label><input type="number" id="s-cycle-dur" min="1" max="12" value="5"></div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="setupAddCycle()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Agregar periodo
+        </button>
+      </div>
+      <div id="setup-cycles-list"></div>
+      <div id="setup-avg-display" style="font-size:.78rem;color:var(--sage-d);font-weight:500;margin-bottom:.85rem;display:none"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-ghost" onclick="goStep(0)">← Atrás</button>
+        <button type="button" class="btn btn-primary" style="flex:1" onclick="goStep(2)" id="btn-step1-next">Continuar →</button>
+      </div>
+    </div>
+ 
+    <!-- Step 2: PIN -->
+    <div class="step-card" id="sc-2">
+      <h3>Crea tu PIN</h3>
+      <p class="sdesc">Un PIN de 4 dígitos para proteger tu información privada.</p>
+      <div class="setup-pin-dots" id="setup-pin-dots">
+        <div class="setup-pin-dot" id="spd0">—</div><div class="setup-pin-dot" id="spd1">—</div>
+        <div class="setup-pin-dot" id="spd2">—</div><div class="setup-pin-dot" id="spd3">—</div>
+      </div>
+      <div class="spad">
+        <button type="button" class="skey" onclick="setupPinKey('1')">1</button><button type="button" class="skey" onclick="setupPinKey('2')">2</button><button type="button" class="skey" onclick="setupPinKey('3')">3</button>
+        <button type="button" class="skey" onclick="setupPinKey('4')">4</button><button type="button" class="skey" onclick="setupPinKey('5')">5</button><button type="button" class="skey" onclick="setupPinKey('6')">6</button>
+        <button type="button" class="skey" onclick="setupPinKey('7')">7</button><button type="button" class="skey" onclick="setupPinKey('8')">8</button><button type="button" class="skey" onclick="setupPinKey('9')">9</button>
+        <button type="button" class="skey" onclick="setupPinDel()" style="font-size:.85rem">←</button><button type="button" class="skey" onclick="setupPinKey('0')">0</button><button type="button" class="skey" style="opacity:.15" disabled></button>
+      </div>
+      <div class="btn-row"><button type="button" class="btn btn-ghost" onclick="goStep(1)">← Atrás</button><button type="button" class="btn btn-primary" id="btn-pin-confirm" style="flex:1;opacity:.4" disabled onclick="goStep(3)">Confirmar PIN</button></div>
+    </div>
+ 
+    <!-- Step 3: Listo -->
+    <div class="step-card" id="sc-3">
+      <h3>¡Todo listo!</h3>
+      <p class="sdesc">Luna está lista para acompañarte. Tus datos están protegidos con tu PIN.</p>
+      <div style="text-align:center;padding:1rem 0">
+        <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--plum),var(--sage));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        </div>
+        <p style="font-size:.83rem;color:var(--text2);line-height:1.7">Recordá anotar tu PIN en un lugar seguro.</p>
+      </div>
+      <button type="button" class="btn btn-primary" style="width:100%" onclick="finishSetup()">Entrar a Luna →</button>
     </div>
   </div>
-  <div class="fg"><label>Anticonceptivos</label>
-    <select id="s-contra"><option value="no">No uso</option><option value="pildora">Píldora combinada</option><option value="mini">Minipíldora</option><option value="diu-h">DIU hormonal</option><option value="diu-c">DIU de cobre</option><option value="implante">Implante</option><option value="inyeccion">Inyección</option><option value="otro">Otro</option></select>
-  </div>
-  <div class="btn-row"><button class="btn btn-primary" style="width:100%" onclick="goStep(1)">Continuar →</button></div>
 </div>
-
-<!-- Step 1: Ciclos -->
-<div class="step-card" id="sc-1">
-  <h3>Tus ciclos</h3>
-  <p class="sdesc">Registrá el primer día de sangrado de cada periodo que recuerdes. Con más registros, las predicciones serán más precisas.</p>
-  <div class="fg"><label>Duración del sangrado (días)</label>
-    <select id="s-plen"><option value="3">3 días</option><option value="4">4 días</option><option value="5" selected>5 días</option><option value="6">6 días</option><option value="7">7 días</option><option value="8">8 días</option></select>
-  </div>
-  <div style="background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);padding:1rem;margin-bottom:.85rem;">
-    <div style="font-size:.78rem;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.75rem;">Agregar periodo</div>
-    <div class="fg-row">
-      <div class="fg"><label>Fecha del primer sangrado</label><input type="date" id="s-cycle-date"></div>
-      <div class="fg"><label>Duración sangrado</label><input type="number" id="s-cycle-dur" min="1" max="12" value="5"></div>
-    </div>
-    <button class="btn btn-secondary btn-sm" onclick="setupAddCycle()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-      Agregar periodo
-    </button>
-  </div>
-  <div id="setup-cycles-list"></div>
-  <div id="setup-avg-display" style="font-size:.78rem;color:var(--sage-d);font-weight:500;margin-bottom:.85rem;display:none"></div>
-  <div class="btn-row">
-    <button class="btn btn-ghost" onclick="goStep(0)">← Atrás</button>
-    <button class="btn btn-primary" style="flex:1" onclick="goStep(2)" id="btn-step1-next">Continuar →</button>
-  </div>
-</div>
-
-<!-- Step 2: PIN -->
-<div class="step-card" id="sc-2">
-  <h3>Crea tu PIN</h3>
-  <p class="sdesc">Un PIN de 4 dígitos para proteger tu información privada.</p>
-  <div class="setup-pin-dots" id="setup-pin-dots">
-    <div class="setup-pin-dot" id="spd0">—</div><div class="setup-pin-dot" id="spd1">—</div>
-    <div class="setup-pin-dot" id="spd2">—</div><div class="setup-pin-dot" id="spd3">—</div>
-  </div>
-  <div class="spad">
-    <button class="skey" onclick="setupPinKey('1')">1</button><button class="skey" onclick="setupPinKey('2')">2</button><button class="skey" onclick="setupPinKey('3')">3</button>
-    <button class="skey" onclick="setupPinKey('4')">4</button><button class="skey" onclick="setupPinKey('5')">5</button><button class="skey" onclick="setupPinKey('6')">6</button>
-    <button class="skey" onclick="setupPinKey('7')">7</button><button class="skey" onclick="setupPinKey('8')">8</button><button class="skey" onclick="setupPinKey('9')">9</button>
-    <button class="skey" onclick="setupPinDel()" style="font-size:.85rem">←</button><button class="skey" onclick="setupPinKey('0')">0</button><button class="skey" style="opacity:.15" disabled></button>
-  </div>
-  <div class="btn-row"><button class="btn btn-ghost" onclick="goStep(1)">← Atrás</button><button class="btn btn-primary" id="btn-pin-confirm" style="flex:1;opacity:.4" disabled onclick="goStep(3)">Confirmar PIN</button></div>
-</div>
-
-<!-- Step 3: Listo -->
-<div class="step-card" id="sc-3">
-  <h3>¡Todo listo!</h3>
-  <p class="sdesc">Luna está lista para acompañarte. Tus datos están protegidos con tu PIN.</p>
-  <div style="text-align:center;padding:1rem 0">
-    <div style="width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,var(--plum),var(--sage));margin:0 auto 1rem;display:flex;align-items:center;justify-content:center">
-      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
-    </div>
-    <p style="font-size:.83rem;color:var(--text2);line-height:1.7">Recordá anotar tu PIN en un lugar seguro.</p>
-  </div>
-  <button class="btn btn-primary" style="width:100%" onclick="finishSetup()">Entrar a Luna →</button>
-</div>
-```
-
-  </div>
-</div>
-
+ 
 <!-- ══════════════════════════════════
      MAIN APP
 ══════════════════════════════════ -->
-
 <div class="screen" id="screen-app">
   <div style="display:flex;flex-direction:column;min-height:100vh;width:100%">
-
-```
-<div class="topbar">
-  <div class="topbar-logo"><div class="logo-dot"></div>Luna</div>
-  <div class="topbar-right">
-    <div class="phase-chip" id="topbar-phase">—</div>
-    <div class="lock-btn" onclick="lockApp()" title="Bloquear">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+ 
+    <div class="topbar">
+      <div class="topbar-logo"><div class="logo-dot"></div>Luna</div>
+      <div class="topbar-right">
+        <div class="phase-chip" id="topbar-phase">—</div>
+        <button type="button" class="lock-btn" onclick="lockApp()" title="Bloquear">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+      </div>
     </div>
+ 
+    <div class="content">
+      <!-- TAB: INICIO -->
+      <div class="tab-page active" id="tp-inicio">
+        <div class="hero">
+          <div class="hero-greet" id="hero-greet">Hola</div>
+          <div class="hero-phase" id="hero-phase">—</div>
+          <div class="hero-day" id="hero-day">—</div>
+          <div class="hero-bar">
+            <div class="bar-track"><div class="bar-fill" id="hero-fill" style="width:0%"></div></div>
+            <div class="bar-labels"><span>Día 1</span><span id="bar-mid">Ovulación</span><span id="bar-end">—</span></div>
+          </div>
+        </div>
+        <div class="stat-grid" id="stat-grid"></div>
+        <div class="sec-hdr">
+          <div class="sec-title">Calendario</div>
+          <button type="button" class="btn btn-secondary btn-sm" onclick="goToToday()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            Hoy
+          </button>
+        </div>
+        <div class="cal-wrap">
+          <div class="cal-hdr">
+            <button type="button" class="cal-nav-btn" onclick="changeMonth(-1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <div class="cal-month" id="cal-month-lbl"></div>
+            <button type="button" class="cal-nav-btn" onclick="changeMonth(1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+          <div class="cal-grid" id="cal-dnames"></div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div class="cal-legend">
+            <div class="leg-item"><div class="leg-sw ls-p"></div>Menstruación</div>
+            <div class="leg-item"><div class="leg-sw ls-f"></div>Ventana fértil</div>
+            <div class="leg-item"><div class="leg-sw ls-o"></div>Ovulación</div>
+            <div class="leg-item"><div class="leg-sw ls-pr"></div>Predicción</div>
+            <div class="leg-item"><div class="leg-sw ls-t"></div>Hoy</div>
+          </div>
+        </div>
+        <div class="sec-hdr"><div class="sec-title">Consejo del día</div></div>
+        <div id="daily-tip"></div>
+      </div>
+ 
+      <!-- TAB: REGISTRAR -->
+      <div class="tab-page" id="tp-registro">
+        <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Registrar ciclo</div></div>
+        <div class="card">
+          <div class="card-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            Nuevo periodo
+          </div>
+          <p style="font-size:.78rem;color:var(--text2);margin-bottom:.85rem;line-height:1.6">Registrá el primer día de sangrado. Podés cargar periodos pasados para un promedio más preciso.</p>
+          <div class="fg-row">
+            <div class="fg"><label>Fecha (primer sangrado)</label><input type="date" id="r-date"></div>
+            <div class="fg"><label>Duración (días)</label><input type="number" id="r-dur" min="1" max="12" value="5"></div>
+          </div>
+          <div class="btn-row"><button type="button" class="btn btn-primary btn-sm" onclick="saveCycle()">Guardar</button></div>
+        </div>
+        <div class="card" style="margin-top:.85rem">
+          <div class="card-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Historial de ciclos
+            <span id="cycles-avg-badge" style="margin-left:auto;font-size:.68rem;font-weight:500;background:var(--sage-l);color:var(--sage-d);padding:2px 8px;border-radius:12px"></span>
+          </div>
+          <div id="cycles-list-reg"></div>
+          <p style="font-size:.7rem;color:var(--text3);margin-top:.65rem;font-style:italic;line-height:1.55">Con 2+ ciclos registrados el promedio se calcula automáticamente.</p>
+        </div>
+ 
+        <div class="sec-hdr"><div class="sec-title">Diario del día</div>
+          <input type="date" id="log-date" style="font-size:.75rem;padding:.3rem .58rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--text);outline:none;">
+        </div>
+        <div class="card">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>Flujo</div>
+          <div class="flow-row" id="flow-sel">
+            <div class="flow-opt" data-v="sin" onclick="selFlow(this)">Sin flujo</div>
+            <div class="flow-opt" data-v="ligero" onclick="selFlow(this)">Ligero</div>
+            <div class="flow-opt" data-v="moderado" onclick="selFlow(this)">Moderado</div>
+            <div class="flow-opt" data-v="abundante" onclick="selFlow(this)">Abundante</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg>Estado de ánimo</div>
+          <div class="chips" id="mood-chips">
+            <div class="chip mood" onclick="togC(this)">Feliz</div><div class="chip mood" onclick="togC(this)">Tranquila</div><div class="chip mood" onclick="togC(this)">Energética</div><div class="chip mood" onclick="togC(this)">Sensible</div><div class="chip mood" onclick="togC(this)">Cansada</div><div class="chip mood" onclick="togC(this)">Triste</div><div class="chip mood" onclick="togC(this)">Irritable</div><div class="chip mood" onclick="togC(this)">Ansiosa</div><div class="chip mood" onclick="togC(this)">Confundida</div><div class="chip mood" onclick="togC(this)">Motivada</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 12.5l6 6 9-11"/></svg>Síntomas físicos</div>
+          <div class="chips" id="phys-chips">
+            <div class="chip phys" onclick="togC(this)">Cólicos</div><div class="chip phys" onclick="togC(this)">Dolor de cabeza</div><div class="chip phys" onclick="togC(this)">Migraña</div><div class="chip phys" onclick="togC(this)">Sensibilidad senos</div><div class="chip phys" onclick="togC(this)">Hinchazón</div><div class="chip phys" onclick="togC(this)">Náuseas</div><div class="chip phys" onclick="togC(this)">Dolor de espalda</div><div class="chip phys" onclick="togC(this)">Fatiga</div><div class="chip phys" onclick="togC(this)">Acné</div><div class="chip phys" onclick="togC(this)">Retención de líquidos</div><div class="chip phys" onclick="togC(this)">Antojos</div><div class="chip phys" onclick="togC(this)">Insomnio</div><div class="chip phys" onclick="togC(this)">Manchado</div><div class="chip phys" onclick="togC(this)">Diarrea</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>Biométricos</div>
+          <div class="fg" style="margin-bottom:.7rem"><label>Intensidad del dolor (0 = sin dolor / 5 = intenso)</label>
+            <div class="pain-row" id="pain-sel">
+              <div class="pain-opt" data-v="0" onclick="selPain(this)">0</div><div class="pain-opt" data-v="1" onclick="selPain(this)">1</div><div class="pain-opt" data-v="2" onclick="selPain(this)">2</div><div class="pain-opt" data-v="3" onclick="selPain(this)">3</div><div class="pain-opt" data-v="4" onclick="selPain(this)">4</div><div class="pain-opt" data-v="5" onclick="selPain(this)">5</div>
+            </div>
+          </div>
+          <div class="fg-row">
+            <div class="fg"><label>Temperatura basal</label><div class="mini-met"><input type="number" id="log-temp" step="0.01" min="35" max="40" placeholder="36.5"><span class="unit">°C</span></div></div>
+            <div class="fg"><label>Nivel de energía</label><select id="log-energy"><option value="">—</option><option value="muy-baja">Muy baja</option><option value="baja">Baja</option><option value="normal">Normal</option><option value="alta">Alta</option><option value="muy-alta">Muy alta</option></select></div>
+          </div>
+          <div class="fg-row" style="margin-top:.3rem">
+            <div class="fg"><label>Calidad del sueño</label><select id="log-sleep"><option value="">—</option><option value="malo">Malo</option><option value="regular">Regular</option><option value="bueno">Bueno</option><option value="excelente">Excelente</option></select></div>
+            <div class="fg"><label>Moco cervical</label><select id="log-mucus"><option value="">—</option><option value="seco">Seco</option><option value="cremoso">Cremoso</option><option value="acuoso">Acuoso</option><option value="clara">Clara de huevo</option></select></div>
+          </div>
+          <div class="fg-row" style="margin-top:.3rem">
+            <div class="fg"><label>Hora de dormir</label><input type="time" id="log-sleep-from"></div>
+            <div class="fg"><label>Hora de despertar</label><input type="time" id="log-sleep-to"></div>
+          </div>
+          <div id="sleep-calc"></div>
+        </div>
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima
+            <span style="font-size:.66rem;color:var(--text3);font-weight:400;margin-left:auto">Privado</span>
+          </div>
+          <div class="tgl-row" onclick="togInt()" style="margin-bottom:.75rem">
+            <div class="tgl" id="int-tgl"></div><span class="tgl-lbl" id="int-lbl">No registrada</span>
+          </div>
+          <div id="int-details" style="display:none">
+            <div class="fg" style="margin-bottom:.75rem"><label>¿Cómo te sentiste después?</label>
+              <div class="chips" id="int-feel-chips">
+                <div class="chip gen" onclick="togC(this)">Bien / Feliz</div><div class="chip gen" onclick="togC(this)">Conectada</div><div class="chip gen" onclick="togC(this)">Relajada</div><div class="chip gen" onclick="togC(this)">Plena</div><div class="chip gen" onclick="togC(this)">Indiferente</div><div class="chip gen" onclick="togC(this)">Incómoda</div><div class="chip gen" onclick="togC(this)">Triste</div><div class="chip gen" onclick="togC(this)">Culpable</div>
+              </div>
+            </div>
+            <div class="fg-row" style="margin-bottom:.75rem">
+              <div class="fg"><label>Tipo de actividad</label>
+                <select id="int-type"><option value="">—</option><option value="sola">Sola</option><option value="pareja">Con pareja</option><option value="relacion">Relación sexual</option></select>
+              </div>
+              <div class="fg"><label>¿Hubo orgasmo?</label>
+                <select id="int-orgasm"><option value="">—</option><option value="si">Sí</option><option value="no">No</option><option value="parcial">Parcial</option></select>
+              </div>
+            </div>
+            <div class="fg-row">
+              <div class="fg"><label>Nivel de deseo previo</label>
+                <select id="int-desire"><option value="">—</option><option value="muy-bajo">Muy bajo</option><option value="bajo">Bajo</option><option value="moderado">Moderado</option><option value="alto">Alto</option><option value="muy-alto">Muy alto</option></select>
+              </div>
+              <div class="fg"><label>Satisfacción (1–5)</label>
+                <select id="int-sat"><option value="">—</option><option value="1">1 – Baja</option><option value="2">2</option><option value="3">3 – Media</option><option value="4">4</option><option value="5">5 – Alta</option></select>
+              </div>
+            </div>
+            <div class="fg" style="margin-top:.5rem"><label>Notas íntimas</label><textarea id="int-notes" placeholder="Solo vos podés ver esto..." style="min-height:54px"></textarea></div>
+          </div>
+          <p style="font-size:.68rem;color:var(--text3);font-style:italic;margin-top:.5rem">Solo visible al abrir el detalle del día</p>
+        </div>
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notas</div>
+          <div class="fg"><textarea id="log-notes" placeholder="¿Cómo te sentiste hoy?..."></textarea></div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-primary" onclick="saveLog()">Guardar</button>
+            <button type="button" class="btn btn-secondary" onclick="clearLog()">Limpiar</button>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- TAB: ANÁLISIS -->
+      <div class="tab-page" id="tp-analisis">
+        <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Tu perfil menstrual</div></div>
+        <div id="analysis-content"></div>
+      </div>
+ 
+      <!-- TAB: HISTORIAL -->
+      <div class="tab-page" id="tp-historial">
+        <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Estadísticas</div></div>
+        <div class="card" id="stats-card"></div>
+        <div class="sec-hdr"><div class="sec-title">Registros</div></div>
+        <div class="log-list" id="log-list"></div>
+      </div>
+ 
+      <!-- TAB: APRENDE -->
+      <div class="tab-page" id="tp-aprende">
+        <div id="learn-age-tip"></div>
+        <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Las 4 fases</div></div>
+        <div class="card">
+          <div class="cyc-bar"><div class="cb-s cb-m" style="flex:5">1–5</div><div class="cb-s cb-f" style="flex:8">6–13</div><div class="cb-s cb-o" style="flex:3">14</div><div class="cb-s cb-l" style="flex:12">15–28</div></div>
+          <div class="phase-tiles"><div class="phase-tile pt-m"><div class="pt-day">Días 1–5</div><div class="pt-name">Menstrual</div></div><div class="phase-tile pt-f"><div class="pt-day">Días 6–13</div><div class="pt-name">Folicular</div></div><div class="phase-tile pt-o"><div class="pt-day">~Día 14</div><div class="pt-name">Ovulación</div></div><div class="phase-tile pt-l"><div class="pt-day">Días 15–28</div><div class="pt-name">Lútea</div></div></div>
+        </div>
+        <div class="sec-hdr"><div class="sec-title">Guías</div></div>
+        <div class="info-card"><div class="info-card-title">🩸 Fase Menstrual — Días 1–5</div><p>El revestimiento uterino se desprende. Hormonas en su punto más bajo. Cólicos, fatiga y cambios de humor son normales. Descansá, hidratate y consumí alimentos ricos en hierro.</p></div>
+        <div class="info-card"><div class="info-card-title">🌱 Fase Folicular — Días 6–13</div><p>Los estrógenos suben y los folículos maduran. Más energía, claridad mental y ánimo elevado. Mejor momento para ejercicio intenso y nuevos proyectos.</p></div>
+        <div class="info-card"><div class="info-card-title">✨ Ovulación — ~Día 14</div><p>El óvulo es liberado. Estrógeno en su pico, temperatura basal sube 0.2–0.5°C. Moco tipo clara de huevo. <strong>Ventana fértil:</strong> 6 días previos + 5 días posteriores.</p></div>
+        <div class="info-card"><div class="info-card-title">🌙 Fase Lútea — Días 15–28</div><p>Domina la progesterona. Al final pueden aparecer síntomas del SPM: hinchazón, irritabilidad, antojos. El magnesio y reducir la cafeína ayudan significativamente.</p></div>
+        <div class="info-card"><div class="info-card-title">⚠️ Cuándo consultar a tu médica</div><div class="insight-box ib-rose" style="margin:0"><strong>Señales de alarma</strong>Ciclos menores de 21 o mayores de 35 días · Sangrado mayor a 8 días · Dolor que impide actividades normales · Sangrado entre periodos · Ausencia de periodo por 3+ meses</div></div>
+        <div class="sec-hdr"><div class="sec-title">Tu ciclo según la edad</div></div>
+        <div class="age-grid">
+          <div class="age-card ac-teen"><strong>Adolescencia (12–19)</strong>Ciclos irregulares los primeros 2–3 años. Normal entre 21–45 días.</div>
+          <div class="age-card ac-20"><strong>Tus 20s</strong>Años más fértiles. Ciclo se regulariza. Ideal para conocer tu patrón.</div>
+          <div class="age-card ac-30"><strong>Tus 30s</strong>Regular hasta los 35. El SPM puede intensificarse. Mayor riesgo de fibromas.</div>
+          <div class="age-card ac-40"><strong>40s y perimenopausia</strong>Ciclos más irregulares. Flujo puede variar. Ovulación menos predecible.</div>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="showTab('inicio')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-lbl">Inicio</span>
+      </div>
+      <div class="nav-item" onclick="showTab('registro')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        <span class="nav-lbl">Registrar</span>
+      </div>
+      <div class="nav-item" onclick="showTab('analisis')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span class="nav-lbl">Análisis</span>
+      </div>
+      <div class="nav-item" onclick="showTab('historial')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <span class="nav-lbl">Historial</span>
+      </div>
+      <div class="nav-item" onclick="showTab('aprende')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        <span class="nav-lbl">Aprende</span>
+      </div>
+    </nav>
   </div>
 </div>
-
-<div class="content">
-  <!-- TAB: INICIO -->
-  <div class="tab-page active" id="tp-inicio">
-    <div class="hero">
-      <div class="hero-greet" id="hero-greet">Hola</div>
-      <div class="hero-phase" id="hero-phase">—</div>
-      <div class="hero-day" id="hero-day">—</div>
-      <div class="hero-bar">
-        <div class="bar-track"><div class="bar-fill" id="hero-fill" style="width:0%"></div></div>
-        <div class="bar-labels"><span>Día 1</span><span id="bar-mid">Ovulación</span><span id="bar-end">—</span></div>
-      </div>
-    </div>
-    <div class="stat-grid" id="stat-grid"></div>
-    <div class="sec-hdr">
-      <div class="sec-title">Calendario</div>
-      <button class="btn btn-secondary btn-sm" onclick="goToToday()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        Hoy
-      </button>
-    </div>
-    <div class="cal-wrap">
-      <div class="cal-hdr">
-        <button class="cal-nav-btn" onclick="changeMonth(-1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <div class="cal-month" id="cal-month-lbl"></div>
-        <button class="cal-nav-btn" onclick="changeMonth(1)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
-      </div>
-      <div class="cal-grid" id="cal-dnames"></div>
-      <div class="cal-grid" id="cal-grid"></div>
-      <div class="cal-legend">
-        <div class="leg-item"><div class="leg-sw ls-p"></div>Menstruación</div>
-        <div class="leg-item"><div class="leg-sw ls-f"></div>Ventana fértil</div>
-        <div class="leg-item"><div class="leg-sw ls-o"></div>Ovulación</div>
-        <div class="leg-item"><div class="leg-sw ls-pr"></div>Predicción</div>
-        <div class="leg-item"><div class="leg-sw ls-t"></div>Hoy</div>
-      </div>
-    </div>
-    <div class="sec-hdr"><div class="sec-title">Consejo del día</div></div>
-    <div id="daily-tip"></div>
-  </div>
-
-  <!-- TAB: REGISTRAR -->
-  <div class="tab-page" id="tp-registro">
-    <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Registrar ciclo</div></div>
-    <div class="card">
-      <div class="card-title">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        Nuevo periodo
-      </div>
-      <p style="font-size:.78rem;color:var(--text2);margin-bottom:.85rem;line-height:1.6">Registrá el primer día de sangrado. Podés cargar periodos pasados para un promedio más preciso.</p>
-      <div class="fg-row">
-        <div class="fg"><label>Fecha (primer sangrado)</label><input type="date" id="r-date"></div>
-        <div class="fg"><label>Duración (días)</label><input type="number" id="r-dur" min="1" max="12" value="5"></div>
-      </div>
-      <div class="btn-row"><button class="btn btn-primary btn-sm" onclick="saveCycle()">Guardar</button></div>
-    </div>
-    <div class="card" style="margin-top:.85rem">
-      <div class="card-title">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        Historial de ciclos
-        <span id="cycles-avg-badge" style="margin-left:auto;font-size:.68rem;font-weight:500;background:var(--sage-l);color:var(--sage-d);padding:2px 8px;border-radius:12px"></span>
-      </div>
-      <div id="cycles-list-reg"></div>
-      <p style="font-size:.7rem;color:var(--text3);margin-top:.65rem;font-style:italic;line-height:1.55">Con 2+ ciclos registrados el promedio se calcula automáticamente.</p>
-    </div>
-
-    <div class="sec-hdr"><div class="sec-title">Diario del día</div>
-      <input type="date" id="log-date" style="font-size:.75rem;padding:.3rem .58rem;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;color:var(--text);outline:none;">
-    </div>
-    <div class="card">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>Flujo</div>
-      <div class="flow-row" id="flow-sel">
-        <div class="flow-opt" data-v="sin" onclick="selFlow(this)">Sin flujo</div>
-        <div class="flow-opt" data-v="ligero" onclick="selFlow(this)">Ligero</div>
-        <div class="flow-opt" data-v="moderado" onclick="selFlow(this)">Moderado</div>
-        <div class="flow-opt" data-v="abundante" onclick="selFlow(this)">Abundante</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:.75rem">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9" stroke-width="3"/><line x1="15" y1="9" x2="15.01" y2="9" stroke-width="3"/></svg>Estado de ánimo</div>
-      <div class="chips" id="mood-chips">
-        <div class="chip mood" onclick="togC(this)">Feliz</div><div class="chip mood" onclick="togC(this)">Tranquila</div><div class="chip mood" onclick="togC(this)">Energética</div><div class="chip mood" onclick="togC(this)">Sensible</div><div class="chip mood" onclick="togC(this)">Cansada</div><div class="chip mood" onclick="togC(this)">Triste</div><div class="chip mood" onclick="togC(this)">Irritable</div><div class="chip mood" onclick="togC(this)">Ansiosa</div><div class="chip mood" onclick="togC(this)">Confundida</div><div class="chip mood" onclick="togC(this)">Motivada</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:.75rem">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 12.5l6 6 9-11"/></svg>Síntomas físicos</div>
-      <div class="chips" id="phys-chips">
-        <div class="chip phys" onclick="togC(this)">Cólicos</div><div class="chip phys" onclick="togC(this)">Dolor de cabeza</div><div class="chip phys" onclick="togC(this)">Migraña</div><div class="chip phys" onclick="togC(this)">Sensibilidad senos</div><div class="chip phys" onclick="togC(this)">Hinchazón</div><div class="chip phys" onclick="togC(this)">Náuseas</div><div class="chip phys" onclick="togC(this)">Dolor de espalda</div><div class="chip phys" onclick="togC(this)">Fatiga</div><div class="chip phys" onclick="togC(this)">Acné</div><div class="chip phys" onclick="togC(this)">Retención de líquidos</div><div class="chip phys" onclick="togC(this)">Antojos</div><div class="chip phys" onclick="togC(this)">Insomnio</div><div class="chip phys" onclick="togC(this)">Manchado</div><div class="chip phys" onclick="togC(this)">Diarrea</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:.75rem">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>Biométricos</div>
-      <div class="fg" style="margin-bottom:.7rem"><label>Intensidad del dolor (0 = sin dolor / 5 = intenso)</label>
-        <div class="pain-row" id="pain-sel">
-          <div class="pain-opt" data-v="0" onclick="selPain(this)">0</div><div class="pain-opt" data-v="1" onclick="selPain(this)">1</div><div class="pain-opt" data-v="2" onclick="selPain(this)">2</div><div class="pain-opt" data-v="3" onclick="selPain(this)">3</div><div class="pain-opt" data-v="4" onclick="selPain(this)">4</div><div class="pain-opt" data-v="5" onclick="selPain(this)">5</div>
-        </div>
-      </div>
-      <div class="fg-row">
-        <div class="fg"><label>Temperatura basal</label><div class="mini-met"><input type="number" id="log-temp" step="0.01" min="35" max="40" placeholder="36.5"><span class="unit">°C</span></div></div>
-        <div class="fg"><label>Nivel de energía</label><select id="log-energy"><option value="">—</option><option value="muy-baja">Muy baja</option><option value="baja">Baja</option><option value="normal">Normal</option><option value="alta">Alta</option><option value="muy-alta">Muy alta</option></select></div>
-      </div>
-      <div class="fg-row" style="margin-top:.3rem">
-        <div class="fg"><label>Calidad del sueño</label><select id="log-sleep"><option value="">—</option><option value="malo">Malo</option><option value="regular">Regular</option><option value="bueno">Bueno</option><option value="excelente">Excelente</option></select></div>
-        <div class="fg"><label>Moco cervical</label><select id="log-mucus"><option value="">—</option><option value="seco">Seco</option><option value="cremoso">Cremoso</option><option value="acuoso">Acuoso</option><option value="clara">Clara de huevo</option></select></div>
-      </div>
-      <div class="fg-row" style="margin-top:.3rem">
-        <div class="fg"><label>Hora de dormir</label><input type="time" id="log-sleep-from"></div>
-        <div class="fg"><label>Hora de despertar</label><input type="time" id="log-sleep-to"></div>
-      </div>
-      <div id="sleep-calc"></div>
-    </div>
-    <div class="card" style="margin-top:.75rem">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Actividad íntima
-        <span style="font-size:.66rem;color:var(--text3);font-weight:400;margin-left:auto">Privado</span>
-      </div>
-      <div class="tgl-row" onclick="togInt()" style="margin-bottom:.75rem">
-        <div class="tgl" id="int-tgl"></div><span class="tgl-lbl" id="int-lbl">No registrada</span>
-      </div>
-      <div id="int-details" style="display:none">
-        <div class="fg" style="margin-bottom:.75rem"><label>¿Cómo te sentiste después?</label>
-          <div class="chips" id="int-feel-chips">
-            <div class="chip gen" onclick="togC(this)">Bien / Feliz</div><div class="chip gen" onclick="togC(this)">Conectada</div><div class="chip gen" onclick="togC(this)">Relajada</div><div class="chip gen" onclick="togC(this)">Plena</div><div class="chip gen" onclick="togC(this)">Indiferente</div><div class="chip gen" onclick="togC(this)">Incómoda</div><div class="chip gen" onclick="togC(this)">Triste</div><div class="chip gen" onclick="togC(this)">Culpable</div>
-          </div>
-        </div>
-        <div class="fg-row" style="margin-bottom:.75rem">
-          <div class="fg"><label>Tipo de actividad</label>
-            <select id="int-type"><option value="">—</option><option value="sola">Sola</option><option value="pareja">Con pareja</option><option value="relacion">Relación sexual</option></select>
-          </div>
-          <div class="fg"><label>¿Hubo orgasmo?</label>
-            <select id="int-orgasm"><option value="">—</option><option value="si">Sí</option><option value="no">No</option><option value="parcial">Parcial</option></select>
-          </div>
-        </div>
-        <div class="fg-row">
-          <div class="fg"><label>Nivel de deseo previo</label>
-            <select id="int-desire"><option value="">—</option><option value="muy-bajo">Muy bajo</option><option value="bajo">Bajo</option><option value="moderado">Moderado</option><option value="alto">Alto</option><option value="muy-alto">Muy alto</option></select>
-          </div>
-          <div class="fg"><label>Satisfacción (1–5)</label>
-            <select id="int-sat"><option value="">—</option><option value="1">1 – Baja</option><option value="2">2</option><option value="3">3 – Media</option><option value="4">4</option><option value="5">5 – Alta</option></select>
-          </div>
-        </div>
-        <div class="fg" style="margin-top:.5rem"><label>Notas íntimas</label><textarea id="int-notes" placeholder="Solo vos podés ver esto..." style="min-height:54px"></textarea></div>
-      </div>
-      <p style="font-size:.68rem;color:var(--text3);font-style:italic;margin-top:.5rem">Solo visible al abrir el detalle del día</p>
-    </div>
-    <div class="card" style="margin-top:.75rem">
-      <div class="card-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>Notas</div>
-      <div class="fg"><textarea id="log-notes" placeholder="¿Cómo te sentiste hoy?..."></textarea></div>
-      <div class="btn-row">
-        <button class="btn btn-primary" onclick="saveLog()">Guardar</button>
-        <button class="btn btn-secondary" onclick="clearLog()">Limpiar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB: ANÁLISIS -->
-  <div class="tab-page" id="tp-analisis">
-    <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Tu perfil menstrual</div></div>
-    <div id="analysis-content"></div>
-  </div>
-
-  <!-- TAB: HISTORIAL -->
-  <div class="tab-page" id="tp-historial">
-    <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Estadísticas</div></div>
-    <div class="card" id="stats-card"></div>
-    <div class="sec-hdr"><div class="sec-title">Registros</div></div>
-    <div class="log-list" id="log-list"></div>
-  </div>
-
-  <!-- TAB: APRENDE -->
-  <div class="tab-page" id="tp-aprende">
-    <div id="learn-age-tip"></div>
-    <div class="sec-hdr" style="margin-top:0"><div class="sec-title">Las 4 fases</div></div>
-    <div class="card">
-      <div class="cyc-bar"><div class="cb-s cb-m" style="flex:5">1–5</div><div class="cb-s cb-f" style="flex:8">6–13</div><div class="cb-s cb-o" style="flex:3">14</div><div class="cb-s cb-l" style="flex:12">15–28</div></div>
-      <div class="phase-tiles"><div class="phase-tile pt-m"><div class="pt-day">Días 1–5</div><div class="pt-name">Menstrual</div></div><div class="phase-tile pt-f"><div class="pt-day">Días 6–13</div><div class="pt-name">Folicular</div></div><div class="phase-tile pt-o"><div class="pt-day">~Día 14</div><div class="pt-name">Ovulación</div></div><div class="phase-tile pt-l"><div class="pt-day">Días 15–28</div><div class="pt-name">Lútea</div></div></div>
-    </div>
-    <div class="sec-hdr"><div class="sec-title">Guías</div></div>
-    <div class="info-card"><div class="info-card-title">🩸 Fase Menstrual — Días 1–5</div><p>El revestimiento uterino se desprende. Hormonas en su punto más bajo. Cólicos, fatiga y cambios de humor son normales. Descansá, hidratate y consumí alimentos ricos en hierro.</p></div>
-    <div class="info-card"><div class="info-card-title">🌱 Fase Folicular — Días 6–13</div><p>Los estrógenos suben y los folículos maduran. Más energía, claridad mental y ánimo elevado. Mejor momento para ejercicio intenso y nuevos proyectos.</p></div>
-    <div class="info-card"><div class="info-card-title">✨ Ovulación — ~Día 14</div><p>El óvulo es liberado. Estrógeno en su pico, temperatura basal sube 0.2–0.5°C. Moco tipo clara de huevo. <strong>Ventana fértil:</strong> 6 días previos + 5 días posteriores.</p></div>
-    <div class="info-card"><div class="info-card-title">🌙 Fase Lútea — Días 15–28</div><p>Domina la progesterona. Al final pueden aparecer síntomas del SPM: hinchazón, irritabilidad, antojos. El magnesio y reducir la cafeína ayudan significativamente.</p></div>
-    <div class="info-card"><div class="info-card-title">⚠️ Cuándo consultar a tu médica</div><div class="insight-box ib-rose" style="margin:0"><strong>Señales de alarma</strong>Ciclos menores de 21 o mayores de 35 días · Sangrado mayor a 8 días · Dolor que impide actividades normales · Sangrado entre periodos · Ausencia de periodo por 3+ meses</div></div>
-    <div class="sec-hdr"><div class="sec-title">Tu ciclo según la edad</div></div>
-    <div class="age-grid">
-      <div class="age-card ac-teen"><strong>Adolescencia (12–19)</strong>Ciclos irregulares los primeros 2–3 años. Normal entre 21–45 días.</div>
-      <div class="age-card ac-20"><strong>Tus 20s</strong>Años más fértiles. Ciclo se regulariza. Ideal para conocer tu patrón.</div>
-      <div class="age-card ac-30"><strong>Tus 30s</strong>Regular hasta los 35. El SPM puede intensificarse. Mayor riesgo de fibromas.</div>
-      <div class="age-card ac-40"><strong>40s y perimenopausia</strong>Ciclos más irregulares. Flujo puede variar. Ovulación menos predecible.</div>
-    </div>
-  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <div class="nav-item active" onclick="showTab('inicio')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span class="nav-lbl">Inicio</span>
-  </div>
-  <div class="nav-item" onclick="showTab('registro')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-    <span class="nav-lbl">Registrar</span>
-  </div>
-  <div class="nav-item" onclick="showTab('analisis')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    <span class="nav-lbl">Análisis</span>
-  </div>
-  <div class="nav-item" onclick="showTab('historial')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    <span class="nav-lbl">Historial</span>
-  </div>
-  <div class="nav-item" onclick="showTab('aprende')">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    <span class="nav-lbl">Aprende</span>
-  </div>
-</nav>
-```
-
-  </div>
-</div>
-
+ 
 <!-- DAY MODAL -->
-
 <div class="modal-bg" id="modal-bg" onclick="closeMBG(event)">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -755,7 +741,7 @@ MAIN APP
     <div id="modal-body"></div>
   </div>
 </div>
-
+ 
 <script>
 // ══════════════════════════════════════════════════════════
 //  STATE
@@ -772,7 +758,7 @@ let intimateOn = false;
 let setupPin = '';
 let pinBuf = '';
 let setupCycles = []; // temporary during setup
-
+ 
 // ── Persist ──
 function save(){ try{ localStorage.setItem('luna_v4', JSON.stringify(S)); }catch(e){} }
 function loadS(){
@@ -782,7 +768,7 @@ function loadS(){
   }catch(e){}
   return false;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  DATE UTILS
 // ══════════════════════════════════════════════════════════
@@ -796,14 +782,14 @@ const ds = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+S
 const ddiff = (a,b) => Math.floor((b-a)/86400000); // floor of days between two Date objects
 const fmtS = s => s ? pd(s).toLocaleDateString('es',{day:'numeric',month:'short'}) : '—';
 const fmtL = s => s ? pd(s).toLocaleDateString('es',{day:'numeric',month:'long',year:'numeric'}) : '—';
-
+ 
 // ══════════════════════════════════════════════════════════
 //  CYCLE ENGINE — THE CORE
 // ══════════════════════════════════════════════════════════
-
+ 
 // Returns sorted cycles array
 function SC(){ return [...S.cycles].sort((a,b)=>a.start.localeCompare(b.start)); }
-
+ 
 // Average cycle length from real logged data
 function avgCL(){
   const sc = SC();
@@ -812,7 +798,7 @@ function avgCL(){
   for(let i=1;i<sc.length;i++) diffs.push(ddiff(pd(sc[i-1].start), pd(sc[i].start)));
   return Math.max(21, Math.min(45, Math.round(diffs.reduce((a,b)=>a+b,0)/diffs.length)));
 }
-
+ 
 // For a given date string, return the cycle day number (1-indexed)
 // Rules:
 // - Find the largest registered cycle start that is <= target
@@ -847,7 +833,7 @@ function cycleDay(dstr){
     return ddiff(curStart, target) + 1;
   }
 }
-
+ 
 // Build the calendar color map for all dates
 // Returns object: {dateStr: 'period'|'fertile'|'ovulation'|'period-pred'|'pred-main'|'pred-adj'}
 function buildMap(){
@@ -856,7 +842,7 @@ function buildMap(){
   const m = {};
   const avg = avgCL();
   const pLen = S.periodLength || 5;
-
+ 
   // Helper: mark one cycle's period+ovulation+fertile from a real registered start
   function markReal(startDate){
     // Period days
@@ -874,10 +860,10 @@ function buildMap(){
       if(!m[k]) m[k] = 'fertile';
     }
   }
-
+ 
   // 1. Mark all registered cycles with their EXACT start dates
   sc.forEach(c => markReal(pd(c.start)));
-
+ 
   // 2. Fill gaps between registered cycles if gap > avg (skipped cycle)
   for(let i=0;i<sc.length-1;i++){
     const gapDays = ddiff(pd(sc[i].start), pd(sc[i+1].start));
@@ -895,7 +881,7 @@ function buildMap(){
       }
     }
   }
-
+ 
   // 3. Predict NEXT period only (the immediate next cycle after last registered)
   const last = pd(sc[sc.length-1].start);
   const nextStart = ad(last, avg);
@@ -907,7 +893,7 @@ function buildMap(){
   if(!m[predBefore]) m[predBefore] = 'pred-adj';
   if(!m[predMain]) m[predMain] = 'pred-main';
   if(!m[predAfter]) m[predAfter] = 'pred-adj';
-
+ 
   // 4. Predict past cycles before earliest registered cycle (for browsing)
   const first = pd(sc[0].start);
   for(let cy=1;cy<=12;cy++){
@@ -917,10 +903,10 @@ function buildMap(){
     if(!m[ds(ov)])m[ds(ov)]='ovulation';
     for(let i=-6;i<=5;i++){ if(i===0)continue;const k=ds(ad(ov,i));if(!m[k])m[k]='fertile'; }
   }
-
+ 
   return m;
 }
-
+ 
 // Next period date = last registered start + avg
 function nextPeriodDate(){
   const sc = SC();
@@ -928,7 +914,7 @@ function nextPeriodDate(){
   const last = pd(sc[sc.length-1].start);
   return ds(ad(last, avgCL()));
 }
-
+ 
 // Current cycle start for hero card
 function currentCycleStart(){
   const sc = SC();
@@ -946,7 +932,7 @@ function currentCycleStart(){
   const cycNum = Math.floor(dayIn / avg);
   return ad(best, cycNum*avg);
 }
-
+ 
 // Current phase name
 function curPhase(){
   const map = buildMap();
@@ -962,7 +948,7 @@ function curPhase(){
   if(day>14) return {name:'Fase Lútea',short:'Lútea',color:'var(--gold-d)'};
   return {name:'—',short:'—',color:'var(--text2)'};
 }
-
+ 
 // Cycle stats
 function cycleStats(){
   const sc = SC();
@@ -977,12 +963,12 @@ function cycleStats(){
   }
   return {avg, vari, count:sc.length};
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  PIN LOGIC
 // ══════════════════════════════════════════════════════════
 function hashPin(p){ let h=0; for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;} return h.toString(); }
-
+ 
 function pinKey(d){
   if(pinBuf.length>=4) return;
   pinBuf+=d; renderPinDots();
@@ -1007,12 +993,12 @@ function checkPin(){
   }
 }
 function lockApp(){ showScreen('screen-lock'); }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  SETUP
 // ══════════════════════════════════════════════════════════
 let setupStep = 0;
-
+ 
 function goStep(step){
   if(step===2 && setupCycles.length===0){
     showToast('Agregá al menos un periodo');
@@ -1037,7 +1023,7 @@ function goStep(step){
   const scroll=document.querySelector('.setup-scroll');
   if(scroll) scroll.scrollTop=0;
 }
-
+ 
 function setupAddCycle(){
   const dateEl=document.getElementById('s-cycle-date');
   const durEl=document.getElementById('s-cycle-dur');
@@ -1074,7 +1060,7 @@ function renderSetupCycles(){
     </div>`;
   }).join('');
 }
-
+ 
 // Setup PIN
 function setupPinKey(d){
   if(setupPin.length>=4) return;
@@ -1098,7 +1084,7 @@ function setupPinDel(){
   document.getElementById('btn-pin-confirm').disabled=true;
   document.getElementById('btn-pin-confirm').style.opacity='.4';
 }
-
+ 
 function finishSetup(){
   S.name=document.getElementById('s-name').value.trim();
   S.age=parseInt(document.getElementById('s-age').value)||null;
@@ -1110,7 +1096,7 @@ function finishSetup(){
   save();
   launchApp();
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  SCREEN / APP
 // ══════════════════════════════════════════════════════════
@@ -1119,7 +1105,7 @@ function showScreen(id){
   const el=document.getElementById(id);
   if(el){el.classList.add('active');el.style.display='flex';}
 }
-
+ 
 function launchApp(){
   showScreen('screen-app');
   calMonth=new Date(); calMonth.setDate(1);
@@ -1127,14 +1113,14 @@ function launchApp(){
   document.getElementById('r-date').value=td();
   renderAll();
 }
-
+ 
 function renderAll(){
   renderHero(); renderStatCards(); renderCalendar(); renderDailyTip();
   renderCyclesListReg(); renderStatsCard(); renderLogList(); renderAnalysis(); renderLearnAge();
   const ph=curPhase();
   document.getElementById('topbar-phase').textContent=ph.short;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  HERO CARD
 // ══════════════════════════════════════════════════════════
@@ -1152,7 +1138,7 @@ function renderHero(){
   document.getElementById('hero-fill').style.width=pct+'%';
   document.getElementById('bar-end').textContent='Día '+avg;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  STAT CARDS
 // ══════════════════════════════════════════════════════════
@@ -1169,7 +1155,7 @@ function renderStatCards(){
   const nextOv=Object.entries(map).filter(([d,t])=>d>todayStr&&t==='ovulation').sort(([a],[b])=>a.localeCompare(b))[0]?.[0];
   const dOv=nextOv?ddiff(today,pd(nextOv)):null;
   const isFert=tt==='fertile'||tt==='ovulation';
-
+ 
   document.getElementById('stat-grid').innerHTML=`
     <div class="stat-card sc-rose"><div class="stat-icon si-rose"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg></div>
       <div class="stat-lbl">Próx. periodo</div>
@@ -1192,7 +1178,7 @@ function renderStatCards(){
       <div class="stat-sub">${tt==='ovulation'?'Día de ovulación':isFert?'Alta probabilidad':'Fuera de ventana'}</div>
     </div>`;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  CALENDAR
 // ══════════════════════════════════════════════════════════
@@ -1238,7 +1224,7 @@ function renderCalendar(){
 }
 function changeMonth(d){ calMonth.setMonth(calMonth.getMonth()+d); renderCalendar(); }
 function goToToday(){ calMonth=new Date(); calMonth.setDate(1); renderCalendar(); }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  DAY MODAL
 // ══════════════════════════════════════════════════════════
@@ -1282,7 +1268,7 @@ function openDayModal(dstr){
 function goToLog(d){ closeMDirect(); document.getElementById('log-date').value=d; showTab('registro'); }
 function closeMBG(e){ if(e.target===document.getElementById('modal-bg'))closeMDirect(); }
 function closeMDirect(){ document.getElementById('modal-bg').classList.remove('open'); }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  LOG FORM
 // ══════════════════════════════════════════════════════════
@@ -1306,7 +1292,7 @@ function clearLog(){
   document.getElementById('int-lbl').textContent='No registrada';
   document.getElementById('int-details').style.display='none';
 }
-
+ 
 // Sleep hours calculator
 ['log-sleep-from','log-sleep-to'].forEach(id=>{
   const el=document.getElementById(id);
@@ -1326,7 +1312,7 @@ function updateSleepCalc(){
   sc.textContent=hrs+'h de sueño — '+(q==='excelente'?'Excelente':q==='bueno'?'Bueno':q==='regular'?'Regular':'Insuficiente');
   document.getElementById('log-sleep').value=q;
 }
-
+ 
 function saveLog(){
   const date=document.getElementById('log-date').value;
   if(!date){ showToast('Seleccioná una fecha'); return; }
@@ -1362,7 +1348,7 @@ function saveLog(){
   };
   save(); showToast('Guardado ✓'); clearLog(); renderAll();
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  CYCLE MANAGEMENT (Registro tab)
 // ══════════════════════════════════════════════════════════
@@ -1405,7 +1391,7 @@ function renderCyclesListReg(){
     </div>`;
   }).join('')}</div>`;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  DAILY TIP
 // ══════════════════════════════════════════════════════════
@@ -1427,7 +1413,7 @@ function renderDailyTip(){
   const tip=tips[key]||tips.luteal;
   document.getElementById('daily-tip').innerHTML=`<div class="insight-box ${tip.cls}"><strong>${tip.t}</strong>${tip.b}</div>`;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  STATS CARD
 // ══════════════════════════════════════════════════════════
@@ -1448,7 +1434,7 @@ function renderStatsCard(){
     <div class="stat-row"><span class="sk">Duración del sangrado</span><span class="sv">${S.periodLength} días</span></div>
     <div style="margin-top:.85rem"><button class="btn btn-danger btn-sm" onclick="if(confirm('¿Segura? Se borrarán todos los datos.'))resetApp()">Restablecer</button></div>`;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  LOG LIST
 // ══════════════════════════════════════════════════════════
@@ -1470,7 +1456,7 @@ function renderLogList(){
     </div>`;
   }).join('');
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  ANALYSIS
 // ══════════════════════════════════════════════════════════
@@ -1510,7 +1496,7 @@ function renderSleepAnalysis(){
   h+=`</div>`;
   return h;
 }
-
+ 
 function renderIntimateAnalysis(){
   const logs=Object.entries(S.logs).sort(([a],[b])=>b.localeCompare(a));
   const intimateLogs=logs.filter(([,l])=>l.intimate);
@@ -1544,7 +1530,7 @@ function renderIntimateAnalysis(){
   if(phaseEntries.length){const peak=phaseEntries.sort((a,b)=>b[1]-a[1])[0];const insights={fertile:'Tu actividad íntima es más frecuente durante la ventana fértil. Los estrógenos altos aumentan naturalmente el deseo sexual en esta fase.',ovulation:'Más actividad en el día de ovulación — el pico estrogénico aumenta el deseo al máximo.',follicular:'Mayor actividad en la fase folicular. El aumento gradual de estrógenos eleva la energía y el deseo.',luteal:'Mayor actividad en la fase lútea. La progesterona puede reducir el deseo para algunas mujeres, pero tu patrón es único.',period:'Actividad durante el periodo — completamente normal. Algunas mujeres reportan mayor deseo en estos días.'};h+=`<div class="insight-box ib-plum"><strong>Tu patrón de deseo</strong>${insights[peak[0]]||''}</div>`;}
   h+=`</div>`;return h;
 }
-
+ 
 function renderAnalysis(){
   const logs=Object.entries(S.logs).sort(([a],[b])=>b.localeCompare(a));
   const{avg,vari}=cycleStats();
@@ -1563,7 +1549,7 @@ function renderAnalysis(){
   const vClass=vari<=2?'pill-low':vari<=4?'pill-med':'pill-high';
   const vText=vari<=2?'Ciclo muy consistente':vari<=4?'Leve variación, normal':'Bastante variable';
   const sc=SC();
-
+ 
   // ── KPI cards ──
   let h=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:.85rem">
     <div class="stat-card sc-sage" style="padding:.88rem"><div class="stat-icon si-sage" style="width:28px;height:28px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div class="stat-lbl">Promedio</div><div class="stat-val">${avg}d</div><div class="stat-sub">${sc.length} ciclo(s)</div></div>
@@ -1571,7 +1557,7 @@ function renderAnalysis(){
     <div class="stat-card sc-rose" style="padding:.88rem"><div class="stat-icon si-rose" style="width:28px;height:28px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg></div><div class="stat-lbl">Dolor promedio</div><div class="stat-val">${avgPain}${avgPain!=='—'?'/5':''}</div><div class="stat-sub">${pains.length?pains.length+' días':'Sin datos'}</div></div>
     <div class="stat-card sc-plum" style="padding:.88rem"><div class="stat-icon si-plum" style="width:28px;height:28px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><div class="stat-lbl">Días registrados</div><div class="stat-val">${logs.length}</div><div class="stat-sub">en tu diario</div></div>
   </div>`;
-
+ 
   // ── Cycle position ring ──
   const day=cycleDay(td());
   if(day>0){
@@ -1596,7 +1582,7 @@ function renderAnalysis(){
       </div>
     </div>`;
   }
-
+ 
   // ── Symptom frequency ──
   if(topS.length){
     const maxS=topS[0][1];
@@ -1604,7 +1590,7 @@ function renderAnalysis(){
     topS.forEach(([s,c])=>{const p=Math.round((c/maxS)*100);h+=`<div class="sf-row"><span class="sf-name">${s}</span><div class="sf-bg"><div class="sf-fill" style="width:${p}%"></div></div><span class="sf-cnt">${c}×</span></div>`;});
     h+=`</div></div>`;
   }
-
+ 
   // ── Mood donut ──
   if(topM.length){
     const mCols={'Feliz':'var(--sage)','Tranquila':'var(--plum)','Energética':'var(--gold)','Sensible':'#e8a0b4','Cansada':'var(--sage-l)','Triste':'var(--sky)','Irritable':'var(--rose)','Ansiosa':'#f0b470','Confundida':'var(--c2)','Motivada':'var(--gold)'};
@@ -1615,7 +1601,7 @@ function renderAnalysis(){
       <div class="donut-leg">${topM.slice(0,5).map(([k,v])=>`<div class="dl-item"><div class="dl-dot" style="background:${mCols[k]||'#ccc'}"></div><span class="dl-lbl">${k}</span><span class="dl-val">${Math.round((v/mTot)*100)}%</span></div>`).join('')}</div>
     </div></div>`;
   }
-
+ 
   // ── Flow donut ──
   if(flTot>0){
     const flCols={abundante:'var(--rose-d)',moderado:'var(--rose)',ligero:'#f0a0b8',sin:'var(--border)'};
@@ -1624,13 +1610,13 @@ function renderAnalysis(){
     Object.entries(flDist).filter(([,v])=>v>0).forEach(([k,v])=>{const p=Math.round((v/flTot)*100);h+=`<div class="sf-row"><span class="sf-name" style="color:var(--rose-d)">${flLabels[k]}</span><div class="sf-bg"><div class="sf-fill" style="width:${p}%;background:${flCols[k]}"></div></div><span class="sf-cnt">${p}%</span></div>`;});
     h+=`</div></div>`;
   }
-
+ 
   // ── Sleep analysis ──
   h+=renderSleepAnalysis();
-
+ 
   // ── Intimate analysis ──
   h+=renderIntimateAnalysis();
-
+ 
   // ── Insights ──
   const insights=[];
   if(avg<25) insights.push({cls:'ib-sky',t:'Ciclo corto',b:'Tu ciclo es más corto que el promedio. Si es consistente, es normal para vos. Ciclos menores a 21 días merecen consulta médica.'});
@@ -1646,7 +1632,7 @@ function renderAnalysis(){
   h+=`</div>`;
   document.getElementById('analysis-content').innerHTML=h;
 }
-
+ 
 function buildPhaseRows(){
   const day=cycleDay(td()),avg=cycleStats().avg;
   const pLen=S.periodLength||5;
@@ -1665,8 +1651,8 @@ function buildPhaseRows(){
     </div>`;
   }).join('');
 }
-
-
+ 
+ 
 function buildDonut(items,total){
   if(!total) return '';
   const cx=45,cy=45,r=32,circ=2*Math.PI*r;
@@ -1683,8 +1669,8 @@ function buildDonut(items,total){
   });
   return paths;
 }
-
-
+ 
+ 
 // ══════════════════════════════════════════════════════════
 //  LEARN AGE
 // ══════════════════════════════════════════════════════════
@@ -1698,7 +1684,7 @@ function renderLearnAge(){
   else tip=`<div class="insight-box ib-plum"><strong>Para vos — Perimenopausia</strong>Los ciclos irregulares son normales en esta transición. Tus registros son invaluables para tu médica.</div>`;
   document.getElementById('learn-age-tip').innerHTML=tip;
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  NAV + TABS
 // ══════════════════════════════════════════════════════════
@@ -1711,7 +1697,7 @@ function showTab(name){
   // Render analysis on demand (it's heavy, only render when tab is opened)
   if(name==='analisis') setTimeout(renderAnalysis, 50);
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  TOAST
 // ══════════════════════════════════════════════════════════
@@ -1721,12 +1707,12 @@ function showToast(msg){
   t.textContent=msg;t.classList.add('show');
   clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2200);
 }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  RESET
 // ══════════════════════════════════════════════════════════
 function resetApp(){ try{localStorage.removeItem('luna_v4');}catch(e){} location.reload(); }
-
+ 
 // ══════════════════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════════════════
@@ -1743,6 +1729,5 @@ function resetApp(){ try{localStorage.removeItem('luna_v4');}catch(e){} location
   }
 })();
 </script>
-
 </body>
 </html>
